@@ -19,6 +19,10 @@ export class RpgIsoSpriteBox extends IsoSprite {
   self: Phaser.Physics.Arcade.Sprite;
   isoConfig?: {x: number, y: number};
   customDepth?: number;
+  
+  matrixPosition?: {x: number, y: number, h: number};
+  type: string = "NOTHING";
+
   constructor(
     scene: Phaser.Scene,
     x: number,
@@ -27,7 +31,9 @@ export class RpgIsoSpriteBox extends IsoSprite {
     texture: string,
     frame: string | number,
     group?: Phaser.GameObjects.Group,
+    matrixPosition?: {x: number, y: number, h: number},
   ) {
+
     // @ts-ignore
     super(scene, x, y, z, texture, frame);
     this.scene = scene;
@@ -42,6 +48,7 @@ export class RpgIsoSpriteBox extends IsoSprite {
     // body.collideWorldBounds = true;
     this.container = scene.add.container(0, 0);
     this.init(x,y,z)
+    if(matrixPosition) this.matrixPosition = matrixPosition;
   }
   
   init (x: number, y: number, z: number) {

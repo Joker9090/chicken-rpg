@@ -14,6 +14,7 @@ import EventsCenter from "./EventsCenter";
 import UIScene from "./UIScene";
 import GlobalDataSingleton from "./services/GlobalData";
 import { RpgIsoSpriteBox } from "./Assets/rpgIsoSpriteBox";
+import { RpgIsoPlayer } from "./Assets/rpgIsoPlayer";
 // import UIScene from "./UIScene";
 
 export type IsoSceneType = {
@@ -84,7 +85,6 @@ export default class RPG extends Scene {
     }
 
     for (let index = 0; index < 6; index++) {
-      console.log("index", index);
       this.load.spritesheet(
         `columna-${index}`,
         "/images/chicken/piedraAbajo.png",
@@ -125,7 +125,6 @@ export default class RPG extends Scene {
 
     // una creacion de un group para guardar todos los tiles
     this.isoGroup = this.add.group();
-
 
     const posiblePositions = [
       "attack-s",
@@ -218,8 +217,6 @@ export default class RPG extends Scene {
     // const chicken = new RpgIsoSpriteBox(this, 700, 215, 100, "chicken", 17, this.isoGroup);
     // const chickenBOT = new RpgIsoSpriteBox(this, 750, 215, 100, "chicken", 17, this.isoGroup);
 
-   
-
     // chicken.self.play("atack-s");
     // chickenBOT.self.play("atack-n");
 
@@ -236,7 +233,6 @@ export default class RPG extends Scene {
     for (let index = 0; index < objectsMaps.length; index++) {
       const map = objectsMaps[index];
 
-      console.log("ESTE MAPA", map);
       // const h = 1000 + index * 600;
       scalar = index;
       const m = new MapManager(map, this as any);
@@ -250,82 +246,49 @@ export default class RPG extends Scene {
           conf: ConfObjectType,
           objectKey: string
         ) => {
+          //
           const { game, setPosFromAnchor } = that;
 
           const { height } = conf;
           const x = setPosFromAnchor(b, c).x;
           const y = setPosFromAnchor(b, c).y;
-          console.log("objectKey?", objectKey)
+
+          let direction = undefined;
           switch (objectKey) {
             case "PLAYER-E":
-              const chickenE = new RpgIsoSpriteBox(
-                this,
-                x,
-                y,
-                height + h,
-                "chicken",
-                17,
-                this.isoGroup
-              );
-              chickenE.self.play("idle-e");
-              this.cameras.main.startFollow(chickenE);
-              chickenE.self.on("pointerover", () => chickenE.self.setTint(0xff00ff));
-              chickenE.self.on("pointerout",  () => chickenE.self.setTint(0xffffff));
-              chickenE.self.on("pointerdown", () => this.cameras.main.startFollow(chickenE));
+              direction = "e";
               break;
-
             case "PLAYER-N":
-              const chickenN = new RpgIsoSpriteBox(
-                this,
-                x,
-                y,
-                height + h,
-                "chicken",
-                17,
-                this.isoGroup
-              );
-              chickenN.self.play("idle-n");
-              this.cameras.main.startFollow(chickenN);
-              chickenN.self.on("pointerover", () => chickenN.self.setTint(0xff00ff));
-              chickenN.self.on("pointerout",  () => chickenN.self.setTint(0xffffff));
-              chickenN.self.on("pointerdown", () => this.cameras.main.startFollow(chickenN));
+              direction = "n";
               break;
-
             case "PLAYER-S":
-              const chickenS = new RpgIsoSpriteBox(
-                this,
-                x,
-                y,
-                height + h,
-                "chicken",
-                17,
-                this.isoGroup
-              );
-              chickenS.self.play("idle-s");
-              this.cameras.main.startFollow(chickenS);
-              chickenS.self.on("pointerover", () => chickenS.self.setTint(0xff00ff));
-              chickenS.self.on("pointerout",  () => chickenS.self.setTint(0xffffff));
-              chickenS.self.on("pointerdown", () => this.cameras.main.startFollow(chickenS));
+              direction = "s";
               break;
-
             case "PLAYER-W":
-              const chickenW = new RpgIsoSpriteBox(
-                this,
-                x,
-                y,
-                height + h,
-                "chicken",
-                17,
-                this.isoGroup
-              );
-              chickenW.self.play("idle-w");
-              this.cameras.main.startFollow(chickenW);
-              chickenW.self.on("pointerover", () => chickenW.self.setTint(0xff00ff));
-              chickenW.self.on("pointerout",  () => chickenW.self.setTint(0xffffff));
-              chickenW.self.on("pointerdown", () => this.cameras.main.startFollow(chickenW));
+              direction = "w";
               break;
+          }
+          if (direction) {
+            let matrixPosition = {
+              x: b,
+              y: c,
+              h: height,
+            };
 
-              
+            let a = new RpgIsoPlayer(
+              this, // Scene
+              x, // x
+              y, // y
+              height + h, // height
+              "chicken", // spriteName
+              17, // baseFrame
+              this.isoGroup, // group
+              direction, // direction
+              matrixPosition
+            );
+            if (direction === "n") {
+              a.velocity = 3;
+            }
           }
         },
       };
@@ -340,7 +303,6 @@ export default class RPG extends Scene {
 
     function tweenTile(tile: RpgIsoSpriteBox) {
       return () => {
-        console.log("ENTRO?");
         self.tweens.add({
           targets: tile.self,
           isoZ: tile.isoZ + 10,
@@ -359,12 +321,9 @@ export default class RPG extends Scene {
       // reverse the map string
       const map = this.maps[index];
 
-      console.log("MAP", index);
-      console.log(map);
       // const h = 1000 + index * 600;
       scalar = index - startOnMap;
       const m = new MapManager(map, this as any);
-      console.log("aca");
       const conf = {
         height: h * scalar,
         structure: (
@@ -415,21 +374,20 @@ export default class RPG extends Scene {
   ) {
     const { game, setPosFromAnchor } = that;
     const { height } = conf;
-    console.log("columna", tile);
     const x = setPosFromAnchor(b, c).x;
     const y = setPosFromAnchor(b, c).y;
     let tileObj;
     tileObj = new RpgIsoSpriteBox(game, x, y, height, tile, 0, this.isoGroup);
     pos++;
 
+    tileObj.type = "STONE";
+
     //if height is 75 tint tile
 
     // tileObj.self.on("pointerover", tweenTile(tileObj));
     // console.log(tileObj);
     // log the position of tile every 10 tiles
-    if (pos % 10 == 0) {
-      console.log("POS", tileObj.isoX, tileObj.isoY, tileObj.isoZ);
-    }
+    
   }
 
   createSemiBloque(
@@ -442,21 +400,20 @@ export default class RPG extends Scene {
   ) {
     const { game, setPosFromAnchor } = that;
     const { height } = conf;
-    console.log("height", height);
     const x = setPosFromAnchor(b, c).x;
     const y = setPosFromAnchor(b, c).y;
     let tileObj;
     tileObj = new RpgIsoSpriteBox(game, x, y, height, tile, 0, this.isoGroup);
     pos++;
 
+    tileObj.type = "STONE";
+
     //if height is 75 tint tile
 
     // tileObj.self.on("pointerover", tweenTile(tileObj));
     // console.log(tileObj);
     // log the position of tile every 10 tiles
-    if (pos % 10 == 0) {
-      console.log("POS", tileObj.isoX, tileObj.isoY, tileObj.isoZ);
-    }
+   
   }
 
   createTreeTile(
@@ -468,7 +425,6 @@ export default class RPG extends Scene {
   ) {
     const { game, setPosFromAnchor } = that;
     const { height } = conf;
-    console.log("height", height);
     const x = setPosFromAnchor(b, c).x;
     const y = setPosFromAnchor(b, c).y;
     let tileObj;
@@ -481,6 +437,7 @@ export default class RPG extends Scene {
     tileObj.customDepth = tileObj.self.depth + 50;
     tileObj.container.add(tree);
     pos++;
+    tileObj.type = "TREE";
 
     this.forest.push(tileObj);
   }
@@ -495,7 +452,6 @@ export default class RPG extends Scene {
   ) {
     const { game, setPosFromAnchor } = that;
     const { height } = conf;
-    console.log("height", height);
     const x = setPosFromAnchor(b, c).x;
     const y = setPosFromAnchor(b, c).y;
     let tileObj;
@@ -509,22 +465,20 @@ export default class RPG extends Scene {
       this.isoGroup
     );
     pos++;
+    tileObj.type = "STONE";
 
     //if height is 75 tint tile
 
     // tileObj.self.on("pointerover", tweenTile(tileObj));
     // console.log(tileObj);
     // log the position of tile every 10 tiles
-    if (pos % 10 == 0) {
-      console.log("POS", tileObj.isoX, tileObj.isoY, tileObj.isoZ);
-    }
+   
   }
 
   destroyTile(tileObj: RpgIsoSpriteBox) {
     return () => {
       // destroy all tiles in the highlightedTiles array
       if (tileObj.highlightedTiles === undefined) return;
-      console.log("highlightedTiles", tileObj.highlightedTiles);
       tileObj.highlightedTiles.forEach((tile: RpgIsoSpriteBox) => {
         if (tile.tileX === tileObj.tileX && tile.tileY === tileObj.tileY)
           return;
@@ -578,9 +532,8 @@ export default class RPG extends Scene {
       tileObj.highlightedTiles = [];
       // clean tint from all tiles
       // @ts-ignore
-      this.isoGroup?.children.each((t) => {
-        const tile = t as unknown as RpgIsoSpriteBox;
-        tile.self.clearTint();
+      this.isoGroup?.children.each((t: RpgIsoSpriteBox) => {
+        if (t.type == "STONE" || t.type == "GRASS") t.self.clearTint();
       });
     };
   }
@@ -595,7 +548,6 @@ export default class RPG extends Scene {
   ) {
     const { game, setPosFromAnchor } = that;
     const { height } = conf;
-    console.log("height", height);
     const x = setPosFromAnchor(b, c).x;
     const y = setPosFromAnchor(b, c).y;
     let tileObj;
@@ -609,6 +561,7 @@ export default class RPG extends Scene {
       this.isoGroup
     );
     pos++;
+    tileObj.type = "STONE";
 
     //if height is 75 tint tile
     tileObj.floor = indexMap;
@@ -634,6 +587,13 @@ export default class RPG extends Scene {
     const x = setPosFromAnchor(b, c).x;
     const y = setPosFromAnchor(b, c).y;
     let tileObj;
+
+    let matrixPosition = {
+      x: b,
+      y: c,
+      h: height,
+    };
+
     tileObj = new RpgIsoSpriteBox(
       game,
       x,
@@ -641,30 +601,13 @@ export default class RPG extends Scene {
       height,
       "tile", //"bloque-" + Math.floor(Math.random() * 6),
       0,
-      this.isoGroup
+      this.isoGroup,
+      matrixPosition
     );
     pos++;
 
-    //if height is 75 tint tile
-
-    // tileObj.self.on("pointerover", tweenTile(tileObj));
-    // console.log(tileObj);
-    // log the position of tile every 10 tiles
-
-    if (pos % 10 == 0) {
-      console.log("POS", tileObj.isoX, tileObj.isoY, tileObj.isoZ);
-    }
+    tileObj.type = "GRASS";
   }
 
-  update() {
-    // if(this.game.input.mousePointer) {
-    //   const { x,y } = this.input.mousePointer
-    //   console.log("mouse position", x,y)
-    // }
-    // // grab mouse position and follow the camera
-    // if(this.game.input.mousePointer) {
-    //   const { x, y } = this.game.input.mousePointer;
-    //   this.cameras.main.centerOn(x, y);
-    // }
-  }
+  update() {}
 }
