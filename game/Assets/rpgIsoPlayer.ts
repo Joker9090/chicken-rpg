@@ -108,14 +108,13 @@ export class RpgIsoPlayer extends RpgIsoSpriteBox {
             (y >= yp - reach && y <= yp + reach && x === xp)
           ) {
             tile.self.setTint(0x00ffff);
-          } else if (
-            x >= xp - (reach - 1) &&
-            x <= xp + (reach - 1) &&
-            y >= yp - (reach - 1) &&
-            y <= yp + (reach - 1)
+          }  else if (
+            Math.abs(x - xp) <= reach &&
+            Math.abs(y - yp) <= reach &&
+            Math.abs(x - xp) + Math.abs(y - yp) <= reach // Ajuste para diagonal
           ) {
             tile.self.setTint(0x00ff00);
-          } 
+          }
           
         }
       });
