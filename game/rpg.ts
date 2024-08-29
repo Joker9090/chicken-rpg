@@ -15,6 +15,7 @@ import UIScene from "./UIScene";
 import GlobalDataSingleton from "./services/GlobalData";
 import { RpgIsoSpriteBox } from "./Assets/rpgIsoSpriteBox";
 import { RpgIsoPlayer } from "./Assets/rpgIsoPlayer";
+import { RpgIsoPlayerPrincipal } from "./Assets/rpgIsoPlayerPrincipal";
 // import UIScene from "./UIScene";
 
 export type IsoSceneType = {
@@ -39,6 +40,7 @@ export default class RPG extends Scene {
   isoGroup?: Phaser.GameObjects.Group;
   sceneKey: string;
   forest: Array<RpgIsoSpriteBox> = [];
+  player?: RpgIsoPlayerPrincipal;
 
   constructor(maps: string[]) {
     const sceneConfig = {
@@ -151,8 +153,9 @@ export default class RPG extends Scene {
           end: index + floor + 3,
         }),
         frameRate: 10,
-        repeat: -1,
+        repeat: (((index + floor) >= 16) && ((index + floor + 3) <= 32)) ? -1 : 1,
       });
+      if((((index + floor) >= 16) && ((index + floor + 3) <= 32))) console.log('es idle: ',(index + floor),(index + floor + 3));
     }
 
     // crea lo tiles
@@ -275,20 +278,39 @@ export default class RPG extends Scene {
               h: height,
             };
 
-            let a = new RpgIsoPlayer(
-              this, // Scene
-              x, // x
-              y, // y
-              height + h, // height
-              "chicken", // spriteName
-              17, // baseFrame
-              this.isoGroup, // group
-              direction, // direction
-              matrixPosition
-            );
-            if (direction === "n") {
-              a.velocity = 3;
+            console.log('object key: ', objectKey);
+            if(objectKey == 'PLAYER-S') {
+              this.player = new RpgIsoPlayerPrincipal(
+                this, // Scene
+                x, // x
+                y, // y
+                height + h, // height
+                "chicken", // spriteName
+                17, // baseFrame
+                this.isoGroup, // group
+                direction, // direction
+                matrixPosition,
+                "Pepe"
+              );
+
+            }else {
+              let a = new RpgIsoPlayer(
+                this, // Scene
+                x, // x
+                y, // y
+                height + h, // height
+                "chicken", // spriteName
+                17, // baseFrame
+                this.isoGroup, // group
+                direction, // direction
+                matrixPosition
+              );
+              if (direction === "n") {
+                a.velocity = 3;
+              }
             }
+
+
           }
         },
       };
@@ -609,5 +631,11 @@ export default class RPG extends Scene {
     tileObj.type = "GRASS";
   }
 
-  update() {}
+  update() {
+    const self = this;
+    if (self.player && self.cursors?.down.isDown) {
+      console.log("cursor update: ", self.cursors, self.player);
+      self.player.updateAnim(self.cursors);
+    }
+  }
 }
