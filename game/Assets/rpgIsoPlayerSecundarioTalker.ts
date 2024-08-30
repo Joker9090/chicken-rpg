@@ -45,6 +45,9 @@ export class RpgIsoPlayerSecundarioTalker extends RpgIsoSpriteBox {
 
 
   breakInteract(){
+    if (this.textDisplayed?.text === this.text && this.isWriting === true){
+      this.isWriting = false
+    }
     if (!this.isWriting) {
       this.textDisplayed?.setVisible(false)
       this.textDisplayed?.setText("")
