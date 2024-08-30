@@ -7,7 +7,7 @@ export class RpgIsoPlayerSecundarioTalker extends RpgIsoSpriteBox {
   velocity: number = 1;
   text?: string;
   textDisplayed?: Phaser.GameObjects.Text;
-
+  isWriting: boolean = false;
   constructor(
     scene: RPG,
     x: number,
@@ -44,10 +44,17 @@ export class RpgIsoPlayerSecundarioTalker extends RpgIsoSpriteBox {
   }
 
 
+  breakInteract(){
+    if (!this.isWriting) {
+      this.textDisplayed?.setVisible(false)
+      this.textDisplayed?.setText("")
+    }
+  }
 
   interact(){
     if (this.text) {
       this.textBuilder(this.text, 100)
+      this.isWriting = true
     }
   }
 
@@ -75,6 +82,7 @@ export class RpgIsoPlayerSecundarioTalker extends RpgIsoSpriteBox {
     callBack: Function,
   ) {
     if (index < message.length) {
+      if (index === message.length - 1) this.isWriting = false
       const self = this;
       target.setText(target.text + message[index]);
       setTimeout(() => {

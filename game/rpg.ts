@@ -669,5 +669,6 @@ export default class RPG extends Scene {
       console.log(this.player?.isoX, this.player?.isoY, "ARIEL")
     }
     if (this.player?.isoX === 660 && this.player?.isoY === 55 && this.player.facingDirection === 'e') this.NPCTalker?.interact()
+    else this.NPCTalker?.breakInteract()
   }
 }

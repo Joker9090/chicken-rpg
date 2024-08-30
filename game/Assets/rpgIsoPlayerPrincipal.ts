@@ -168,10 +168,10 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
             y == matrixPosition.y &&
             h == matrixPosition.h
           ) {
-            if(hasObject) {
+            if (hasObject) {
               const obj = this.getObjectAt({ x: x, y: y, h: h + 50 });
-              console.log("ENTRO?", obj,hasObject)
-              if(!obj) _tile = tile;
+              console.log("ENTRO?", obj, hasObject)
+              if (!obj) _tile = tile;
             } else {
               _tile = tile;
             }
@@ -193,22 +193,22 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
       yoyo: false,
       repeat: 0,
       onComplete: () => {
-        if(tile.matrixPosition) this.matrixPosition = {...tile.matrixPosition}
+        if (tile.matrixPosition) this.matrixPosition = { ...tile.matrixPosition }
         this.isMoving = false;
-        this.self.play("idle-" + direction); // Viernes lo arreglo (?)
-        console.log('direction: ',direction);
+        this.self.play("idle-" + direction); // Viernes lo arreglo (?) si claro
+        console.log('direction: ', direction);
       },
     });
   }
 
   move(direction: string, newX: number, newY: number) {
     //this.self.play("idle-" + this.direction);
-    this.self.play("walk-"+ direction);
+    this.self.play("walk-" + direction);
     this.facingDirection = direction
     if (this.matrixPosition) {
       const { x, y, h } = this.matrixPosition;
       const withObject = true
-      const tile = this.getTileAt({ x: x - newX, y: y - newY, h: h  }, withObject);
+      const tile = this.getTileAt({ x: x - newX, y: y - newY, h: h }, withObject);
       tile?.self.setTint(0x00ff00);
       if (tile) {
         this.isMoving = true;
@@ -220,13 +220,13 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
   updateAnim(cursors: Phaser.Types.Input.Keyboard.CursorKeys) {
     if (cursors && !this.isMoving) {
       const { up, down, left, right } = cursors;
-      if (up.isUp && down.isUp && left.isUp && right.isUp) this.self.stop();
-      else if (up.isDown) {
+      // if (up.isUp && down.isUp && left.isUp && right.isUp) this.self.stop(); // se comentó esto
+      if (up.isDown) {
         //this.self.play("walk-n", true);
         this.move("e", 1, 0);
       } else if (down.isDown) this.move("w", -1, 0);
       else if (left.isDown) this.move("n", 0, 1);
-      else if (right.isDown) this.move("s" ,  0, -1);
+      else if (right.isDown) this.move("s", 0, -1);
     }
   }
 
