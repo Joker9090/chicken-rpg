@@ -180,7 +180,7 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
     }
   }
 
-  tweenTile(tile: RpgIsoSpriteBox) {
+  tweenTile(tile: RpgIsoSpriteBox, direction: string) {
     this.scene.tweens.add({
       targets: this.self,
       isoZ: this.isoZ,
@@ -192,12 +192,15 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
       onComplete: () => {
         if(tile.matrixPosition) this.matrixPosition = {...tile.matrixPosition}
         this.isMoving = false;
+        this.self.play("idle-" + direction); // Viernes lo arreglo (?)
+        console.log('direction: ',direction);
       },
     });
   }
 
   move(direction: string, newX: number, newY: number) {
-    this.self.play(direction);
+    //this.self.play("idle-" + this.direction);
+    this.self.play("walk-"+ direction);
     if (this.matrixPosition) {
       const { x, y, h } = this.matrixPosition;
       const withObject = true
@@ -205,7 +208,7 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
       tile?.self.setTint(0x00ff00);
       if (tile) {
         this.isMoving = true;
-        this.tweenTile(tile);
+        this.tweenTile(tile, direction);
       }
     }
   }
@@ -216,18 +219,11 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
       if (up.isUp && down.isUp && left.isUp && right.isUp) this.self.stop();
       else if (up.isDown) {
         //this.self.play("walk-n", true);
-        this.move("walk-e", 1, 0);
-      } else if (down.isDown) this.move("walk-w", -1, 0);
-      else if (left.isDown) this.move("walk-n", 0, 1);
-      else if (right.isDown) this.move("walk-s" ,  0, -1);
+        this.move("e", 1, 0);
+      } else if (down.isDown) this.move("w", -1, 0);
+      else if (left.isDown) this.move("n", 0, 1);
+      else if (right.isDown) this.move("s" ,  0, -1);
     }
   }
-  setVelocity(x: number, y: number, z: number) {
-    //@ts-ignore
-    this.body?.velocity.setTo(x, y, z);
-  }
-  setPosition(x: number, y: number, z: number) {
-    //@ts-ignore
-    this.body?.position.setTo(x, y, z);
-  }
+
 }
