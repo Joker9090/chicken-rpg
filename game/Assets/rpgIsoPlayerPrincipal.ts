@@ -6,6 +6,8 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
   velocity: number = 1;
   name: string;
   isMoving: boolean = false;
+  facingDirection: string = "s"
+
   constructor(
     scene: Phaser.Scene,
     x: number,
@@ -16,7 +18,7 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
     group?: Phaser.GameObjects.Group,
     direction: string = "s",
     matrixPosition?: { x: number; y: number; h: number },
-    name: string = "test"
+    name: string = "test",
   ) {
     // @ts-ignore
     super(scene, x, y, z, texture, frame, group, matrixPosition, name);
@@ -146,6 +148,7 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
   }
 
 
+
   getTileAt(matrixPosition: { x: number; y: number; h: number }, hasObject: boolean = false) {
     const tiles = this.group?.children.entries as unknown as RpgIsoSpriteBox[];
 
@@ -201,6 +204,7 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
   move(direction: string, newX: number, newY: number) {
     //this.self.play("idle-" + this.direction);
     this.self.play("walk-"+ direction);
+    this.facingDirection = direction
     if (this.matrixPosition) {
       const { x, y, h } = this.matrixPosition;
       const withObject = true

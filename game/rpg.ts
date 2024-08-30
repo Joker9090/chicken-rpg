@@ -16,6 +16,7 @@ import GlobalDataSingleton from "./services/GlobalData";
 import { RpgIsoSpriteBox } from "./Assets/rpgIsoSpriteBox";
 import { RpgIsoPlayer } from "./Assets/rpgIsoPlayer";
 import { RpgIsoPlayerPrincipal } from "./Assets/rpgIsoPlayerPrincipal";
+import { RpgIsoPlayerSecundarioTalker } from "./Assets/rpgIsoPlayerSecundarioTalker";
 // import UIScene from "./UIScene";
 
 export type IsoSceneType = {
@@ -41,6 +42,8 @@ export default class RPG extends Scene {
   sceneKey: string;
   forest: Array<RpgIsoSpriteBox> = [];
   player?: RpgIsoPlayerPrincipal;
+  NPCTalker?: RpgIsoPlayerSecundarioTalker;
+  UICamera?: Phaser.Cameras.Scene2D.Camera;
 
   constructor(maps: string[]) {
     const sceneConfig = {
@@ -294,7 +297,7 @@ export default class RPG extends Scene {
                 "Pepe"
               );
             } else {
-              let a = new RpgIsoPlayer(
+              this.NPCTalker = new RpgIsoPlayerSecundarioTalker(
                 this, // Scene
                 x, // x
                 y, // y
@@ -305,9 +308,9 @@ export default class RPG extends Scene {
                 direction, // direction
                 matrixPosition
               );
-              if (direction === "n") {
-                a.velocity = 3;
-              }
+              // if (direction === "n") {
+              //   a.velocity = 3;
+              // }
             }
           }
         },
@@ -663,6 +666,8 @@ export default class RPG extends Scene {
     const self = this;
     if (self.player && self.cursors) {
       self.player.updateAnim(self.cursors);
+      console.log(this.player?.isoX, this.player?.isoY, "ARIEL")
     }
+    if (this.player?.isoX === 660 && this.player?.isoY === 55 && this.player.facingDirection === 'e') this.NPCTalker?.interact()
   }
 }
