@@ -5,7 +5,7 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
   group?: Phaser.GameObjects.Group;
   velocity: number = 1;
   name: string;
-
+  isMoving: boolean = false;
   constructor(
     scene: Phaser.Scene,
     x: number,
@@ -16,7 +16,7 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
     group?: Phaser.GameObjects.Group,
     direction: string = "s",
     matrixPosition?: { x: number; y: number; h: number },
-    name: string = "test",
+    name: string = "test"
   ) {
     // @ts-ignore
     super(scene, x, y, z, texture, frame, group, matrixPosition, name);
@@ -31,7 +31,6 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
 
     this.type = "PLAYER";
     this.group = group;
-
   }
 
   pointerover() {
@@ -106,81 +105,121 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
 
           const reach = this.velocity;
 
-           if (
+          if (
             (x >= xp - reach && x <= xp + reach && y === yp) ||
             (y >= yp - reach && y <= yp + reach && x === xp)
           ) {
             tile.self.setTint(0x00ffff);
-          }  else if (
+          } else if (
             Math.abs(x - xp) <= reach &&
             Math.abs(y - yp) <= reach &&
             Math.abs(x - xp) + Math.abs(y - yp) <= reach // Ajuste para diagonal
           ) {
             tile.self.setTint(0x00ff00);
           }
-          
         }
       });
     }
   }
 
-  getTileAt(matrixPosition: { x: number; y: number; h: number }) {
-    
+  getObjectAt(matrixPosition: { x: number; y: number; h: number }) {
+    const tiles = this.group?.children.entries as unknown as RpgIsoSpriteBox[];
+
+    if (this.matrixPosition) {
+      let _tile: RpgIsoSpriteBox | undefined;
+      tiles.forEach((tile) => {
+        if (tile.matrixPosition) {
+          const { x, y, h } = tile.matrixPosition;
+          console.log("tile", x, y, h, tile.type)
+          if (
+            x == matrixPosition.x &&
+            y == matrixPosition.y &&
+            h == matrixPosition.h
+          ) {
+            _tile = tile;
+          }
+        }
+      });
+      console.log("tile", _tile);
+      return _tile;
+    }
+  }
+
+
+  getTileAt(matrixPosition: { x: number; y: number; h: number }, hasObject: boolean = false) {
     const tiles = this.group?.children.entries as unknown as RpgIsoSpriteBox[];
 
     const grassTiles = tiles.filter(
       (tile) => tile.type === "GRASS" && tile.matrixPosition
     );
-    if (this.matrixPosition) {
-      
-      let _tile : RpgIsoSpriteBox | undefined;
-      grassTiles.forEach((tile) => {
-        if (tile.matrixPosition) {
-          
-          const { x, y, h } = tile.matrixPosition;
-          if(x == matrixPosition.x && y == matrixPosition.y && h == matrixPosition.h) {
-            _tile = tile;
 
+    const allTiles = tiles.filter((tile) => tile.matrixPosition);
+
+    if (this.matrixPosition) {
+      let _tile: RpgIsoSpriteBox | undefined;
+      (hasObject ? allTiles : grassTiles).forEach((tile) => {
+        if (tile.matrixPosition) {
+          const { x, y, h } = tile.matrixPosition;
+          if (
+            x == matrixPosition.x &&
+            y == matrixPosition.y &&
+            h == matrixPosition.h
+          ) {
+            if(hasObject) {
+              const obj = this.getObjectAt({ x: x, y: y, h: h + 50 });
+              console.log("ENTRO?", obj,hasObject)
+              if(!obj) _tile = tile;
+            } else {
+              _tile = tile;
+            }
           }
-          
         }
       });
       console.log("tile", _tile);
-      return _tile
+      return _tile;
     }
   }
 
-  move(direction: string) {
-    this.self.play(direction);
-    if(this.matrixPosition) {
-      const { x, y, h } = this.matrixPosition;
-      const tile = this.getTileAt({x: x, y: y + 1, h: h});
-      if(tile) {
-        this.scene.tweens.add(
-          {
-            targets: this.self,
-            x: tile.x,
-            y: tile.y,
+  tweenTile(tile: RpgIsoSpriteBox) {
+    this.scene.tweens.add({
+      targets: this.self,
+      isoZ: this.isoZ,
+      isoX: tile.isoX,
+      isoY: tile.isoY,
+      duration: 200,
+      yoyo: false,
+      repeat: 0,
+      onComplete: () => {
+        if(tile.matrixPosition) this.matrixPosition = {...tile.matrixPosition}
+        this.isMoving = false;
+      },
+    });
+  }
 
-          }
-        )
+  move(direction: string, newX: number, newY: number) {
+    this.self.play(direction);
+    if (this.matrixPosition) {
+      const { x, y, h } = this.matrixPosition;
+      const withObject = true
+      const tile = this.getTileAt({ x: x - newX, y: y - newY, h: h  }, withObject);
+      tile?.self.setTint(0x00ff00);
+      if (tile) {
+        this.isMoving = true;
+        this.tweenTile(tile);
       }
     }
   }
-  
 
   updateAnim(cursors: Phaser.Types.Input.Keyboard.CursorKeys) {
-    if (cursors) {
+    if (cursors && !this.isMoving) {
       const { up, down, left, right } = cursors;
-      if (up.isUp && down.isUp && left.isUp && right.isUp) 
-      this.self.stop();
+      if (up.isUp && down.isUp && left.isUp && right.isUp) this.self.stop();
       else if (up.isDown) {
         //this.self.play("walk-n", true);
-        this.move("walk-n");
-      }
-      else if (down.isDown) this.self.play("walk-s", true);
-      else if (left.isDown) this.self.play("walk-w", true);
-      else if (right.isDown) this.self.play("walk-e", true);
+        this.move("walk-e", 1, 0);
+      } else if (down.isDown) this.move("walk-w", -1, 0);
+      else if (left.isDown) this.move("walk-n", 0, 1);
+      else if (right.isDown) this.move("walk-s" ,  0, -1);
     }
   }
   setVelocity(x: number, y: number, z: number) {

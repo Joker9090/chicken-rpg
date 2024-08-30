@@ -153,9 +153,10 @@ export default class RPG extends Scene {
           end: index + floor + 3,
         }),
         frameRate: 10,
-        repeat: (((index + floor) >= 16) && ((index + floor + 3) <= 32)) ? -1 : 1,
+        repeat: index + floor >= 16 && index + floor + 3 <= 32 ? -1 : 1,
       });
-      if((((index + floor) >= 16) && ((index + floor + 3) <= 32))) console.log('es idle: ',(index + floor),(index + floor + 3));
+      if (index + floor >= 16 && index + floor + 3 <= 32)
+        console.log("es idle: ", index + floor, index + floor + 3);
     }
 
     // crea lo tiles
@@ -278,8 +279,8 @@ export default class RPG extends Scene {
               h: height,
             };
 
-            console.log('object key: ', objectKey);
-            if(objectKey == 'PLAYER-S') {
+            console.log("object key: ", objectKey);
+            if (objectKey == "PLAYER-S") {
               this.player = new RpgIsoPlayerPrincipal(
                 this, // Scene
                 x, // x
@@ -292,8 +293,7 @@ export default class RPG extends Scene {
                 matrixPosition,
                 "Pepe"
               );
-
-            }else {
+            } else {
               let a = new RpgIsoPlayer(
                 this, // Scene
                 x, // x
@@ -309,8 +309,6 @@ export default class RPG extends Scene {
                 a.velocity = 3;
               }
             }
-
-
           }
         },
       };
@@ -399,7 +397,13 @@ export default class RPG extends Scene {
     const x = setPosFromAnchor(b, c).x;
     const y = setPosFromAnchor(b, c).y;
     let tileObj;
-    tileObj = new RpgIsoSpriteBox(game, x, y, height, tile, 0, this.isoGroup);
+    let matrixPosition = {
+      x: b,
+      y: c,
+      h: height,
+    };
+ 
+    tileObj = new RpgIsoSpriteBox(game, x, y, height, tile, 0, this.isoGroup,matrixPosition);
     pos++;
 
     tileObj.type = "STONE";
@@ -409,7 +413,6 @@ export default class RPG extends Scene {
     // tileObj.self.on("pointerover", tweenTile(tileObj));
     // console.log(tileObj);
     // log the position of tile every 10 tiles
-    
   }
 
   createSemiBloque(
@@ -425,7 +428,13 @@ export default class RPG extends Scene {
     const x = setPosFromAnchor(b, c).x;
     const y = setPosFromAnchor(b, c).y;
     let tileObj;
-    tileObj = new RpgIsoSpriteBox(game, x, y, height, tile, 0, this.isoGroup);
+    let matrixPosition = {
+      x: b,
+      y: c,
+      h: height,
+    };
+
+    tileObj = new RpgIsoSpriteBox(game, x, y, height, tile, 0, this.isoGroup,matrixPosition);
     pos++;
 
     tileObj.type = "STONE";
@@ -435,7 +444,6 @@ export default class RPG extends Scene {
     // tileObj.self.on("pointerover", tweenTile(tileObj));
     // console.log(tileObj);
     // log the position of tile every 10 tiles
-   
   }
 
   createTreeTile(
@@ -450,12 +458,20 @@ export default class RPG extends Scene {
     const x = setPosFromAnchor(b, c).x;
     const y = setPosFromAnchor(b, c).y;
     let tileObj;
-    tileObj = new RpgIsoSpriteBox(game, x, y, height, "tree", 0, this.isoGroup);
+    let matrixPosition = {
+      x: b,
+      y: c,
+      h: height,
+    };
+
+    tileObj = new RpgIsoSpriteBox(game, x, y, height, "tree", 0, this.isoGroup,matrixPosition);
     tileObj.self.setAlpha(0.7);
     tileObj.self.setTint(0x000000);
-    tileObj.self.setOrigin(0.92 + 0.03, 0.85 + 0.03);
+    tileObj.self.setOrigin(0.42 + 0.03, 0.80 + 0.03);
+    tileObj.self.setAngle(100)
+    tileObj.self.setScale(0.6)
     const tree = this.add.sprite(0, 0, "tree");
-    tree.setOrigin(0.92, 0.85);
+    tree.setOrigin(0.42, 0.75);
     tileObj.customDepth = tileObj.self.depth + 50;
     tileObj.container.add(tree);
     pos++;
@@ -477,6 +493,12 @@ export default class RPG extends Scene {
     const x = setPosFromAnchor(b, c).x;
     const y = setPosFromAnchor(b, c).y;
     let tileObj;
+    let matrixPosition = {
+      x: b,
+      y: c,
+      h: height,
+    };
+
     tileObj = new RpgIsoSpriteBox(
       game,
       x,
@@ -484,7 +506,8 @@ export default class RPG extends Scene {
       height,
       objectKey.toLowerCase(),
       0,
-      this.isoGroup
+      this.isoGroup,
+      matrixPosition
     );
     pos++;
     tileObj.type = "STONE";
@@ -494,7 +517,6 @@ export default class RPG extends Scene {
     // tileObj.self.on("pointerover", tweenTile(tileObj));
     // console.log(tileObj);
     // log the position of tile every 10 tiles
-   
   }
 
   destroyTile(tileObj: RpgIsoSpriteBox) {
@@ -573,6 +595,11 @@ export default class RPG extends Scene {
     const x = setPosFromAnchor(b, c).x;
     const y = setPosFromAnchor(b, c).y;
     let tileObj;
+    let matrixPosition = {
+      x: b,
+      y: c,
+      h: height,
+    };
     tileObj = new RpgIsoSpriteBox(
       game,
       x,
@@ -580,7 +607,8 @@ export default class RPG extends Scene {
       height,
       "bloque-" + Math.floor(Math.random() * 6),
       0,
-      this.isoGroup
+      this.isoGroup,
+      matrixPosition
     );
     pos++;
     tileObj.type = "STONE";
@@ -633,8 +661,7 @@ export default class RPG extends Scene {
 
   update() {
     const self = this;
-    if (self.player && self.cursors?.down.isDown) {
-      console.log("cursor update: ", self.cursors, self.player);
+    if (self.player && self.cursors) {
       self.player.updateAnim(self.cursors);
     }
   }
