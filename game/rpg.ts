@@ -148,6 +148,7 @@ export default class RPG extends Scene {
 
     for (let index = 0; index < 12; index++) {
       let floor = index > 0 ? index * 3 : 0;
+      let isIdleAnim = ((index + floor >= 16) && (index + floor + 3 <= 32)) ? true : false;
 
       this.anims.create({
         key: posiblePositions[index],
@@ -156,7 +157,7 @@ export default class RPG extends Scene {
           end: index + floor + 3,
         }),
         frameRate: 10,
-        repeat: index + floor >= 16 && index + floor + 3 <= 32 ? -1 : 1,
+        repeat: isIdleAnim ? -1 : 1,
       });
       if (index + floor >= 16 && index + floor + 3 <= 32)
         console.log("es idle: ", index + floor, index + floor + 3);
@@ -571,6 +572,7 @@ export default class RPG extends Scene {
         });
       }
       // tileObj.self.setTint(0xff0000);
+      
     };
   }
 
@@ -660,13 +662,15 @@ export default class RPG extends Scene {
     pos++;
 
     tileObj.type = "GRASS";
+    // tileObj.self.setTint(0x0000ff);
+    // tileObj.self.on("pointerdown", () => console.log('pointer en grass',tileObj));
   }
 
   update() {
     const self = this;
     if (self.player && self.cursors) {
       self.player.updateAnim(self.cursors);
-      console.log(this.player?.isoX, this.player?.isoY, "ARIEL")
+      //console.log(this.player?.isoX, this.player?.isoY, "ARIEL")
     }
     if (this.player?.isoX === 660 && this.player?.isoY === 55 && this.player.facingDirection === 'e') this.NPCTalker?.interact()
     else this.NPCTalker?.breakInteract()

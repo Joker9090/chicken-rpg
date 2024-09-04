@@ -3,7 +3,7 @@ import { RpgIsoSpriteBox } from "./rpgIsoSpriteBox";
 export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
   direction: string = "s";
   group?: Phaser.GameObjects.Group;
-  velocity: number = 1;
+  velocity: number = 2;
   name: string;
   isMoving: boolean = false;
   facingDirection: string = "s"
@@ -95,7 +95,7 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
 
   drawMovements() {
     const tiles = this.group?.children.entries as unknown as RpgIsoSpriteBox[];
-
+    const mouseMovement =[] as RpgIsoSpriteBox[];
     const grassTiles = tiles.filter(
       (tile) => tile.type === "GRASS" && tile.matrixPosition
     );
@@ -112,15 +112,24 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
             (y >= yp - reach && y <= yp + reach && x === xp)
           ) {
             tile.self.setTint(0x00ffff);
+            mouseMovement.push(tile);
           } else if (
             Math.abs(x - xp) <= reach &&
             Math.abs(y - yp) <= reach &&
             Math.abs(x - xp) + Math.abs(y - yp) <= reach // Ajuste para diagonal
           ) {
             tile.self.setTint(0x00ff00);
+            mouseMovement.push(tile);
           }
+
         }
       });
+
+      mouseMovement.forEach((tile) => {
+        tile.self.on('pointerdown', () => {
+          tile.self.setTint(0x0000ff);
+        });
+      })
     }
   }
 
@@ -189,13 +198,13 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
       isoZ: this.isoZ,
       isoX: tile.isoX,
       isoY: tile.isoY,
-      duration: 200,
+      duration: 400,
       yoyo: false,
       repeat: 0,
       onComplete: () => {
         if (tile.matrixPosition) this.matrixPosition = { ...tile.matrixPosition }
         this.isMoving = false;
-        this.self.play("idle-" + direction); // Viernes lo arreglo (?) si claro
+        this.self.play("idle-" + direction);
         console.log('direction: ', direction);
       },
     });
