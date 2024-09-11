@@ -6,7 +6,8 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
   velocity: number = 2;
   name: string;
   isMoving: boolean = false;
-  facingDirection: string = "s"
+  facingDirection: string = "s";
+  possibleMovements: RpgIsoSpriteBox[] = [];
 
   constructor(
     scene: Phaser.Scene,
@@ -18,10 +19,18 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
     group?: Phaser.GameObjects.Group,
     direction: string = "s",
     matrixPosition?: { x: number; y: number; h: number },
-    name: string = "test",
+    name: string = "test"
   ) {
+
+    const interactivityBox = {
+      x: 50,
+      y: 25,
+      w: 50,
+      h: 80,
+    };
+    
     // @ts-ignore
-    super(scene, x, y, z, texture, frame, group, matrixPosition, name);
+    super(scene, x, y, z, texture, frame, group, matrixPosition, interactivityBox);
     this.direction = direction;
     this.name = name;
     this.self.play("idle-" + this.direction);
@@ -33,6 +42,7 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
 
     this.type = "PLAYER";
     this.group = group;
+
   }
 
   pointerover() {
@@ -93,9 +103,19 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
     }
   }
 
+  clearPossibleMovements() {
+    this.possibleMovements.forEach((tile) => {
+      tile.self.clearTint();
+      tile.self.off("pointerdown", () => this.possibleMovementMouseDown(tile));
+      tile.self.off("pointerover", () => this.possibleMovementMouseOver(tile));
+      tile.self.off("pointerout", () => this.possibleMovementMouseOut(tile));
+    });
+    this.possibleMovements = [];
+  }
+
   drawMovements() {
     const tiles = this.group?.children.entries as unknown as RpgIsoSpriteBox[];
-    const mouseMovement =[] as RpgIsoSpriteBox[];
+    const mouseMovement = [] as RpgIsoSpriteBox[];
     const grassTiles = tiles.filter(
       (tile) => tile.type === "GRASS" && tile.matrixPosition
     );
@@ -109,27 +129,82 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
 
           if (
             (x >= xp - reach && x <= xp + reach && y === yp) ||
-            (y >= yp - reach && y <= yp + reach && x === xp)
+            (y >= yp - reach && y <= yp + reach && x === xp) ||
+            (Math.abs(x - xp) <= reach &&
+              Math.abs(y - yp) <= reach &&
+              Math.abs(x - xp) + Math.abs(y - yp) <= reach) // Ajuste para diagonal
           ) {
-            tile.self.setTint(0x00ffff);
-            mouseMovement.push(tile);
-          } else if (
-            Math.abs(x - xp) <= reach &&
-            Math.abs(y - yp) <= reach &&
-            Math.abs(x - xp) + Math.abs(y - yp) <= reach // Ajuste para diagonal
-          ) {
-            tile.self.setTint(0x00ff00);
             mouseMovement.push(tile);
           }
-
         }
       });
 
-      mouseMovement.forEach((tile) => {
-        tile.self.on('pointerdown', () => {
-          tile.self.setTint(0x0000ff);
-        });
-      })
+      this.possibleMovements = mouseMovement;
+
+      this.possibleMovements.forEach((tile) => {
+        tile.self.setTint(0x00ff00);
+
+        tile.self.on("pointerdown", () => this.possibleMovementMouseDown(tile));
+        tile.self.on("pointerover", () => this.possibleMovementMouseOver(tile));
+        tile.self.on("pointerout", () => this.possibleMovementMouseOut(tile));
+
+
+      });
+    }
+  }
+
+  possibleMovementMouseDown(tile: RpgIsoSpriteBox) {
+    // this.clearPossibleMovements();
+    this.isMoving = true;
+    console.log("tilePosition", tile.matrixPosition, this.matrixPosition)
+
+    // swithc funcion to change direction on depends matrix position dif
+    let newDirection = this.facingDirection
+    if (tile.matrixPosition && this.matrixPosition) {
+      const { x, y } = tile.matrixPosition;
+      const { x: xp, y: yp } = this.matrixPosition;
+      if (x > xp) {
+        newDirection = "w";
+      } else if (x < xp) {
+        newDirection = "e";
+      } else if (y > yp) {
+        newDirection = "s";
+      } else if (y < yp) {
+        newDirection = "n";
+      }
+    }
+    this.facingDirection = newDirection;
+    this.self.play("walk-" + this.facingDirection);
+    this.tweenTile(tile, this.facingDirection);
+  }
+
+  possibleMovementMouseOver(tile: RpgIsoSpriteBox) {
+    console.log(tile,"barto")
+    if(tile){
+      // @ts-ignore
+      if(!tile.baseZ) tile.baseZ = tile.isoZ;
+      this.scene.tweens.add({
+        targets: tile,
+        isoZ: tile.isoZ + 5,
+        duration: 100,
+        yoyo: false,
+        repeat: 0,
+      });
+    }
+    // if(tile) tile.setTint(0x0000ff);
+  }
+
+  possibleMovementMouseOut(tile: RpgIsoSpriteBox) {
+    console.log(tile,"barto")
+    if(tile){
+      this.scene.tweens.add({
+        targets: tile,
+        // @ts-ignore
+        isoZ: tile.baseZ,
+        duration: 100,
+        yoyo: false,
+        repeat: 0,
+      });
     }
   }
 
@@ -141,7 +216,7 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
       tiles.forEach((tile) => {
         if (tile.matrixPosition) {
           const { x, y, h } = tile.matrixPosition;
-          console.log("tile", x, y, h, tile.type)
+          console.log("tile", x, y, h, tile.type);
           if (
             x == matrixPosition.x &&
             y == matrixPosition.y &&
@@ -156,9 +231,10 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
     }
   }
 
-
-
-  getTileAt(matrixPosition: { x: number; y: number; h: number }, hasObject: boolean = false) {
+  getTileAt(
+    matrixPosition: { x: number; y: number; h: number },
+    hasObject: boolean = false
+  ) {
     const tiles = this.group?.children.entries as unknown as RpgIsoSpriteBox[];
 
     const grassTiles = tiles.filter(
@@ -179,7 +255,7 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
           ) {
             if (hasObject) {
               const obj = this.getObjectAt({ x: x, y: y, h: h + 50 });
-              console.log("ENTRO?", obj, hasObject)
+              console.log("ENTRO?", obj, hasObject);
               if (!obj) _tile = tile;
             } else {
               _tile = tile;
@@ -202,22 +278,27 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
       yoyo: false,
       repeat: 0,
       onComplete: () => {
-        if (tile.matrixPosition) this.matrixPosition = { ...tile.matrixPosition }
+        if (tile.matrixPosition)
+          this.matrixPosition = { ...tile.matrixPosition };
         this.isMoving = false;
         this.self.play("idle-" + direction);
-        console.log('direction: ', direction);
+        console.log("direction: ", direction);
       },
     });
   }
 
   move(direction: string, newX: number, newY: number) {
+    this.clearPossibleMovements()
     //this.self.play("idle-" + this.direction);
     this.self.play("walk-" + direction);
-    this.facingDirection = direction
+    this.facingDirection = direction;
     if (this.matrixPosition) {
       const { x, y, h } = this.matrixPosition;
-      const withObject = true
-      const tile = this.getTileAt({ x: x - newX, y: y - newY, h: h }, withObject);
+      const withObject = true;
+      const tile = this.getTileAt(
+        { x: x - newX, y: y - newY, h: h },
+        withObject
+      );
       tile?.self.setTint(0x00ff00);
       if (tile) {
         this.isMoving = true;
@@ -238,5 +319,4 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
       else if (right.isDown) this.move("s", 0, -1);
     }
   }
-
 }

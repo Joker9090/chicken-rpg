@@ -167,7 +167,7 @@ export default class RPG extends Scene {
     this.spawnTiles();
     this.spawnObjects();
 
-    this.cameras.main.setZoom(0.9);
+    this.cameras.main.setZoom(1.5);
     this.cameras.main.setViewport(0, 0, window.innerWidth, window.innerHeight);
     let cameraFollow = false;
 
@@ -578,6 +578,7 @@ export default class RPG extends Scene {
 
   noHighlightTile(tileObj: RpgIsoSpriteBox) {
     return () => {
+      if(this.player) this.player.clearPossibleMovements()
       tileObj.highlightedTiles = [];
       // clean tint from all tiles
       // @ts-ignore

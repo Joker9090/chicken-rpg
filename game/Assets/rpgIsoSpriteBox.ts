@@ -32,6 +32,7 @@ export class RpgIsoSpriteBox extends IsoSprite {
     frame: string | number,
     group?: Phaser.GameObjects.Group,
     matrixPosition?: {x: number, y: number, h: number},
+    interactivityPosition?: {x: number, y: number, w: number, h: number},
   ) {
 
     // @ts-ignore
@@ -42,7 +43,16 @@ export class RpgIsoSpriteBox extends IsoSprite {
     group?.add(this.self);
     //this.scene.isoPhysics.world.enable(this);
     this.scene.add.existing(this.self);
-    this.self.setInteractive();
+    if(interactivityPosition) {
+      this.self.setInteractive(new Phaser.Geom.Rectangle(
+        interactivityPosition.x, 
+        interactivityPosition.y, 
+        interactivityPosition.w, 
+        interactivityPosition.h), Phaser.Geom.Rectangle.Contains);
+    } else {
+      this.self.setInteractive();
+    }
+    
     const body = this.body as Physics.Arcade.Body
     
     // body.collideWorldBounds = true;
