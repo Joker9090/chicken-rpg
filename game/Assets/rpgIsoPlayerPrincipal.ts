@@ -1,5 +1,10 @@
 import { RpgIsoSpriteBox } from "./rpgIsoSpriteBox";
 
+export type PositionMatrix = {
+  x: number,
+  y: number,
+  h: number,
+}
 export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
   direction: string = "s";
   group?: Phaser.GameObjects.Group;
@@ -42,6 +47,8 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
 
     this.type = "PLAYER";
     this.group = group;
+
+    //window.calculatePath = this.calculatePath
 
   }
 
@@ -153,16 +160,90 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
     }
   }
 
+  /*calculatePath(start: PositionMatrix,end:PositionMatrix) {
+    let path = [];
+
+    let {x: xs, y: ys, h:hs} = start;
+    let {x: xe, y: ye, h:he} = end;
+
+    const stepsX = xs - xe;
+    const stepsY = ys - ye;
+
+    let stepX = 4;
+    let stepY = 3; 
+    let tempX = xs;
+    let tempY = ys;
+
+
+
+    for (let index = 1; index < Math.abs(stepsX); index++) {
+      if(stepsX > 0) {
+        tempX = stepsX + index;
+        path.push({...start, x: xs + index}); 
+      }else {
+        tempX = stepsX - index;
+        path.push({...start, x: xs - index}); 
+      }
+
+    }
+
+    for (let index = 1; index <= Math.abs(stepsY); index++) {
+      if(stepsY > 0) {
+        path.push({...start,x: tempX, y: ye + index});
+      }else path.push({...start,x: tempX, y: ye - index});
+      
+    }
+
+
+    return path;
+
+  }*/
+
+  //A testear
+  calculatePath(start: PositionMatrix, end: PositionMatrix) {
+    let path = [];
+
+    let { x: xs, y: ys } = start;
+    let { x: xe, y: ye } = end;
+
+    // Movimiento en el eje X primero
+    if (xs !== xe) {
+        const stepsX = Math.abs(xe - xs);
+        const directionX = xe > xs ? 1 : -1; // Determina si va a la derecha o a la izquierda(lo q nos faltaba)
+
+        for (let i = 1; i <= stepsX; i++) {
+            path.push({ ...start, x: xs + i * directionX, y: ys });
+        }
+    }
+
+    // Movimiento en el eje Y después
+    if (ys !== ye) {
+        const stepsY = Math.abs(ye - ys); 
+        const directionY = ye > ys ? 1 : -1; // Determina si va hacia abajo o arriba(lo q nos faltaba)
+
+        for (let i = 1; i <= stepsY; i++) {
+            path.push({ ...start, x: xe, y: ys + i * directionY });
+        }
+    }
+
+    return path;
+  }
+  
+  
+
   possibleMovementMouseDown(tile: RpgIsoSpriteBox) {
     // this.clearPossibleMovements();
     this.isMoving = true;
-    console.log("tilePosition", tile.matrixPosition, this.matrixPosition)
+    console.log("tilePosition(pos player , pos tile)", this.matrixPosition, tile.matrixPosition)
 
     // swithc funcion to change direction on depends matrix position dif
     let newDirection = this.facingDirection
     if (tile.matrixPosition && this.matrixPosition) {
       const { x, y } = tile.matrixPosition;
       const { x: xp, y: yp } = this.matrixPosition;
+      let  algo = this.calculatePath(this.matrixPosition,tile.matrixPosition);
+      console.log("steps !!!!!: ", algo);
+
       if (x > xp) {
         newDirection = "w";
       } else if (x < xp) {
@@ -179,7 +260,7 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
   }
 
   possibleMovementMouseOver(tile: RpgIsoSpriteBox) {
-    console.log(tile,"barto")
+    //console.log(tile,"barto")
     if(tile){
       // @ts-ignore
       if(!tile.baseZ) tile.baseZ = tile.isoZ;
@@ -195,7 +276,7 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
   }
 
   possibleMovementMouseOut(tile: RpgIsoSpriteBox) {
-    console.log(tile,"barto")
+    //console.log(tile,"barto")
     if(tile){
       this.scene.tweens.add({
         targets: tile,
