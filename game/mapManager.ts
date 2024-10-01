@@ -42,6 +42,7 @@ export default class MapManager {
     return {
       x: (this.posOfAnchor[0] + blockI) * this.distanceOfTiles.width,
       y: (this.posOfAnchor[1] + rowI) * this.distanceOfTiles.height,
+      
     };
   }
 
