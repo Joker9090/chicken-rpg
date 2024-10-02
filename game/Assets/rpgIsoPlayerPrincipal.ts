@@ -116,6 +116,7 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
       tile.self.off("pointerdown", () => this.possibleMovementMouseDown(tile));
       tile.self.off("pointerover", () => this.possibleMovementMouseOver(tile));
       tile.self.off("pointerout", () => this.possibleMovementMouseOut(tile));
+      tile.self.removeAllListeners();
     });
     this.possibleMovements = [];
   }
@@ -151,7 +152,11 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
       this.possibleMovements.forEach((tile) => {
         tile.self.setTint(0x00ff00);
 
-        tile.self.on("pointerdown", () => this.possibleMovementMouseDown(tile));
+        let tilesListener = tile.self.eventNames();
+        //console.log("tiles listener: ", tilesListener);
+        if(!tilesListener.includes("pointerdown")) {
+          tile.self.on("pointerdown", () => this.possibleMovementMouseDown(tile));
+        }
         tile.self.on("pointerover", () => this.possibleMovementMouseOver(tile));
         tile.self.on("pointerout", () => this.possibleMovementMouseOut(tile));
 
@@ -228,6 +233,60 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
 
     return path;
   }
+
+  movePath(path: PositionMatrix[]) {
+    if(path.length === 0) {
+      this.self.play("idle-" + this.facingDirection);
+      this.clearPossibleMovements();
+      return
+    }
+
+    //return
+
+    const nextPos = path.shift();
+    if(nextPos && this.matrixPosition) {
+      const {x, y} = this.matrixPosition;
+      let newDirection = this.facingDirection;
+  
+      if (nextPos.x > x) {
+        newDirection = "w";
+      } else if (nextPos.x < x) {
+        newDirection = "e";
+      } else if (nextPos.y > y) {
+        newDirection = "s";
+      } else if (nextPos.y < y) {
+        newDirection = "n";
+      }
+      
+      this.facingDirection = newDirection;
+      this.self.play("walk-" + this.facingDirection);
+
+
+      this.tweenTile(nextPos, this.facingDirection, () => {
+        this.movePath(path);
+      });
+
+    }
+
+
+
+  }
+
+  checkpath(originalPath: PositionMatrix[]) {
+
+    let newPath = [];
+    for (let i = 0; i < originalPath.length; i++) {
+      //h + 50 
+      let testPos: PositionMatrix = {...originalPath[i] , h: originalPath[i].h + 50 };
+      let _tile = this.getObjectAt(testPos);
+      console.log("checkpath _tile: ", _tile);
+      if(!_tile?.type){
+        newPath.push(originalPath[i]);
+      }
+    }
+    return newPath;
+
+  }
   
   
 
@@ -241,22 +300,14 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
     if (tile.matrixPosition && this.matrixPosition) {
       const { x, y } = tile.matrixPosition;
       const { x: xp, y: yp } = this.matrixPosition;
-      let  algo = this.calculatePath(this.matrixPosition,tile.matrixPosition);
-      console.log("steps !!!!!: ", algo);
+      let  path = this.calculatePath(this.matrixPosition,tile.matrixPosition);
+      console.log("steps !!!!!: ", path);
+      let testing = this.checkpath(path);
+      console.log("testing log: ", testing);
 
-      if (x > xp) {
-        newDirection = "w";
-      } else if (x < xp) {
-        newDirection = "e";
-      } else if (y > yp) {
-        newDirection = "s";
-      } else if (y < yp) {
-        newDirection = "n";
-      }
+      //this.movePath(testing);
+      this.movePath(path);
     }
-    this.facingDirection = newDirection;
-    this.self.play("walk-" + this.facingDirection);
-    this.tweenTile(tile, this.facingDirection);
   }
 
   possibleMovementMouseOver(tile: RpgIsoSpriteBox) {
@@ -297,7 +348,7 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
       tiles.forEach((tile) => {
         if (tile.matrixPosition) {
           const { x, y, h } = tile.matrixPosition;
-          console.log("tile", x, y, h, tile.type);
+          //console.log("tile", x, y, h, tile.type);
           if (
             x == matrixPosition.x &&
             y == matrixPosition.y &&
@@ -307,7 +358,7 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
           }
         }
       });
-      console.log("tile", _tile);
+      //console.log("tile", _tile);
       return _tile;
     }
   }
@@ -349,7 +400,29 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
     }
   }
 
-  tweenTile(tile: RpgIsoSpriteBox, direction: string) {
+  tweenTile(tile: PositionMatrix, direction: string, onCallback: () => void) {
+    let _tile = this.getObjectAt(tile);
+    if(_tile) {
+      this.scene.tweens.add({
+        targets: this.self,
+        isoZ: this.isoZ,
+        isoX: _tile.isoX,
+        isoY: _tile.isoY,
+        duration: 400,
+        yoyo: false,
+        repeat: 0,
+        onComplete: () => {
+          this.matrixPosition = { ...tile };
+          this.isMoving = false;
+          this.self.play("idle-" + direction);
+          console.log("direction: ", direction);
+          onCallback();
+        },
+      });
+    }
+  }
+
+  /* tweenTile(tile: RpgIsoSpriteBox, direction: string) {
     this.scene.tweens.add({
       targets: this.self,
       isoZ: this.isoZ,
@@ -366,7 +439,7 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
         console.log("direction: ", direction);
       },
     });
-  }
+  } */
 
   move(direction: string, newX: number, newY: number) {
     this.clearPossibleMovements()
@@ -383,7 +456,7 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
       tile?.self.setTint(0x00ff00);
       if (tile) {
         this.isMoving = true;
-        this.tweenTile(tile, direction);
+        //this.tweenTile(tile, direction);
       }
     }
   }
