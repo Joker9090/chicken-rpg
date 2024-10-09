@@ -44,6 +44,8 @@ export default class RPG extends Scene {
   player?: RpgIsoPlayerPrincipal;
   NPCTalker?: RpgIsoPlayerSecundarioTalker;
   UICamera?: Phaser.Cameras.Scene2D.Camera;
+  group?: Phaser.GameObjects.Group;
+
 
   constructor(maps: string[]) {
     const sceneConfig = {
@@ -57,6 +59,7 @@ export default class RPG extends Scene {
 
   preload() {
     this.load.image("tile", "/images/bloque.png");
+    this.load.image("reloj", "/assets/UI/UILevel/reloj.png");
     this.load.spritesheet("chicken", "/images/chicken/spritesheetChicken.png", {
       frameWidth: 552 / 4,
       frameHeight: 1152 / 12,
@@ -114,7 +117,7 @@ export default class RPG extends Scene {
     });
   }
 
-  destroy() {}
+  destroy() { }
 
   create() {
     //default
@@ -227,11 +230,37 @@ export default class RPG extends Scene {
 
     // chicken.self.play("atack-s");
     // chickenBOT.self.play("atack-n");
-
+    // const rect = this.add.rectangle(1000,0, window.innerWidth, window.innerHeight, 0xff00ff, 0.5)
+    // this.group = this.add.group()
+    // this.group?.add(rect)
     // this.cameras.main.startFollow(chicken);
+    this.UICamera = this.cameras.add(0, 0, window.innerWidth, window.innerHeight)
+    const graphics = this.add.graphics()
+    graphics.lineStyle(4, 0xffffff, 1);
+    graphics.strokeRoundedRect(10, 20, 150, 60, 15); 
+    const timer = this.add.image(40, 50, "reloj").setOrigin(0, 0.5)
+    const timerCounter = this.add.text(110, 50, "0", {
+      fontSize: 40,
+      fontStyle: "bold",
+    }).setOrigin(0, 0.5)
+    setInterval(() => {
+      timerCounter.setText((Number(timerCounter.text) + 1).toString())
+    }, 1000)
+    this.cameras.main.ignore([timer, graphics, timerCounter])
+    //@ts-ignore
+    this.UICamera.ignore(this.player)
+    this.UICamera.ignore(this.isoGroup)
+    const forestContainers = this.forest.map((arbolito) => arbolito.container)
+    // this.UICamera.ignore()
+    this.UICamera.shake(5000, 0.01, false, (progress: number)=>{
+      if (progress > 0.9) this.UICamera?.flash(4000, 0, 0, 0, true)
+    })
+    console.log("ISO GRUOUP", this.isoGroup)
+    this.UICamera.ignore(forestContainers)
   }
 
   spawnObjects() {
+    this.UICamera
     let scalar = 0;
     let h = 50;
 
@@ -406,8 +435,8 @@ export default class RPG extends Scene {
       y: c,
       h: height,
     };
- 
-    tileObj = new RpgIsoSpriteBox(game, x, y, height, tile, 0, this.isoGroup,matrixPosition);
+
+    tileObj = new RpgIsoSpriteBox(game, x, y, height, tile, 0, this.isoGroup, matrixPosition);
     pos++;
 
     tileObj.type = "STONE";
@@ -438,7 +467,7 @@ export default class RPG extends Scene {
       h: height,
     };
 
-    tileObj = new RpgIsoSpriteBox(game, x, y, height, tile, 0, this.isoGroup,matrixPosition);
+    tileObj = new RpgIsoSpriteBox(game, x, y, height, tile, 0, this.isoGroup, matrixPosition);
     pos++;
 
     tileObj.type = "STONE";
@@ -468,7 +497,7 @@ export default class RPG extends Scene {
       h: height,
     };
 
-    tileObj = new RpgIsoSpriteBox(game, x, y, height, "tree", 0, this.isoGroup,matrixPosition);
+    tileObj = new RpgIsoSpriteBox(game, x, y, height, "tree", 0, this.isoGroup, matrixPosition);
     tileObj.self.setAlpha(0.7);
     tileObj.self.setTint(0x000000);
     tileObj.self.setOrigin(0.42 + 0.03, 0.80 + 0.03);
@@ -572,13 +601,13 @@ export default class RPG extends Scene {
         });
       }
       // tileObj.self.setTint(0xff0000);
-      
+
     };
   }
 
   noHighlightTile(tileObj: RpgIsoSpriteBox) {
     return () => {
-      if(this.player) this.player.clearPossibleMovements()
+      if (this.player) this.player.clearPossibleMovements()
       tileObj.highlightedTiles = [];
       // clean tint from all tiles
       // @ts-ignore
