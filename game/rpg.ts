@@ -17,6 +17,7 @@ import { RpgIsoSpriteBox } from "./Assets/rpgIsoSpriteBox";
 import { RpgIsoPlayer } from "./Assets/rpgIsoPlayer";
 import { RpgIsoPlayerPrincipal } from "./Assets/rpgIsoPlayerPrincipal";
 import { RpgIsoPlayerSecundarioTalker } from "./Assets/rpgIsoPlayerSecundarioTalker";
+import { UIContainer } from "./Assets/UIAssets/UIContainer";
 // import UIScene from "./UIScene";
 
 export type IsoSceneType = {
@@ -60,6 +61,13 @@ export default class RPG extends Scene {
   preload() {
     this.load.image("tile", "/images/bloque.png");
     this.load.image("reloj", "/assets/UI/UILevel/reloj.png");
+    this.load.image("settingsIcon", "/assets/UI/UILevel/settingsGame.png");
+    this.load.image("settingsIcon", "/assets/UI/UILevel/settingsGame.png");
+    this.load.image("settingsIcon", "/assets/UI/UILevel/settingsGame.png");
+    this.load.image("settingsIcon", "/assets/UI/UILevel/settingsGame.png");
+    this.load.image("settingsIcon", "/assets/UI/UILevel/settingsGame.png");
+
+
     this.load.spritesheet("chicken", "/images/chicken/spritesheetChicken.png", {
       frameWidth: 552 / 4,
       frameHeight: 1152 / 12,
@@ -170,93 +178,22 @@ export default class RPG extends Scene {
     this.spawnTiles();
     this.spawnObjects();
 
-    this.cameras.main.setZoom(1.5);
+    this.cameras.main.setZoom(1);
     this.cameras.main.setViewport(0, 0, window.innerWidth, window.innerHeight);
-    let cameraFollow = false;
 
-    // tween camera zoom after 200 ms
-    // setTimeout(() => {
-    //   this.cameras.main.zoomTo(1.1, 200);
-    // }, 200);
 
-    let pos = 0;
-
-    // @ts-ignore
-    // this.isoGroup?.children.each((tile: RpgIsoSpriteBox) => {
-    //   if (pos == 1 && tile && !cameraFollow) {
-    //     console.log("SIGO", tile);
-    //     // cameraFollow = true;
-    //     // this.cameras.main.startFollow(tile);
-    //   }
-    // });
-
-    // after 3 seconds, log positions of tiles every 10 tiles
-    // setTimeout(() => {
-    //
-    // },
-    // 1000);
-
-    //  this.input.on("pointermove",(pointer) => {
-    //   console.log("aca")
-    //  });
-
-    // this.input.on("pointermove",(pointer) => {
-    //   const { x,y } = this.input.mousePointer
-    // this.cameras.main.centerOn(x, y);
-    // const w = window.innerWidth
-    // const h = window.innerHeight
-    // this.forest.forEach((tree) => {
-    //   console.log("aca",tree)
-    //     //Detect if mouse is in the top, bottom and left or right part of the screen
-    //     let pushX, pushY = 0
-    //     if (x > w / 2) {
-    //       pushX = 0.06;
-    //     } else {
-    //       pushX = -0.06;
-    //     }
-
-    //     if(y > h /2) {
-    //       pushY = 0.06;
-    //     } else {
-    //       pushY = -0.06;
-    //     }
-
-    //     tree.self.setOrigin(0.92+pushX, 0.85+pushY)
-    // })
-    // })
-
-    // const chicken = new RpgIsoSpriteBox(this, 700, 215, 100, "chicken", 17, this.isoGroup);
-    // const chickenBOT = new RpgIsoSpriteBox(this, 750, 215, 100, "chicken", 17, this.isoGroup);
-
-    // chicken.self.play("atack-s");
-    // chickenBOT.self.play("atack-n");
-    // const rect = this.add.rectangle(1000,0, window.innerWidth, window.innerHeight, 0xff00ff, 0.5)
-    // this.group = this.add.group()
-    // this.group?.add(rect)
-    // this.cameras.main.startFollow(chicken);
+    // UI 
     this.UICamera = this.cameras.add(0, 0, window.innerWidth, window.innerHeight)
-    const graphics = this.add.graphics()
-    graphics.lineStyle(4, 0xffffff, 1);
-    graphics.strokeRoundedRect(10, 20, 150, 60, 15); 
-    const timer = this.add.image(40, 50, "reloj").setOrigin(0, 0.5)
-    const timerCounter = this.add.text(110, 50, "0", {
-      fontSize: 40,
-      fontStyle: "bold",
-    }).setOrigin(0, 0.5)
-    setInterval(() => {
-      timerCounter.setText((Number(timerCounter.text) + 1).toString())
-    }, 1000)
-    this.cameras.main.ignore([timer, graphics, timerCounter])
-    //@ts-ignore
-    this.UICamera.ignore(this.player)
-    this.UICamera.ignore(this.isoGroup)
+    const UI = new UIContainer(this, 0, 0)
+    
     const forestContainers = this.forest.map((arbolito) => arbolito.container)
-    // this.UICamera.ignore()
-    this.UICamera.shake(5000, 0.01, false, (progress: number)=>{
-      if (progress > 0.9) this.UICamera?.flash(4000, 0, 0, 0, true)
-    })
-    console.log("ISO GRUOUP", this.isoGroup)
+    this.UICamera.ignore(this.isoGroup)
     this.UICamera.ignore(forestContainers)
+    
+    // this.UICamera.shake(5000, 0.01, false, (camera: Phaser.Cameras.Scene2D.Camera, progress: number)=>{
+    //   if (progress > 0.9) this.UICamera?.flash(4000, 0, 0, 0, true)
+    //   })
+
   }
 
   spawnObjects() {
