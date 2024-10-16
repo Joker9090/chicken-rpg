@@ -71,6 +71,13 @@ export default class RPG extends Scene {
     this.load.image("varEmpty", "/assets/chickenUIAssets/varEmpty.png");
     this.load.image("varSelector", "/assets/chickenUIAssets/varSelector.png");
     this.load.image("reloj", "/assets/UI/UILevel/reloj.png");
+    this.load.image("settingsIcon", "/assets/UI/UILevel/settingsGame.png");
+    this.load.image("settingsIcon", "/assets/UI/UILevel/settingsGame.png");
+    this.load.image("settingsIcon", "/assets/UI/UILevel/settingsGame.png");
+    this.load.image("settingsIcon", "/assets/UI/UILevel/settingsGame.png");
+    this.load.image("settingsIcon", "/assets/UI/UILevel/settingsGame.png");
+
+
     this.load.spritesheet("chicken", "/images/chicken/spritesheetChicken.png", {
       frameWidth: 552 / 4,
       frameHeight: 1152 / 12,
