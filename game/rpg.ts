@@ -1,24 +1,13 @@
-import { GameObjects, Physics, Scene } from "phaser";
+import { Scene } from "phaser";
 //@ts-ignore
-import IsoPlugin, { IsoPhysics, IsoSprite } from "phaser3-plugin-isometric";
+import IsoPlugin, { IsoPhysics } from "phaser3-plugin-isometric";
 import MapManager from "@/game/mapManager";
-import MovVelocity from "./movement/MovVelocity";
-import MovForce from "./movement/MovForce";
-import MovTile from "./movement/MovTile";
-import { Player } from "./Assets/Player";
-import { Audio, ConfObjectType, LevelDataType } from "./types";
-import { TileFactory } from "./Assets/factories/TileFactory";
-import { TileObjectFactory } from "./Assets/factories/TileObjectFactory";
-import BetweenScenes, { BetweenScenesStatus } from "./BetweenScenes";
-import EventsCenter from "./EventsCenter";
-import UIScene from "./UIScene";
-import GlobalDataSingleton from "./services/GlobalData";
+import { ConfObjectType } from "./types";
 import { RpgIsoSpriteBox } from "./Assets/rpgIsoSpriteBox";
 import { RpgIsoPlayer } from "./Assets/rpgIsoPlayer";
 import { RpgIsoPlayerPrincipal } from "./Assets/rpgIsoPlayerPrincipal";
 import { RpgIsoPlayerSecundarioTalker } from "./Assets/rpgIsoPlayerSecundarioTalker";
 import { UIContainer } from "./Assets/UIAssets/UIContainer";
-
 // import UIScene from "./UIScene";
 
 export type IsoSceneType = {
@@ -60,23 +49,31 @@ export default class RPG extends Scene {
   }
 
   preload() {
-    this.load.image("tile", "/images/bloque.png");
+    // ASSETS UI ->
     this.load.image("background", "/assets/chickenUIAssets/background.png");
     this.load.image("settingsIcon", "/assets/chickenUIAssets/settingsIcon.png");
-    this.load.image("cancel", "/assets/chickenUIAssets/cancel.png");
-    this.load.image("cancelHover", "/assets/chickenUIAssets/cancelHover.png");
-    this.load.image("cancelClick", "/assets/chickenUIAssets/cancelClick.png");
-    this.load.image("cerrar", "/assets/chickenUIAssets/cerrar.png");
+    this.load.image("helpIcon", "/assets/chickenUIAssets/helpIcon.png");
+
+    this.load.image("exit", "/assets/chickenUIAssets/cerrar.png");
+    this.load.image("exitClick", "/assets/chickenUIAssets/cerrarClick.png");
+    this.load.image("exitHover", "/assets/chickenUIAssets/cerrarHover.png");
+
     this.load.image("save", "/assets/chickenUIAssets/save.png");
+    this.load.image("saveClick", "/assets/chickenUIAssets/saveClick.png");
+    this.load.image("saveHover", "/assets/chickenUIAssets/saveHover.png");
+
+    this.load.image("on", "/assets/chickenUIAssets/on.png");
+    this.load.image("off", "/assets/chickenUIAssets/off.png");
+
     this.load.image("varFull", "/assets/chickenUIAssets/varFull.png");
     this.load.image("varEmpty", "/assets/chickenUIAssets/varEmpty.png");
     this.load.image("varSelector", "/assets/chickenUIAssets/varSelector.png");
+
     this.load.image("reloj", "/assets/UI/UILevel/reloj.png");
-    this.load.image("settingsIcon", "/assets/UI/UILevel/settingsGame.png");
-    this.load.image("settingsIcon", "/assets/UI/UILevel/settingsGame.png");
-    this.load.image("settingsIcon", "/assets/UI/UILevel/settingsGame.png");
-    this.load.image("settingsIcon", "/assets/UI/UILevel/settingsGame.png");
-    this.load.image("settingsIcon", "/assets/UI/UILevel/settingsGame.png");
+    // <- ASSETS UI 
+
+    // otros assets
+    this.load.image("tile", "/images/bloque.png");
 
 
     this.load.spritesheet("chicken", "/images/chicken/spritesheetChicken.png", {
@@ -201,8 +198,6 @@ export default class RPG extends Scene {
 
     const UICont = new UIContainer(this, 0, 0)
  
-    // crear un container para la ui -> camara main ignore ese container nada mas
-    // crear un modal de settings
   }
 
   spawnObjects() {
