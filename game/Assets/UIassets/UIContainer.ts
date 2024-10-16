@@ -1,6 +1,6 @@
 import RPG from "@/game/rpg";
 import Phaser from "phaser";
-import { ModalSettings } from "./ModalSettings";
+import ModalSettings from "./ModalSettings";
 
 export class UIContainer extends Phaser.GameObjects.Container {
 

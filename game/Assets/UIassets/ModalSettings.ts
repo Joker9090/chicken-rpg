@@ -1,7 +1,7 @@
 import RPG from "@/game/rpg";
 import Phaser from "phaser";
 
-export class ModalSettings extends Phaser.GameObjects.Container {
+export default class ModalSettings extends Phaser.GameObjects.Container {
 
     scene: RPG;
     timer?: Phaser.GameObjects.Image

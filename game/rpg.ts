@@ -18,6 +18,7 @@ import { RpgIsoPlayer } from "./Assets/rpgIsoPlayer";
 import { RpgIsoPlayerPrincipal } from "./Assets/rpgIsoPlayerPrincipal";
 import { RpgIsoPlayerSecundarioTalker } from "./Assets/rpgIsoPlayerSecundarioTalker";
 import { UIContainer } from "./Assets/UIAssets/UIContainer";
+
 // import UIScene from "./UIScene";
 
 export type IsoSceneType = {
