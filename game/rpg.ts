@@ -1,22 +1,13 @@
-import { GameObjects, Physics, Scene } from "phaser";
+import { Scene } from "phaser";
 //@ts-ignore
-import IsoPlugin, { IsoPhysics, IsoSprite } from "phaser3-plugin-isometric";
+import IsoPlugin, { IsoPhysics } from "phaser3-plugin-isometric";
 import MapManager from "@/game/mapManager";
-import MovVelocity from "./movement/MovVelocity";
-import MovForce from "./movement/MovForce";
-import MovTile from "./movement/MovTile";
-import { Player } from "./Assets/Player";
-import { Audio, ConfObjectType, LevelDataType } from "./types";
-import { TileFactory } from "./Assets/factories/TileFactory";
-import { TileObjectFactory } from "./Assets/factories/TileObjectFactory";
-import BetweenScenes, { BetweenScenesStatus } from "./BetweenScenes";
-import EventsCenter from "./EventsCenter";
-import UIScene from "./UIScene";
-import GlobalDataSingleton from "./services/GlobalData";
+import { ConfObjectType } from "./types";
 import { RpgIsoSpriteBox } from "./Assets/rpgIsoSpriteBox";
 import { RpgIsoPlayer } from "./Assets/rpgIsoPlayer";
 import { RpgIsoPlayerPrincipal } from "./Assets/rpgIsoPlayerPrincipal";
 import { RpgIsoPlayerSecundarioTalker } from "./Assets/rpgIsoPlayerSecundarioTalker";
+import { UIContainer } from "./Assets/UIAssets/UIContainer";
 // import UIScene from "./UIScene";
 
 export type IsoSceneType = {
@@ -44,6 +35,8 @@ export default class RPG extends Scene {
   player?: RpgIsoPlayerPrincipal;
   NPCTalker?: RpgIsoPlayerSecundarioTalker;
   UICamera?: Phaser.Cameras.Scene2D.Camera;
+  group?: Phaser.GameObjects.Group;
+
 
   constructor(maps: string[]) {
     const sceneConfig = {
@@ -56,7 +49,33 @@ export default class RPG extends Scene {
   }
 
   preload() {
+    // ASSETS UI ->
+    this.load.image("background", "/assets/chickenUIAssets/background.png");
+    this.load.image("settingsIcon", "/assets/chickenUIAssets/settingsIcon.png");
+    this.load.image("helpIcon", "/assets/chickenUIAssets/helpIcon.png");
+
+    this.load.image("exit", "/assets/chickenUIAssets/cerrar.png");
+    this.load.image("exitClick", "/assets/chickenUIAssets/cerrarClick.png");
+    this.load.image("exitHover", "/assets/chickenUIAssets/cerrarHover.png");
+
+    this.load.image("save", "/assets/chickenUIAssets/save.png");
+    this.load.image("saveClick", "/assets/chickenUIAssets/saveClick.png");
+    this.load.image("saveHover", "/assets/chickenUIAssets/saveHover.png");
+
+    this.load.image("on", "/assets/chickenUIAssets/on.png");
+    this.load.image("off", "/assets/chickenUIAssets/off.png");
+
+    this.load.image("varFull", "/assets/chickenUIAssets/varFull.png");
+    this.load.image("varEmpty", "/assets/chickenUIAssets/varEmpty.png");
+    this.load.image("varSelector", "/assets/chickenUIAssets/varSelector.png");
+
+    this.load.image("reloj", "/assets/UI/UILevel/reloj.png");
+    // <- ASSETS UI 
+
+    // otros assets
     this.load.image("tile", "/images/bloque.png");
+
+
     this.load.spritesheet("chicken", "/images/chicken/spritesheetChicken.png", {
       frameWidth: 552 / 4,
       frameHeight: 1152 / 12,
@@ -114,7 +133,7 @@ export default class RPG extends Scene {
     });
   }
 
-  destroy() {}
+  destroy() { }
 
   create() {
     //default
@@ -167,71 +186,22 @@ export default class RPG extends Scene {
     this.spawnTiles();
     this.spawnObjects();
 
-    this.cameras.main.setZoom(1.5);
+    this.cameras.main.setZoom(1);
     this.cameras.main.setViewport(0, 0, window.innerWidth, window.innerHeight);
-    let cameraFollow = false;
 
-    // tween camera zoom after 200 ms
-    // setTimeout(() => {
-    //   this.cameras.main.zoomTo(1.1, 200);
-    // }, 200);
+    // WORKKSHOP NANEX
+   
+    this.UICamera = this.cameras.add(0, 0, window.innerWidth, window.innerHeight)
+    this.UICamera.ignore(this.isoGroup)
+    const forestContainers = this.forest.map((arbolito) => arbolito.container)
+    this.UICamera.ignore(forestContainers)
 
-    let pos = 0;
-
-    // @ts-ignore
-    // this.isoGroup?.children.each((tile: RpgIsoSpriteBox) => {
-    //   if (pos == 1 && tile && !cameraFollow) {
-    //     console.log("SIGO", tile);
-    //     // cameraFollow = true;
-    //     // this.cameras.main.startFollow(tile);
-    //   }
-    // });
-
-    // after 3 seconds, log positions of tiles every 10 tiles
-    // setTimeout(() => {
-    //
-    // },
-    // 1000);
-
-    //  this.input.on("pointermove",(pointer) => {
-    //   console.log("aca")
-    //  });
-
-    // this.input.on("pointermove",(pointer) => {
-    //   const { x,y } = this.input.mousePointer
-    // this.cameras.main.centerOn(x, y);
-    // const w = window.innerWidth
-    // const h = window.innerHeight
-    // this.forest.forEach((tree) => {
-    //   console.log("aca",tree)
-    //     //Detect if mouse is in the top, bottom and left or right part of the screen
-    //     let pushX, pushY = 0
-    //     if (x > w / 2) {
-    //       pushX = 0.06;
-    //     } else {
-    //       pushX = -0.06;
-    //     }
-
-    //     if(y > h /2) {
-    //       pushY = 0.06;
-    //     } else {
-    //       pushY = -0.06;
-    //     }
-
-    //     tree.self.setOrigin(0.92+pushX, 0.85+pushY)
-    // })
-    // })
-
-    // const chicken = new RpgIsoSpriteBox(this, 700, 215, 100, "chicken", 17, this.isoGroup);
-    // const chickenBOT = new RpgIsoSpriteBox(this, 750, 215, 100, "chicken", 17, this.isoGroup);
-
-    // chicken.self.play("atack-s");
-    // chickenBOT.self.play("atack-n");
-
-    // this.cameras.main.startFollow(chicken);
+    const UICont = new UIContainer(this, 0, 0)
+ 
   }
 
   spawnObjects() {
+    this.UICamera
     let scalar = 0;
     let h = 50;
 
@@ -406,8 +376,8 @@ export default class RPG extends Scene {
       y: c,
       h: height,
     };
- 
-    tileObj = new RpgIsoSpriteBox(game, x, y, height, tile, 0, this.isoGroup,matrixPosition);
+
+    tileObj = new RpgIsoSpriteBox(game, x, y, height, tile, 0, this.isoGroup, matrixPosition);
     pos++;
 
     tileObj.type = "STONE";
@@ -438,7 +408,7 @@ export default class RPG extends Scene {
       h: height,
     };
 
-    tileObj = new RpgIsoSpriteBox(game, x, y, height, tile, 0, this.isoGroup,matrixPosition);
+    tileObj = new RpgIsoSpriteBox(game, x, y, height, tile, 0, this.isoGroup, matrixPosition);
     pos++;
 
     tileObj.type = "STONE";
@@ -468,7 +438,7 @@ export default class RPG extends Scene {
       h: height,
     };
 
-    tileObj = new RpgIsoSpriteBox(game, x, y, height, "tree", 0, this.isoGroup,matrixPosition);
+    tileObj = new RpgIsoSpriteBox(game, x, y, height, "tree", 0, this.isoGroup, matrixPosition);
     tileObj.self.setAlpha(0.7);
     tileObj.self.setTint(0x000000);
     tileObj.self.setOrigin(0.42 + 0.03, 0.80 + 0.03);
@@ -572,13 +542,13 @@ export default class RPG extends Scene {
         });
       }
       // tileObj.self.setTint(0xff0000);
-      
+
     };
   }
 
   noHighlightTile(tileObj: RpgIsoSpriteBox) {
     return () => {
-      if(this.player) this.player.clearPossibleMovements()
+      if (this.player) this.player.clearPossibleMovements()
       tileObj.highlightedTiles = [];
       // clean tint from all tiles
       // @ts-ignore

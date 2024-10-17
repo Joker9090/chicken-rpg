@@ -1,13 +1,3 @@
-import BetweenScenesScene from "./BetweenScenes";
-import Credits from "./Credits";
-import Intro from "./Intro";
-import Menu from "./Menu";
-import SceneLoader from "./SceneLoader";
-import UIScene from "./UIScene";
-import MusicManager from "./MusicManagger";
-import IsoSandboxScene from "./sandboxScene";
-import IsoExperimentalMap from "./scene";
-import LevelMenu from "./LevelMenu";
 import RPG from "./rpg";
 
 export default class Game {
