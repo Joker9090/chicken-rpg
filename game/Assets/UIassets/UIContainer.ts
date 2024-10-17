@@ -3,7 +3,7 @@ import Phaser from "phaser";
 import { UIInterface } from "./UiInterface";
 import { Timer } from "./Timer";
 
-export class UIContainer extends Phaser.GameObjects.Container {
+export default class UIContainer extends Phaser.GameObjects.Container {
 
     scene: RPG;
     timer?: Timer
