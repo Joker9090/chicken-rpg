@@ -1,5 +1,5 @@
 import Phaser from "phaser";
-import UI, { UIConfig } from "../UIassets/UI";
+import UI, { UIConfig } from "../UIAssetsChicken/UI";
 
 // Scene in class
 class PersonCredit extends Phaser.GameObjects.Container {
