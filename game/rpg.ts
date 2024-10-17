@@ -62,6 +62,10 @@ export default class RPG extends Scene {
     this.load.image("saveClick", "/assets/chickenUIAssets/saveClick.png");
     this.load.image("saveHover", "/assets/chickenUIAssets/saveHover.png");
 
+    this.load.image("cancel", "/assets/chickenUIAssets/cancel.png");
+    this.load.image("cancelClick", "/assets/chickenUIAssets/cancelClick.png");
+    this.load.image("cancelHover", "/assets/chickenUIAssets/cancelHover.png");
+
     this.load.image("on", "/assets/chickenUIAssets/on.png");
     this.load.image("off", "/assets/chickenUIAssets/off.png");
 
