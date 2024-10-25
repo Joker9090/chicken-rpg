@@ -64,7 +64,7 @@ export default function Level() {
   return (
     <>
       <Head>
-        <title>Powerball by Noswar</title> {/* Cambia el título para mostrar el nivel actual */}
+        <title>ChickenRPG by Noswar</title> {/* Cambia el título para mostrar el nivel actual */}
         <meta name="description" content={`Experimental Map - Level ${levelId}`} />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />

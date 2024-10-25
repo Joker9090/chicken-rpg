@@ -41,7 +41,7 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
     this.self.play("idle-" + this.direction);
     scene.cameras.main.startFollow(this);
 
-    this.self.on("pointerover", () => this.pointerover());
+    //this.self.on("pointerover", () => this.pointerover());
     this.self.on("pointerout", () => this.pointerout());
     this.self.on("pointerdown", () => this.pointerdown());
 
@@ -164,46 +164,7 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
       });
     }
   }
-
-  /*calculatePath(start: PositionMatrix,end:PositionMatrix) {
-    let path = [];
-
-    let {x: xs, y: ys, h:hs} = start;
-    let {x: xe, y: ye, h:he} = end;
-
-    const stepsX = xs - xe;
-    const stepsY = ys - ye;
-
-    let stepX = 4;
-    let stepY = 3; 
-    let tempX = xs;
-    let tempY = ys;
-
-
-
-    for (let index = 1; index < Math.abs(stepsX); index++) {
-      if(stepsX > 0) {
-        tempX = stepsX + index;
-        path.push({...start, x: xs + index}); 
-      }else {
-        tempX = stepsX - index;
-        path.push({...start, x: xs - index}); 
-      }
-
-    }
-
-    for (let index = 1; index <= Math.abs(stepsY); index++) {
-      if(stepsY > 0) {
-        path.push({...start,x: tempX, y: ye + index});
-      }else path.push({...start,x: tempX, y: ye - index});
-      
-    }
-
-
-    return path;
-
-  }*/
-
+  /*
   //A testear
   calculatePath(start: PositionMatrix, end: PositionMatrix) {
     let path = [];
@@ -233,6 +194,112 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
 
     return path;
   }
+    */
+
+  checkCubeAround(objectPosition: PositionMatrix) {
+    if(this.matrixPosition) {
+      const newDistance = {
+        x: objectPosition.x - this.matrixPosition.x,
+        y: objectPosition.y - this.matrixPosition.y,
+        h: objectPosition.h - this.matrixPosition.h,
+      };   
+      return newDistance;
+    }
+    return {x:0,y:0,h:0}
+  }
+
+  //Se debe optimizar aun mas
+  calculatePath(start: PositionMatrix, end: PositionMatrix) {
+    let pathXFirst = [];
+    let pathYFirst = [];
+  
+    let { x: xs, y: ys } = start;
+    let { x: xe, y: ye } = end;
+  
+    // Calcula movimiento en el eje X primero
+    if (xs !== xe) {
+      const stepsX = Math.abs(xe - xs);
+      const directionX = xe > xs ? 1 : -1;
+  
+      for (let i = 1; i <= stepsX; i++) {
+        const nextPos = { ...start, x: xs + i * directionX, y: ys };
+        // Verifica si la posición es válida usando getTileAt
+        const tile = this.getTileAt(nextPos);
+        const objectOnTile = this.getObjectAt({ x: nextPos.x, y: nextPos.y, h: nextPos.h + 50 });
+        if (tile && !objectOnTile) {
+          pathXFirst.push(nextPos);
+        }else {
+          pathXFirst = []; // Si hay obstáculo, resetea la ruta
+          break;
+        }
+      }
+    }
+  
+    // Luego movimiento en el eje Y
+    if (pathXFirst.length && ys !== ye) {
+      const stepsY = Math.abs(ye - ys);
+      const directionY = ye > ys ? 1 : -1;
+  
+      for (let i = 1; i <= stepsY; i++) {
+        const nextPos = { ...start, x: xe, y: ys + i * directionY };
+        const tile = this.getTileAt(nextPos);
+        const objectOnTile = this.getObjectAt({ x: nextPos.x, y: nextPos.y, h: nextPos.h + 50 });
+        if (tile && !objectOnTile) {
+          pathXFirst.push(nextPos);
+        } else {
+          pathXFirst = [];
+          break;
+        }
+      }
+    }
+  
+    // Calcula movimiento en el eje Y primero
+    if (ys !== ye) {
+      const stepsY = Math.abs(ye - ys);
+      const directionY = ye > ys ? 1 : -1;
+  
+      for (let i = 1; i <= stepsY; i++) {
+        const nextPos = { ...start, x: xs, y: ys + i * directionY };
+        const tile = this.getTileAt(nextPos);
+        const objectOnTile = this.getObjectAt({ x: nextPos.x, y: nextPos.y, h: nextPos.h + 50 });
+        if (tile && !objectOnTile) {
+          pathYFirst.push(nextPos);
+        }else {
+          pathYFirst = [];
+          break;
+        }
+      }
+    }
+  
+    if (pathYFirst.length && xs !== xe) {
+      const stepsX = Math.abs(xe - xs);
+      const directionX = xe > xs ? 1 : -1;
+  
+      for (let i = 1; i <= stepsX; i++) {
+        const nextPos = { ...start, x: xs + i * directionX, y: ye };
+        const tile = this.getTileAt(nextPos);
+        const objectOnTile = this.getObjectAt({ x: nextPos.x, y: nextPos.y, h: nextPos.h + 50 });
+        if (tile && !objectOnTile) {
+          pathYFirst.push(nextPos);
+        } else {
+          pathYFirst = [];
+          break;
+        }
+      }
+    }
+  
+    // Elige el camino que no está bloqueado
+    if (pathXFirst.length > 0) {
+      return pathXFirst;
+    } else if (pathYFirst.length > 0) {
+      return pathYFirst;
+    }
+  
+    // Si ambos caminos están bloqueados, regresa un array vacío
+    return [];
+  }
+  
+  
 
   movePath(path: PositionMatrix[]) {
     if(path.length === 0) {
@@ -244,6 +311,7 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
     //return
 
     const nextPos = path.shift();
+    console.log("move path next mov: ",nextPos);
     if(nextPos && this.matrixPosition) {
       const {x, y} = this.matrixPosition;
       let newDirection = this.facingDirection;
@@ -272,6 +340,7 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
 
   }
 
+  //No esta en uso actualmente
   checkpath(originalPath: PositionMatrix[]) {
 
     let newPath = [];
@@ -298,14 +367,11 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
     // swithc funcion to change direction on depends matrix position dif
     let newDirection = this.facingDirection
     if (tile.matrixPosition && this.matrixPosition) {
-      const { x, y } = tile.matrixPosition;
-      const { x: xp, y: yp } = this.matrixPosition;
+      // const { x, y } = tile.matrixPosition;
+      // const { x: xp, y: yp } = this.matrixPosition;
       let  path = this.calculatePath(this.matrixPosition,tile.matrixPosition);
       console.log("steps !!!!!: ", path);
-      let testing = this.checkpath(path);
-      console.log("testing log: ", testing);
 
-      //this.movePath(testing);
       this.movePath(path);
     }
   }
@@ -342,7 +408,7 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
 
   getObjectAt(matrixPosition: { x: number; y: number; h: number }) {
     const tiles = this.group?.children.entries as unknown as RpgIsoSpriteBox[];
-
+    console.log("matrixPosition get objectAt: ", matrixPosition);
     if (this.matrixPosition) {
       let _tile: RpgIsoSpriteBox | undefined;
       tiles.forEach((tile) => {
@@ -387,7 +453,7 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
           ) {
             if (hasObject) {
               const obj = this.getObjectAt({ x: x, y: y, h: h + 50 });
-              console.log("ENTRO?", obj, hasObject);
+              console.log("ENTRO? getTileAt ", obj, hasObject);
               if (!obj) _tile = tile;
             } else {
               _tile = tile;
@@ -422,7 +488,7 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
     }
   }
 
-  /* tweenTile(tile: RpgIsoSpriteBox, direction: string) {
+  tweenTileBox(tile: RpgIsoSpriteBox, direction: string) {
     this.scene.tweens.add({
       targets: this.self,
       isoZ: this.isoZ,
@@ -439,7 +505,7 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
         console.log("direction: ", direction);
       },
     });
-  } */
+  }
 
   move(direction: string, newX: number, newY: number) {
     this.clearPossibleMovements()
@@ -449,14 +515,15 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
     if (this.matrixPosition) {
       const { x, y, h } = this.matrixPosition;
       const withObject = true;
+      console.log("config tile: ",x - newX,y - newY,h);
       const tile = this.getTileAt(
-        { x: x - newX, y: y - newY, h: h },
-        withObject
+        { x: x - newX, y: y - newY, h: h } 
       );
-      tile?.self.setTint(0x00ff00);
+      console.log("move player after move box : ",tile, newX,newY);
+      // tile?.self.setTint(0x00ff00);
       if (tile) {
         this.isMoving = true;
-        //this.tweenTile(tile, direction);
+        this.tweenTileBox(tile, direction);
       }
     }
   }

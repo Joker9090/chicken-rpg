@@ -46,6 +46,7 @@ export default class Game {
           "6": "COLUMNACORTA",
           "7": "SEMIBLOQUE",
           "8": "TREE",
+          "9": "CUBE",
           PN: "PLAYER-N",
           PS: "PLAYER-S",
           PE: "PLAYER-E",
@@ -79,7 +80,7 @@ export default class Game {
         "0 8 4 0 0 4 0 0 0 0 0 0 0 0 0 0\n" +
         "8 8 4 0 0 4 4 4 4 5 0 0 0 0 0 0\n" +
         "0 8 4 0 0 4 8 8 0 0 0 0 0 0 0 0\n" +
-        "0 0 0 0 0 0 8 0 0 0 0 0 0 8 0 0\n" +
+        "0 0 0 0 0 0 8 0 0 9 0 0 0 8 0 0\n" +
         "0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0",
       // TWO
       "0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n" +

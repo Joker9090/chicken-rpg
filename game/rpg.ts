@@ -78,7 +78,7 @@ export default class RPG extends Scene {
 
     // otros assets
     this.load.image("tile", "/images/bloque.png");
-
+    this.load.image("cube1", "/images/cube1.png");
 
     this.load.spritesheet("chicken", "/images/chicken/spritesheetChicken.png", {
       frameWidth: 552 / 4,
@@ -190,7 +190,7 @@ export default class RPG extends Scene {
     this.spawnTiles();
     this.spawnObjects();
 
-    this.cameras.main.setZoom(1);
+    this.cameras.main.setZoom(1.5);
     this.cameras.main.setViewport(0, 0, window.innerWidth, window.innerHeight);
 
     // WORKKSHOP NANEX
@@ -354,6 +354,9 @@ export default class RPG extends Scene {
             case "TREE":
               self.createTreeTile(b, c, that, conf, pos);
               break;
+            case "CUBE":
+              self.createCubeTile(b, c, that, conf, pos, "cube1");
+              break;
           }
         },
       };
@@ -495,6 +498,79 @@ export default class RPG extends Scene {
     // tileObj.self.on("pointerover", tweenTile(tileObj));
     // console.log(tileObj);
     // log the position of tile every 10 tiles
+  }
+
+
+  createCubeTile(
+    b: number,
+    c: number,
+    that: MapManager,
+    conf: ConfObjectType,
+    pos: number,
+    tile: string
+  ) {
+    const { game, setPosFromAnchor } = that;
+    const { height } = conf;
+    const x = setPosFromAnchor(b, c).x;
+    const y = setPosFromAnchor(b, c).y;
+    let tileObj;
+    let matrixPosition = {
+      x: b,
+      y: c,
+      h: height,
+    };
+
+    tileObj = new RpgIsoSpriteBox(game, x, y, height, tile, 0, this.isoGroup, matrixPosition);
+    pos++;
+
+    tileObj.type = "CUBE";
+    tileObj.self.setScale(0.9);
+
+    
+
+    tileObj.self.on("pointerdown", () => {
+      console.log("tileObjet pos CUBE : ", tileObj.matrixPosition);
+      console.log("player pos: ", this.player?.matrixPosition);
+      if(tileObj.matrixPosition){
+        //if (this.player?.matrixPosition)this.player.matrixPosition.h = 50;
+        const distance =  this.player?.checkCubeAround(tileObj.matrixPosition);
+        console.log("distance: ", distance);
+        if(distance && Math.abs(distance.x) + Math.abs(distance.y) /*+ Math.abs(distance.h) */ == 1) {
+          let newDirection = this.player?.facingDirection;
+          if (distance.x > 0) {
+            newDirection = "w";
+          } else if (distance.x < 0) {
+            newDirection = "e";
+          } else if (distance.y > 0) {
+            newDirection = "s";
+          } else if (distance.y < 0) {
+            newDirection = "n";
+          }
+          
+          const newMatrixPos = {x:tileObj.matrixPosition.x + (distance.x), y: tileObj.matrixPosition.y + (distance.y), h: 0};
+          const nextTileToCube = this.player?.getObjectAt(newMatrixPos);
+          console.log("nextTileToCube: ",nextTileToCube);
+
+          if(nextTileToCube) {
+            this.tweens.add({
+              targets: tileObj.self,
+              isoZ: tileObj.isoZ, 
+              isoX: nextTileToCube.isoX,
+              isoY: nextTileToCube.isoY,
+              duration: 400,
+              yoyo: false,
+              repeat: 0,
+              onComplete: () => {
+                tileObj.matrixPosition = {...newMatrixPos, h: 50};
+              },
+            });
+            if(newDirection) this.player?.move(newDirection,(distance.x * -1), (distance.y * -1));
+          }
+            
+
+        }
+      }
+    })
   }
 
   destroyTile(tileObj: RpgIsoSpriteBox) {
