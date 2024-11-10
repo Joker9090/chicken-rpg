@@ -39,6 +39,7 @@ export class UIInterface extends Phaser.GameObjects.Container {
             // containerModalHelp,
             containerModalSettings,
             settingsIcon,
+            helpIcon,
         ])
     }
 }

@@ -8,6 +8,7 @@ import { RpgIsoPlayer } from "./Assets/rpgIsoPlayer";
 import { RpgIsoPlayerPrincipal } from "./Assets/rpgIsoPlayerPrincipal";
 import { RpgIsoPlayerSecundarioTalker } from "./Assets/rpgIsoPlayerSecundarioTalker";
 import UIContainer from "./Assets/UIAssetsChicken/UIContainer";
+import { CubeIsoSpriteBox } from "./Assets/cubeIsoSpriteBox";
 // import UIScene from "./UIScene";
 
 export type IsoSceneType = {
@@ -190,7 +191,7 @@ export default class RPG extends Scene {
     this.spawnTiles();
     this.spawnObjects();
 
-    this.cameras.main.setZoom(1.5);
+    this.cameras.main.setZoom(0.2);
     this.cameras.main.setViewport(0, 0, window.innerWidth, window.innerHeight);
 
     // WORKKSHOP NANEX
@@ -294,6 +295,7 @@ export default class RPG extends Scene {
       m.drawMap(this.isoGroup, conf, JSON.parse(lvlConf));
     }
   }
+  
   spawnTiles() {
     const self = this;
     let pos = 0;
@@ -336,6 +338,9 @@ export default class RPG extends Scene {
             case "GRASS":
               self.createGrassTile(b, c, that, conf, pos);
               break;
+              case "STREET":
+                self.createStreetTile(b, c, that, conf, pos);
+                break;
             case "BLOQUERANDOM":
               self.createBloqueRandomTile(b, c, that, conf, pos, index);
               break;
@@ -520,57 +525,9 @@ export default class RPG extends Scene {
       h: height,
     };
 
-    tileObj = new RpgIsoSpriteBox(game, x, y, height, tile, 0, this.isoGroup, matrixPosition);
-    pos++;
+    tileObj = new CubeIsoSpriteBox(game, x, y, height, tile, 0, this.isoGroup, matrixPosition);
 
-    tileObj.type = "CUBE";
-    tileObj.self.setScale(0.9);
-
-    
-
-    tileObj.self.on("pointerdown", () => {
-      console.log("tileObjet pos CUBE : ", tileObj.matrixPosition);
-      console.log("player pos: ", this.player?.matrixPosition);
-      if(tileObj.matrixPosition){
-        //if (this.player?.matrixPosition)this.player.matrixPosition.h = 50;
-        const distance =  this.player?.checkCubeAround(tileObj.matrixPosition);
-        console.log("distance: ", distance);
-        if(distance && Math.abs(distance.x) + Math.abs(distance.y) /*+ Math.abs(distance.h) */ == 1) {
-          let newDirection = this.player?.facingDirection;
-          if (distance.x > 0) {
-            newDirection = "w";
-          } else if (distance.x < 0) {
-            newDirection = "e";
-          } else if (distance.y > 0) {
-            newDirection = "s";
-          } else if (distance.y < 0) {
-            newDirection = "n";
-          }
-          
-          const newMatrixPos = {x:tileObj.matrixPosition.x + (distance.x), y: tileObj.matrixPosition.y + (distance.y), h: 0};
-          const nextTileToCube = this.player?.getObjectAt(newMatrixPos);
-          console.log("nextTileToCube: ",nextTileToCube);
-
-          if(nextTileToCube) {
-            this.tweens.add({
-              targets: tileObj.self,
-              isoZ: tileObj.isoZ, 
-              isoX: nextTileToCube.isoX,
-              isoY: nextTileToCube.isoY,
-              duration: 400,
-              yoyo: false,
-              repeat: 0,
-              onComplete: () => {
-                tileObj.matrixPosition = {...newMatrixPos, h: 50};
-              },
-            });
-            if(newDirection) this.player?.move(newDirection,(distance.x * -1), (distance.y * -1));
-          }
-            
-
-        }
-      }
-    })
+   
   }
 
   destroyTile(tileObj: RpgIsoSpriteBox) {
@@ -714,6 +671,41 @@ export default class RPG extends Scene {
 
     tileObj.type = "GRASS";
     // tileObj.self.setTint(0x0000ff);
+    // tileObj.self.on("pointerdown", () => console.log('pointer en grass',tileObj));
+  }
+  createStreetTile(
+    b: number,
+    c: number,
+    that: MapManager,
+    conf: ConfObjectType,
+    pos: number
+  ) {
+    const { game, setPosFromAnchor } = that;
+    const { height } = conf;
+    const x = setPosFromAnchor(b, c).x;
+    const y = setPosFromAnchor(b, c).y;
+    let tileObj;
+
+    let matrixPosition = {
+      x: b,
+      y: c,
+      h: height,
+    };
+
+    tileObj = new RpgIsoSpriteBox(
+      game,
+      x,
+      y,
+      height,
+      "tile", //"bloque-" + Math.floor(Math.random() * 6),
+      0,
+      this.isoGroup,
+      matrixPosition
+    );
+    pos++;
+
+    tileObj.type = "GRASS";
+    tileObj.self.setTint(0x222222);
     // tileObj.self.on("pointerdown", () => console.log('pointer en grass',tileObj));
   }
 

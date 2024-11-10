@@ -1,3 +1,4 @@
+import { CubeIsoSpriteBox } from "./cubeIsoSpriteBox";
 import { RpgIsoSpriteBox } from "./rpgIsoSpriteBox";
 
 export type PositionMatrix = {
@@ -224,7 +225,7 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
       for (let i = 1; i <= stepsX; i++) {
         const nextPos = { ...start, x: xs + i * directionX, y: ys };
         // Verifica si la posición es válida usando getTileAt
-        const tile = this.getTileAt(nextPos);
+        const [tile] = this.getTileAt(nextPos);
         const objectOnTile = this.getObjectAt({ x: nextPos.x, y: nextPos.y, h: nextPos.h + 50 });
         if (tile && !objectOnTile) {
           pathXFirst.push(nextPos);
@@ -242,7 +243,7 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
   
       for (let i = 1; i <= stepsY; i++) {
         const nextPos = { ...start, x: xe, y: ys + i * directionY };
-        const tile = this.getTileAt(nextPos);
+        const [tile] = this.getTileAt(nextPos);
         const objectOnTile = this.getObjectAt({ x: nextPos.x, y: nextPos.y, h: nextPos.h + 50 });
         if (tile && !objectOnTile) {
           pathXFirst.push(nextPos);
@@ -260,7 +261,7 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
   
       for (let i = 1; i <= stepsY; i++) {
         const nextPos = { ...start, x: xs, y: ys + i * directionY };
-        const tile = this.getTileAt(nextPos);
+        const [tile] = this.getTileAt(nextPos);
         const objectOnTile = this.getObjectAt({ x: nextPos.x, y: nextPos.y, h: nextPos.h + 50 });
         if (tile && !objectOnTile) {
           pathYFirst.push(nextPos);
@@ -277,7 +278,7 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
   
       for (let i = 1; i <= stepsX; i++) {
         const nextPos = { ...start, x: xs + i * directionX, y: ye };
-        const tile = this.getTileAt(nextPos);
+        const [tile] = this.getTileAt(nextPos);
         const objectOnTile = this.getObjectAt({ x: nextPos.x, y: nextPos.y, h: nextPos.h + 50 });
         if (tile && !objectOnTile) {
           pathYFirst.push(nextPos);
@@ -443,6 +444,8 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
 
     if (this.matrixPosition) {
       let _tile: RpgIsoSpriteBox | undefined;
+      let _object: RpgIsoSpriteBox | undefined;
+
       (hasObject ? allTiles : grassTiles).forEach((tile) => {
         if (tile.matrixPosition) {
           const { x, y, h } = tile.matrixPosition;
@@ -451,18 +454,21 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
             y == matrixPosition.y &&
             h == matrixPosition.h
           ) {
+            _tile = tile;
             if (hasObject) {
               const obj = this.getObjectAt({ x: x, y: y, h: h + 50 });
-              console.log("ENTRO? getTileAt ", obj, hasObject);
-              if (!obj) _tile = tile;
-            } else {
-              _tile = tile;
-            }
+              _object = obj;
+            } 
           }
         }
       });
-      console.log("tile", _tile);
-      return _tile;
+      // console.log("tile", _tile);
+      return [_tile,_object];
+    } else {
+      return [
+        undefined,
+        undefined
+      ]
     }
   }
 
@@ -502,7 +508,7 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
           this.matrixPosition = { ...tile.matrixPosition };
         this.isMoving = false;
         this.self.play("idle-" + direction);
-        console.log("direction: ", direction);
+        // console.log("direction: ", direction);
       },
     });
   }
@@ -515,15 +521,24 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
     if (this.matrixPosition) {
       const { x, y, h } = this.matrixPosition;
       const withObject = true;
-      console.log("config tile: ",x - newX,y - newY,h);
-      const tile = this.getTileAt(
-        { x: x - newX, y: y - newY, h: h } 
+      // console.log("config tile: ",x - newX,y - newY,h);
+      const [tile, object] = this.getTileAt(
+        { x: x - newX, y: y - newY, h: h },
+        withObject
       );
-      console.log("move player after move box : ",tile, newX,newY);
+      // console.log("move player after move box : ",tile, newX,newY);
       // tile?.self.setTint(0x00ff00);
-      if (tile) {
+      if (tile && !object) {
+        console.log("tile",tile)
         this.isMoving = true;
         this.tweenTileBox(tile, direction);
+      } else  if (tile && object) {
+        console.log("tile",tile)
+        if(object.type == "CUBE") {
+          console.log("object",object);
+          
+          (object as CubeIsoSpriteBox).moveCube(this);
+        }
       }
     }
   }
