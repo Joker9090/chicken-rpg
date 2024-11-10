@@ -16,7 +16,18 @@ const createGrass = (n: number, withParser: boolean = true): string | number[][]
   return !withParser ? builded : builded.map((row) => row.join(" ")).join("\n");;
 };
 
-const createStreets = (base: number[][] | string, streetConfig: streetConfig): string => {
+const addItems = (base: number[][], objets: ObjetsConfig[]) => {
+  for (let i = 0; i < objets.length; i++) {
+    const { x, y, type } = objets[i];
+    // @ts-ignore
+    base[x][y] = type;
+  }
+
+  return base;
+}
+
+
+const createStreets = (base: number[][] | string, streetConfig: streetConfig, withParser: boolean = true): string | number[][] => {
   if (typeof base === "string") {
     return base;
   }
@@ -51,12 +62,17 @@ const createStreets = (base: number[][] | string, streetConfig: streetConfig): s
         }
     }
     );
-    const buildedWithStreet = builded.map((row) => row.join(" ")).join("\n");
-    console.log("ARI", buildedWithStreet)
-    return buildedWithStreet
+    // const buildedWithStreet = builded.map((row) => row.join(" ")).join("\n");
+    return !withParser ? builded : builded.map((row) => row.join(" ")).join("\n");
     
 }
 
+
+export type ObjetsConfig = {
+  x: number,
+  y: number,
+  type: string
+}
 export type streetConfig = {
   streetWidth: number,
   xPos: number[]
@@ -109,6 +125,20 @@ const generateBuildings = (n: number, buildings: BuildingConfig[]) => {
 
   return r;
 };
+
+const objects: ObjetsConfig[] = [
+  {
+    x: 13,
+    y: 38,
+    type: "9",
+  }
+]
+
+const streetConfig = {
+  streetWidth: 3, 
+  xPos: [10,12, 26, 27], 
+  yPos: [5,14, 23, 32]
+}
 
 const buildings = generateBuildings(40, [
   // first line
@@ -189,10 +219,17 @@ const map = [
   },
 
   // MAP PLAYER / ITEMS CONFIG
-  [createBase(40, [5, 5])],
-  createStreets(createGrass(40, false), {streetWidth: 3, xPos: [10,12, 26, 27], yPos: [5,14, 23, 32]}),
-  ...buildings.map((building) =>
-    building.map((row) => row.join(" ")).join("\n")
+  [createBase(40, [13, 33])],
+  createStreets(createGrass(40, false), streetConfig, true),
+
+  ...buildings.map((_buildings, index) => {
+    if(index === 0) {
+      let newBuildings = addItems(_buildings, objects)
+      return newBuildings.map((row) => row.join(" ")).join("\n")
+    } else {
+      return _buildings.map((row) => row.join(" ")).join("\n")
+    }
+    }
   ),
 ];
 export default map;

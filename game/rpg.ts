@@ -26,6 +26,7 @@ export enum statusEnum {
 
 export default class RPG extends Scene {
   maps: string[];
+  cameraTunnel?: Phaser.GameObjects.Arc
   mapsBuilded: any[] = [];
   input: any;
   isoPhysics: IsoPhysics;
@@ -191,7 +192,7 @@ export default class RPG extends Scene {
     this.spawnTiles();
     this.spawnObjects();
 
-    this.cameras.main.setZoom(0.2);
+    this.cameras.main.setZoom(0.6);
     this.cameras.main.setViewport(0, 0, window.innerWidth, window.innerHeight);
 
     // WORKKSHOP NANEX
@@ -590,7 +591,7 @@ export default class RPG extends Scene {
       // clean tint from all tiles
       // @ts-ignore
       this.isoGroup?.children.each((t: RpgIsoSpriteBox) => {
-        if (t.type == "STONE" || t.type == "GRASS") t.self.clearTint();
+        if (t.type == "STONE") t.self.clearTint();
       });
     };
   }
@@ -709,10 +710,32 @@ export default class RPG extends Scene {
     // tileObj.self.on("pointerdown", () => console.log('pointer en grass',tileObj));
   }
 
+  makeOpacityNearPlayer() {
+
+    if(!this.cameraTunnel) {
+      this.cameraTunnel = this.add.circle(this.player?.self.x, this.player?.self.y, 100, 0x6666ff, 0);
+      this.cameraTunnel.setDepth(100000);
+    }else this.cameraTunnel.setPosition(this.player?.self.x, this.player?.self.y);
+   
+
+    //@ts-ignore
+    this.isoGroup?.children.each((_t) => {
+      const t = _t as unknown as RpgIsoSpriteBox;
+      if (t.type == "STONE" && t.matrixPosition && this.player?.matrixPosition) {
+        if (this.cameraTunnel?.getBounds().contains(t.self.x, t.self.y)) t.self.setAlpha(0.05);
+        else t.self.setAlpha(1);
+      }
+    });
+
+
+  }
+
+
   update() {
     const self = this;
     if (self.player && self.cursors) {
       self.player.updateAnim(self.cursors);
+      this.makeOpacityNearPlayer()
       //console.log(this.player?.isoX, this.player?.isoY, "ARIEL")
     }
     if (this.player?.isoX === 660 && this.player?.isoY === 55 && this.player.facingDirection === 'e') this.NPCTalker?.interact()
