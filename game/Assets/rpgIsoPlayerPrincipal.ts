@@ -14,6 +14,8 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
   isMoving: boolean = false;
   facingDirection: string = "s";
   possibleMovements: RpgIsoSpriteBox[] = [];
+  levelConfig: any;
+  distanceBetweenFloors: number
 
   constructor(
     scene: Phaser.Scene,
@@ -25,7 +27,8 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
     group?: Phaser.GameObjects.Group,
     direction: string = "s",
     matrixPosition?: { x: number; y: number; h: number },
-    name: string = "test"
+    name: string = "test",
+    distanceBetweenFloors: number = 50
   ) {
 
     const interactivityBox = {
@@ -39,6 +42,7 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
     super(scene, x, y, z, texture, frame, group, matrixPosition, interactivityBox);
     this.direction = direction;
     this.name = name;
+    this.distanceBetweenFloors = distanceBetweenFloors;
     this.self.play("idle-" + this.direction);
     scene.cameras.main.startFollow(this);
 
@@ -226,7 +230,7 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
         const nextPos = { ...start, x: xs + i * directionX, y: ys };
         // Verifica si la posición es válida usando getTileAt
         const [tile] = this.getTileAt(nextPos);
-        const objectOnTile = this.getObjectAt({ x: nextPos.x, y: nextPos.y, h: nextPos.h + 50 });
+        const objectOnTile = this.getObjectAt({ x: nextPos.x, y: nextPos.y, h: nextPos.h + this.distanceBetweenFloors });
         if (tile && !objectOnTile) {
           pathXFirst.push(nextPos);
         }else {
@@ -244,7 +248,7 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
       for (let i = 1; i <= stepsY; i++) {
         const nextPos = { ...start, x: xe, y: ys + i * directionY };
         const [tile] = this.getTileAt(nextPos);
-        const objectOnTile = this.getObjectAt({ x: nextPos.x, y: nextPos.y, h: nextPos.h + 50 });
+        const objectOnTile = this.getObjectAt({ x: nextPos.x, y: nextPos.y, h: nextPos.h + this.distanceBetweenFloors });
         if (tile && !objectOnTile) {
           pathXFirst.push(nextPos);
         } else {
@@ -262,7 +266,7 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
       for (let i = 1; i <= stepsY; i++) {
         const nextPos = { ...start, x: xs, y: ys + i * directionY };
         const [tile] = this.getTileAt(nextPos);
-        const objectOnTile = this.getObjectAt({ x: nextPos.x, y: nextPos.y, h: nextPos.h + 50 });
+        const objectOnTile = this.getObjectAt({ x: nextPos.x, y: nextPos.y, h: nextPos.h + this.distanceBetweenFloors });
         if (tile && !objectOnTile) {
           pathYFirst.push(nextPos);
         }else {
@@ -279,7 +283,7 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
       for (let i = 1; i <= stepsX; i++) {
         const nextPos = { ...start, x: xs + i * directionX, y: ye };
         const [tile] = this.getTileAt(nextPos);
-        const objectOnTile = this.getObjectAt({ x: nextPos.x, y: nextPos.y, h: nextPos.h + 50 });
+        const objectOnTile = this.getObjectAt({ x: nextPos.x, y: nextPos.y, h: nextPos.h + this.distanceBetweenFloors });
         if (tile && !objectOnTile) {
           pathYFirst.push(nextPos);
         } else {
@@ -346,8 +350,8 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
 
     let newPath = [];
     for (let i = 0; i < originalPath.length; i++) {
-      //h + 50 
-      let testPos: PositionMatrix = {...originalPath[i] , h: originalPath[i].h + 50 };
+      //h + this.distanceBetweenFloors 
+      let testPos: PositionMatrix = {...originalPath[i] , h: originalPath[i].h + this.distanceBetweenFloors };
       let _tile = this.getObjectAt(testPos);
       console.log("checkpath _tile: ", _tile);
       if(!_tile?.type){
@@ -456,7 +460,7 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
           ) {
             _tile = tile;
             if (hasObject) {
-              const obj = this.getObjectAt({ x: x, y: y, h: h + 50 });
+              const obj = this.getObjectAt({ x: x, y: y, h: h + this.distanceBetweenFloors });
               _object = obj;
             } 
           }

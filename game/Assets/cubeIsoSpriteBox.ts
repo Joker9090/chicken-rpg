@@ -9,6 +9,7 @@ import { RpgIsoPlayerPrincipal } from "./rpgIsoPlayerPrincipal";
 export class CubeIsoSpriteBox extends RpgIsoSpriteBox {
  
   type: string = "CUBE";
+  distanceBetweenFloors: number
 
   constructor(
     scene: Phaser.Scene,
@@ -20,10 +21,12 @@ export class CubeIsoSpriteBox extends RpgIsoSpriteBox {
     group?: Phaser.GameObjects.Group,
     matrixPosition?: {x: number, y: number, h: number},
     interactivityPosition?: {x: number, y: number, w: number, h: number},
+    distanceBetweenFloors: number = 50
   ) {
     super(scene, x, y, z, texture, frame, group, matrixPosition, interactivityPosition);
 
     this.self.setScale(0.9);
+    this.distanceBetweenFloors = distanceBetweenFloors;
     // this.scene.add.existing(this.self);
   }
 
@@ -58,7 +61,7 @@ export class CubeIsoSpriteBox extends RpgIsoSpriteBox {
             yoyo: false,
             repeat: 0,
             onComplete: () => {
-              this.matrixPosition = {...newMatrixPos, h: 50};
+              this.matrixPosition = {...newMatrixPos, h: this.distanceBetweenFloors};
             },
           });
           //if(newDirection) player?.move(newDirection,(distance.x * -1), (distance.y * -1));

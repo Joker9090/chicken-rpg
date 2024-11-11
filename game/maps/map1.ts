@@ -5,6 +5,7 @@ const map = [
       musica: "bkg-uno.mp3",
       ballTexture: "123",
       gravity: 9.8,
+      distanceBetweenFloors: 50,
       tiles: {
         "1": "GRASS",
         "3": "BLOQUE-1",

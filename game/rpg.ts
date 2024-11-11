@@ -335,7 +335,8 @@ export default class RPG extends Scene {
                   this.isoGroup, // group
                   direction, // direction
                   matrixPosition,
-                  "Pepe"
+                  "Pepe",
+                  this.distanceBetweenFloors
                 );
               }
             } else {
@@ -348,7 +349,7 @@ export default class RPG extends Scene {
                 17, // baseFrame
                 this.isoGroup, // group
                 direction, // direction
-                matrixPosition
+                matrixPosition,
               );
               // if (direction === "n") {
               //   a.velocity = 3;
@@ -633,7 +634,7 @@ export default class RPG extends Scene {
       h: height,
     };
 
-    tileObj = new CubeIsoSpriteBox(game, x, y, height, tile, 0, this.isoGroup, matrixPosition);
+    tileObj = new CubeIsoSpriteBox(game, x, y, height, tile, 0, this.isoGroup, matrixPosition, undefined, this.distanceBetweenFloors);
 
    
   }
