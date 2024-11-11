@@ -26,6 +26,12 @@ const addItems = (base: number[][], objets: ObjetsConfig[]) => {
   return base;
 }
 
+const createBullets = (base: number[][], withParser: boolean = true): string | number[][] => {
+
+  console.log("createBullets",base)
+  return !withParser ? base : base.map((row) => row.join(" ")).join("\n");
+
+}
 
 const createStreets = (base: number[][] | string, streetConfig: streetConfig, withParser: boolean = true): string | number[][] => {
   if (typeof base === "string") {
@@ -127,18 +133,18 @@ const createStreets = (base: number[][] | string, streetConfig: streetConfig, wi
     
 }
 
-
 export type ObjetsConfig = {
   x: number,
   y: number,
+  h: number,
   type: string
 }
+
 export type streetConfig = {
   streetWidth: number,
   xPos: number[]
   yPos: number[]
 }
-
 
 export type BuildingConfig = {
   x: number; // POS X
@@ -190,8 +196,24 @@ const objects: ObjetsConfig[] = [
   {
     x: 13,
     y: 38,
+    h: 0,
     type: "9",
-  }
+  },
+
+  {
+    x: 9,
+    y: 31,
+    h: 50,
+    type: "15",
+  },
+
+  {
+    x: 8,
+    y: 29,
+    h: 500,
+    type: "15",
+  },
+
 ]
 
 const streetConfig = {
@@ -254,6 +276,8 @@ const buildings = generateBuildings(40, [
 ]);
 
 console.log(buildings);
+
+let distanceBetweenFloors = 50
 const map = [
   {
     nivel: "city",
@@ -261,6 +285,7 @@ const map = [
     musica: "bkg-uno.mp3",
     ballTexture: "123",
     gravity: 9.8,
+    distanceBetweenFloors: distanceBetweenFloors,
     tiles: {
       "1": "GRASS",
       "10": "STREET-A",
@@ -273,6 +298,7 @@ const map = [
       "7": "SEMIBLOQUE",
       "8": "TREE",
       "9": "CUBE",
+      "15": "PIN",
       PN: "PLAYER-N",
       PS: "PLAYER-S",
       PE: "PLAYER-E",
@@ -282,16 +308,15 @@ const map = [
 
   // MAP PLAYER / ITEMS CONFIG
   [createBase(40, [13, 33])],
-  createStreets(createGrass(40, false), streetConfig, true),
-
+  createStreets(createGrass(40, false), streetConfig, true) as number[][],
   ...buildings.map((_buildings, index) => {
-    if(index === 0) {
-      let newBuildings = addItems(_buildings, objects)
+    const items = objects.filter((item) => item.h === index * distanceBetweenFloors);
+    if(items.length) {
+      let newBuildings = addItems(_buildings, items)
       return newBuildings.map((row) => row.join(" ")).join("\n")
     } else {
       return _buildings.map((row) => row.join(" ")).join("\n")
     }
-    }
-  ),
+  }),
 ];
 export default map;

@@ -1,4 +1,4 @@
-import { Scene } from "phaser";
+import { GameObjects, Scene } from "phaser";
 //@ts-ignore
 import IsoPlugin, { IsoPhysics } from "phaser3-plugin-isometric";
 import MapManager from "@/game/mapManager";
@@ -9,6 +9,7 @@ import { RpgIsoPlayerPrincipal } from "./Assets/rpgIsoPlayerPrincipal";
 import { RpgIsoPlayerSecundarioTalker } from "./Assets/rpgIsoPlayerSecundarioTalker";
 import UIContainer from "./Assets/UIAssetsChicken/UIContainer";
 import { CubeIsoSpriteBox } from "./Assets/cubeIsoSpriteBox";
+import { PinIsoSpriteBox } from "./Assets/pinIsoSpriteBox";
 // import UIScene from "./UIScene";
 
 export type IsoSceneType = {
@@ -39,6 +40,7 @@ export default class RPG extends Scene {
   NPCTalker?: RpgIsoPlayerSecundarioTalker;
   UICamera?: Phaser.Cameras.Scene2D.Camera;
   group?: Phaser.GameObjects.Group;
+  distanceBetweenFloors: number = 50;
 
 
   constructor(maps: string[]) {
@@ -49,7 +51,7 @@ export default class RPG extends Scene {
     super(sceneConfig);
     this.maps = maps;
     this.sceneKey = sceneConfig.key;
-    this.withPlayer = false;
+    this.withPlayer = true;
   }
 
   preload() {
@@ -82,6 +84,7 @@ export default class RPG extends Scene {
 
     // otros assets
     this.load.image("tile", "/images/bloque.png");
+    this.load.image("pin", "/images/pin.png");
     this.load.image("street-a", "/images/street-a.png");
     this.load.image("street-b", "/images/street-b.png");
     this.load.image("street-c", "/images/street-c.png");
@@ -237,15 +240,36 @@ export default class RPG extends Scene {
 
     
     });
- 
+
+    // fire function only once after 300 ms
+
+    this.time.delayedCall(300, () => {
+      this.getObjectByType("PIN")?.forEach((_pin: GameObjects.GameObject) => {
+        const pin = _pin as unknown as PinIsoSpriteBox;
+        if(this.isoGroup) pin.updatePin(this.isoGroup);
+      })
+    })
+
+  }
+
+  getObjectByType(type: string) {
+    return this.isoGroup?.children.entries.filter((t) => {
+      const tile = t as unknown as RpgIsoSpriteBox;
+      return tile.type === type;
+    });
   }
 
   spawnObjects() {
     this.UICamera
     let scalar = 0;
-    let h = 50;
+    let h;
 
-    const lvlConf = this.maps[0];
+    const _lvlConf = this.maps[0];
+    const lvlConf = JSON.parse(_lvlConf)
+
+    this.distanceBetweenFloors = lvlConf.distanceBetweenFloors
+    h = this.distanceBetweenFloors
+
     const objectsMaps = JSON.parse(this.maps[1]);
 
     for (let index = 0; index < objectsMaps.length; index++) {
@@ -329,14 +353,20 @@ export default class RPG extends Scene {
         },
       };
       //@ts-ignore
-      m.drawMap(this.isoGroup, conf, JSON.parse(lvlConf));
+      m.drawMap(this.isoGroup, conf, lvlConf);
     }
   }
   
   spawnTiles() {
     const self = this;
     let pos = 0;
-    const lvlConf = this.maps[0];
+    let h: number;
+
+    const _lvlConf = this.maps[0];
+    const lvlConf = JSON.parse(_lvlConf)
+
+    this.distanceBetweenFloors = lvlConf.distanceBetweenFloors
+    h = this.distanceBetweenFloors
 
     function tweenTile(tile: RpgIsoSpriteBox) {
       return () => {
@@ -352,7 +382,6 @@ export default class RPG extends Scene {
 
     let scalar = 0;
     let startOnMap = 2;
-    let h = 50;
 
     for (let index = startOnMap; index < this.maps.length; index++) {
       // reverse the map string
@@ -403,13 +432,16 @@ export default class RPG extends Scene {
               self.createTreeTile(b, c, that, conf, pos);
               break;
             case "CUBE":
-              self.createCubeTile(b, c, that, conf, pos, "cube1");
+                self.createCubeTile(b, c, that, conf, pos, "cube1");
               break;
+              case "PIN":
+                self.createPinTile(b, c, that, conf, pos, "pin");
+                break;
           }
         },
       };
       //@ts-ignore
-      m.drawMap(this.isoGroup, conf, JSON.parse(lvlConf));
+      m.drawMap(this.isoGroup, conf, lvlConf);
     }
   }
 
@@ -501,7 +533,7 @@ export default class RPG extends Scene {
     tileObj.self.setScale(0.6)
     const tree = this.add.sprite(0, 0, "tree");
     tree.setOrigin(0.42, 0.75);
-    tileObj.customDepth = tileObj.self.depth + 50;
+    tileObj.customDepth = tileObj.self.depth + this.distanceBetweenFloors;
     tileObj.container.add(tree);
     pos++;
     tileObj.type = "TREE";
@@ -548,6 +580,28 @@ export default class RPG extends Scene {
     // log the position of tile every 10 tiles
   }
 
+  createPinTile(
+    b: number,
+    c: number,
+    that: MapManager,
+    conf: ConfObjectType,
+    pos: number,
+    tile: string
+  ) {
+    const { game, setPosFromAnchor } = that;
+    const { height } = conf;
+    const x = setPosFromAnchor(b, c).x;
+    const y = setPosFromAnchor(b, c).y;
+    let tileObj;
+    let matrixPosition = {
+      x: b,
+      y: c,
+      h: height,
+    };
+
+    tileObj = new CubeIsoSpriteBox(game, x, y, height, tile, 0, this.isoGroup, matrixPosition);
+
+  }
 
   createCubeTile(
     b: number,
@@ -716,6 +770,7 @@ export default class RPG extends Scene {
     // tileObj.self.setTint(0x0000ff);
     // tileObj.self.on("pointerdown", () => console.log('pointer en grass',tileObj));
   }
+  
   createStreetTile(
     b: number,
     c: number,

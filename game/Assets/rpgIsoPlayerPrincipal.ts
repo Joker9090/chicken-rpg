@@ -529,11 +529,11 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
       // console.log("move player after move box : ",tile, newX,newY);
       // tile?.self.setTint(0x00ff00);
       if (tile && !object) {
-        console.log("tile",tile)
+        console.log("tile 1",tile)
         this.isMoving = true;
         this.tweenTileBox(tile, direction);
       } else  if (tile && object) {
-        console.log("tile",tile)
+        console.log("tile 2",tile)
         if(object.type == "CUBE") {
           console.log("object",object);
           

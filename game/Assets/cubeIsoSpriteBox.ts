@@ -28,8 +28,8 @@ export class CubeIsoSpriteBox extends RpgIsoSpriteBox {
   }
 
   moveCube(player: RpgIsoPlayerPrincipal) {
+    console.log("moveCube")
     if(this.matrixPosition){
-      //if (this.player?.matrixPosition)this.player.matrixPosition.h = 50;
       const distance =  player.checkCubeAround(this.matrixPosition);
       console.log("distance: ", distance);
       if(distance && Math.abs(distance.x) + Math.abs(distance.y) /*+ Math.abs(distance.h) */ == 1) {
