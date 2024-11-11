@@ -717,16 +717,34 @@ export default class RPG extends Scene {
       this.cameraTunnel.setDepth(100000);
     }else this.cameraTunnel.setPosition(this.player?.self.x, this.player?.self.y);
    
+    const checkCameraContains = (t: RpgIsoSpriteBox) => {
+      return this.cameraTunnel?.getBounds().contains(t.self.x, t.self.y)
+    }
+
+    const checkObjectIsInFrontOfPlayer = (t: RpgIsoSpriteBox, player: RpgIsoPlayerPrincipal) => {
+      if (t.matrixPosition && player.matrixPosition) {
+        // check if x is the same and y is above
+        if (t.matrixPosition.x === player.matrixPosition.x && t.matrixPosition.y > player.matrixPosition.y) return true
+        // check if y is the same and x is above
+        if (t.matrixPosition.y === player.matrixPosition.y && t.matrixPosition.x > player.matrixPosition.x) return true
+        // check if both are above
+        if (t.matrixPosition.y > player.matrixPosition.y && t.matrixPosition.x > player.matrixPosition.x) return true
+        
+        return false
+      }
+      return false
+    }
 
     //@ts-ignore
     this.isoGroup?.children.each((_t) => {
       const t = _t as unknown as RpgIsoSpriteBox;
       if (t.type == "STONE" && t.matrixPosition && this.player?.matrixPosition) {
-        if (this.cameraTunnel?.getBounds().contains(t.self.x, t.self.y)) t.self.setAlpha(0.05);
+        if (checkCameraContains(t) && checkObjectIsInFrontOfPlayer(t, this.player)) {
+            t.self.setAlpha(0.05);
+        }
         else t.self.setAlpha(1);
       }
     });
-
 
   }
 
