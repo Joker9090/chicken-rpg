@@ -45,23 +45,83 @@ const createStreets = (base: number[][] | string, streetConfig: streetConfig, wi
     newXPos = newXPos.filter((item, index) => newXPos.indexOf(item) === index)
     newYPos = newYPos.filter((item, index) => newYPos.indexOf(item) === index)
 
-    console.log("pos", newXPos, newYPos)
 
+    
     const builded = base.map((row, i) => {
-        //go through streetConfig and if i is equal to any xPos return all 3
-        if (newXPos.includes(i)) {
-            return row.map((_, j) => 10)
-        } else {
-          // map row and if j is equal to any yPos return 10
-          return row.map((_, j) => {
-            if (newYPos.includes(j)) {
-              return 10
-            }
-            return 1
-          })
-        }
+      //go through streetConfig and if i is equal to any xPos return all 3
+      if (newXPos.includes(i)) {
+          return row.map((_, j) => 10)
+      } else {
+        // map row and if j is equal to any yPos return 10
+        return row.map((_, j) => {
+          if (newYPos.includes(j)) {
+            return 10
+          }
+          return 1
+        })
+      }
+    });
+
+    // now we need to change all vertical streets to number 10, all horizontal streets to number 11 and all possible intersections to number 12
+
+    // first we need to find all intersections
+    let xIntersections = []
+    let yIntersections = []
+
+    let xPosStreets = typeof streetConfig.xPos == "number" ? [streetConfig.xPos] : streetConfig.xPos
+    let yPosStreets = typeof streetConfig.yPos == "number" ? [streetConfig.yPos] : streetConfig.yPos
+    let maxMapSize = builded.length
+
+    // check the width of the street and add subadditionals streets
+
+    for (let i = 0; i < streetConfig.streetWidth; i++) {
+      let toAddOnX = []
+      let toAddOnY = []
+      for (let j = 0; j < xPosStreets.length; j++) {
+        toAddOnX.push(xPosStreets[j] + i)
+      }
+      xPosStreets = xPosStreets.concat(toAddOnX)
+      
+      for (let j = 0; j < yPosStreets.length; j++) {
+        toAddOnY.push(yPosStreets[j] + i)
+      }
+      yPosStreets = yPosStreets.concat(toAddOnY)
+      
+      xPosStreets = xPosStreets.filter((item, index) => xPosStreets.indexOf(item) === index)
+      yPosStreets = yPosStreets.filter((item, index) => yPosStreets.indexOf(item) === index)
+
     }
-    );
+
+
+    for (let i = 0; i < xPosStreets.length; i++) {
+      for (let j = 0; j < maxMapSize; j++) {
+        if (xPosStreets[i] && builded[i][j]) {
+          xIntersections.push([xPosStreets[i], j])
+          builded[xPosStreets[i]][j] = 11
+        }
+      }
+    }
+
+    for (let i = 0; i < yPosStreets.length; i++) {
+      for (let j = 0; j < maxMapSize; j++) {
+        if (yPosStreets[i] && builded[j][i]) {
+          yIntersections.push([j, yPosStreets[i]])
+          builded[j][yPosStreets[i]] = 10
+        }
+      }
+    }
+
+    
+    for (let i = 0; i < xIntersections.length; i++) {
+      for (let j = 0; j < yIntersections.length; j++) {
+        if (xIntersections[i][0] === yIntersections[j][0] && xIntersections[i][1] === yIntersections[j][1]) {
+          builded[xIntersections[i][0]][xIntersections[i][1]] = 12
+        }
+      }
+    }
+    
+   
+
     // const buildedWithStreet = builded.map((row) => row.join(" ")).join("\n");
     return !withParser ? builded : builded.map((row) => row.join(" ")).join("\n");
     
@@ -203,7 +263,9 @@ const map = [
     gravity: 9.8,
     tiles: {
       "1": "GRASS",
-      "10": "STREET",
+      "10": "STREET-A",
+      "11": "STREET-B",
+      "12": "STREET-C",
       "3": "BLOQUE-1",
       "4": "BLOQUERANDOM",
       "5": "COLUMNALARGA",

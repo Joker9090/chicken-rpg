@@ -82,6 +82,9 @@ export default class RPG extends Scene {
 
     // otros assets
     this.load.image("tile", "/images/bloque.png");
+    this.load.image("street-a", "/images/street-a.png");
+    this.load.image("street-b", "/images/street-b.png");
+    this.load.image("street-c", "/images/street-c.png");
     this.load.image("cube1", "/images/cube1.png");
 
     this.load.spritesheet("chicken", "/images/chicken/spritesheetChicken.png", {
@@ -372,9 +375,15 @@ export default class RPG extends Scene {
             case "GRASS":
               self.createGrassTile(b, c, that, conf, pos);
               break;
-              case "STREET":
-                self.createStreetTile(b, c, that, conf, pos);
-                break;
+            case "STREET-A":
+              self.createStreetTile(b, c, that, conf, pos, "street-a");
+              break;
+            case "STREET-B":
+              self.createStreetTile(b, c, that, conf, pos, "street-b");
+              break;
+            case "STREET-C":
+              self.createStreetTile(b, c, that, conf, pos, "street-c");
+              break;
             case "BLOQUERANDOM":
               self.createBloqueRandomTile(b, c, that, conf, pos, index);
               break;
@@ -712,7 +721,8 @@ export default class RPG extends Scene {
     c: number,
     that: MapManager,
     conf: ConfObjectType,
-    pos: number
+    pos: number,
+    texture: string,
   ) {
     const { game, setPosFromAnchor } = that;
     const { height } = conf;
@@ -731,7 +741,7 @@ export default class RPG extends Scene {
       x,
       y,
       height,
-      "tile", //"bloque-" + Math.floor(Math.random() * 6),
+      texture, //"bloque-" + Math.floor(Math.random() * 6),
       0,
       this.isoGroup,
       matrixPosition
