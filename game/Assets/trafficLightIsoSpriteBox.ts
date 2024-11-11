@@ -3,12 +3,10 @@ import { Physics } from "phaser";
 export const ISOSPRITE: string = "IsoSprite";
 // @ts-ignore
 import { RpgIsoSpriteBox } from "./rpgIsoSpriteBox";
-import { Player } from "./Player";
-import { RpgIsoPlayerPrincipal } from "./rpgIsoPlayerPrincipal";
 
-export class PinIsoSpriteBox extends RpgIsoSpriteBox {
+export class TrafficLightIsoSpriteBox extends RpgIsoSpriteBox {
  
-  type: string = "PIN";
+  type: string = "TRAFFICLIGHT";
 
   constructor(
     scene: Phaser.Scene,
@@ -23,18 +21,11 @@ export class PinIsoSpriteBox extends RpgIsoSpriteBox {
   ) {
     super(scene, x, y, z, texture, frame, group, matrixPosition, interactivityPosition);
 
-    this.self.setScale(0.8);
+    this.self.setScale(1.25);
+    this.isoX = this.isoX - 30;
+    this.isoY = this.isoY - 10;
+    this.self.setTint(0xcccccc)
 
   }
 
-  updatePin(group: Phaser.GameObjects.Group) {
-   this.scene.add.tween({
-    targets: this.self,
-    y: "-=50",
-    duration: 2000,
-    repeat: -1,
-    yoyo: true,
-    ease: "power1",
-    });
-  }
 }

@@ -202,9 +202,16 @@ const objects: ObjetsConfig[] = [
 
   {
     x: 9,
-    y: 31,
+    y: 32,
     h: 50,
-    type: "15",
+    type: "16",
+  },
+
+  {
+    x: 16,
+    y: 32,
+    h: 50,
+    type: "17",
   },
 
   {
@@ -299,6 +306,8 @@ const map = [
       "8": "TREE",
       "9": "CUBE",
       "15": "PIN",
+      "16": "TRAFFIC-LIGHT-A",
+      "17": "TRAFFIC-LIGHT-B",
       PN: "PLAYER-N",
       PS: "PLAYER-S",
       PE: "PLAYER-E",

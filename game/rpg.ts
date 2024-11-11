@@ -10,6 +10,7 @@ import { RpgIsoPlayerSecundarioTalker } from "./Assets/rpgIsoPlayerSecundarioTal
 import UIContainer from "./Assets/UIAssetsChicken/UIContainer";
 import { CubeIsoSpriteBox } from "./Assets/cubeIsoSpriteBox";
 import { PinIsoSpriteBox } from "./Assets/pinIsoSpriteBox";
+import { TrafficLightIsoSpriteBox } from "./Assets/trafficLightIsoSpriteBox"
 // import UIScene from "./UIScene";
 
 export type IsoSceneType = {
@@ -89,6 +90,9 @@ export default class RPG extends Scene {
     this.load.image("street-b", "/images/street-b.png");
     this.load.image("street-c", "/images/street-c.png");
     this.load.image("cube1", "/images/cube1.png");
+    this.load.image("traffic-light-a", "/images/traffic-light-a.png");
+    this.load.image("traffic-light-b", "/images/traffic-light-b.png");
+    
 
     this.load.spritesheet("chicken", "/images/chicken/spritesheetChicken.png", {
       frameWidth: 552 / 4,
@@ -245,6 +249,7 @@ export default class RPG extends Scene {
 
     this.time.delayedCall(300, () => {
       this.getObjectByType("PIN")?.forEach((_pin: GameObjects.GameObject) => {
+        console.log("QUE PASO")
         const pin = _pin as unknown as PinIsoSpriteBox;
         if(this.isoGroup) pin.updatePin(this.isoGroup);
       })
@@ -432,11 +437,17 @@ export default class RPG extends Scene {
               self.createTreeTile(b, c, that, conf, pos);
               break;
             case "CUBE":
-                self.createCubeTile(b, c, that, conf, pos, "cube1");
+              self.createCubeTile(b, c, that, conf, pos, "cube1");
               break;
-              case "PIN":
-                self.createPinTile(b, c, that, conf, pos, "pin");
-                break;
+            case "PIN":
+              self.createPinTile(b, c, that, conf, pos, "pin");
+              break;
+            case "TRAFFIC-LIGHT-A":
+              self.createTrafficLightTile(b, c, that, conf, pos, "traffic-light-a");
+              break;
+            case "TRAFFIC-LIGHT-B":
+              self.createTrafficLightTile(b, c, that, conf, pos, "traffic-light-b");
+              break;
           }
         },
       };
@@ -599,7 +610,7 @@ export default class RPG extends Scene {
       h: height,
     };
 
-    tileObj = new CubeIsoSpriteBox(game, x, y, height, tile, 0, this.isoGroup, matrixPosition);
+    tileObj = new PinIsoSpriteBox(game, x, y, height, tile, 0, this.isoGroup, matrixPosition);
 
   }
 
@@ -623,6 +634,31 @@ export default class RPG extends Scene {
     };
 
     tileObj = new CubeIsoSpriteBox(game, x, y, height, tile, 0, this.isoGroup, matrixPosition);
+
+   
+  }
+
+
+  createTrafficLightTile(
+    b: number,
+    c: number,
+    that: MapManager,
+    conf: ConfObjectType,
+    pos: number,
+    tile: string
+  ) {
+    const { game, setPosFromAnchor } = that;
+    const { height } = conf;
+    const x = setPosFromAnchor(b, c).x;
+    const y = setPosFromAnchor(b, c).y;
+    let tileObj;
+    let matrixPosition = {
+      x: b,
+      y: c,
+      h: height,
+    };
+
+    tileObj = new TrafficLightIsoSpriteBox(game, x, y, height, tile, 0, this.isoGroup, matrixPosition);
 
    
   }
