@@ -26,6 +26,7 @@ export enum statusEnum {
 
 export default class RPG extends Scene {
   maps: string[];
+  withPlayer: Boolean;
   cameraTunnel?: Phaser.GameObjects.Arc
   mapsBuilded: any[] = [];
   input: any;
@@ -48,6 +49,7 @@ export default class RPG extends Scene {
     super(sceneConfig);
     this.maps = maps;
     this.sceneKey = sceneConfig.key;
+    this.withPlayer = false;
   }
 
   preload() {
@@ -203,6 +205,35 @@ export default class RPG extends Scene {
     this.UICamera.ignore(forestContainers)
 
     const UICont = new UIContainer(this, 0, 0)
+
+
+    if(!this.withPlayer) {
+      this.input.on("pointermove", (pointer: Phaser.Input.Pointer) => {
+        if (pointer.isDown) {
+          this.cameras.main.scrollX -= pointer.velocity.x / 2;
+          this.cameras.main.scrollY -= pointer.velocity.y / 2;
+        }
+      });
+    }
+
+    this.input.on("wheel",  (pointer: Phaser.Input.Pointer, gameObjects: any[], deltaX: number, deltaY: number, deltaZ: number) => {
+
+      if (deltaY > 0) {
+          var newZoom = this.cameras.main.zoom -.1;
+          if (newZoom > 0.3) {
+              this.cameras.main.zoom = newZoom;     
+          }
+      }
+    
+      if (deltaY < 0) {
+          var newZoom = this.cameras.main.zoom +.1;
+          if (newZoom < 1.3) {
+              this.cameras.main.zoom = newZoom;     
+          }
+      }
+
+    
+    });
  
   }
 
@@ -261,18 +292,20 @@ export default class RPG extends Scene {
 
             console.log("object key: ", objectKey);
             if (objectKey == "PLAYER-S") {
-              this.player = new RpgIsoPlayerPrincipal(
-                this, // Scene
-                x, // x
-                y, // y
-                height + h, // height
-                "chicken", // spriteName
-                17, // baseFrame
-                this.isoGroup, // group
-                direction, // direction
-                matrixPosition,
-                "Pepe"
-              );
+              if(this.withPlayer) {
+                this.player = new RpgIsoPlayerPrincipal(
+                  this, // Scene
+                  x, // x
+                  y, // y
+                  height + h, // height
+                  "chicken", // spriteName
+                  17, // baseFrame
+                  this.isoGroup, // group
+                  direction, // direction
+                  matrixPosition,
+                  "Pepe"
+                );
+              }
             } else {
               this.NPCTalker = new RpgIsoPlayerSecundarioTalker(
                 this, // Scene
@@ -755,8 +788,8 @@ export default class RPG extends Scene {
       self.player.updateAnim(self.cursors);
       this.makeOpacityNearPlayer()
       //console.log(this.player?.isoX, this.player?.isoY, "ARIEL")
+      if (this.player?.isoX === 660 && this.player?.isoY === 55 && this.player.facingDirection === 'e') this.NPCTalker?.interact()
+      else this.NPCTalker?.breakInteract()
     }
-    if (this.player?.isoX === 660 && this.player?.isoY === 55 && this.player.facingDirection === 'e') this.NPCTalker?.interact()
-    else this.NPCTalker?.breakInteract()
   }
 }
