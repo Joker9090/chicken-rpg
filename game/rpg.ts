@@ -42,6 +42,7 @@ export default class RPG extends Scene {
   UICamera?: Phaser.Cameras.Scene2D.Camera;
   group?: Phaser.GameObjects.Group;
   distanceBetweenFloors: number = 50;
+  eventEmitter?: Phaser.Events.EventEmitter
 
 
   constructor(maps: string[]) {
@@ -52,7 +53,9 @@ export default class RPG extends Scene {
     super(sceneConfig);
     this.maps = maps;
     this.sceneKey = sceneConfig.key;
-    this.withPlayer = true;
+    this.withPlayer = false;
+ 
+
   }
 
   preload() {
@@ -159,6 +162,9 @@ export default class RPG extends Scene {
     this.isoPhysics.projector.origin.setTo(0.5, 0.3); // permitime dudas
     this.isoPhysics.world.gravity.setTo(0); // permitime dudas
 
+    const ee = this.events;
+    this.eventEmitter = ee;
+
     // resize the game
     this.scale.resize(window.innerWidth, window.innerHeight);
 
@@ -242,8 +248,54 @@ export default class RPG extends Scene {
           }
       }
 
-    
     });
+
+
+    if(window.innerWidth < 900) {
+
+      console.log("this.eventEmitter",this.eventEmitter)
+      this.eventEmitter?.addListener("zoomIn", () => {
+        var newZoom = this.cameras.main.zoom +.1;
+        if (newZoom < 1.3) {
+            this.cameras.main.zoom = newZoom;     
+        }
+
+      }, this);
+      this.eventEmitter?.addListener("zoomOut", () => {
+        var newZoom = this.cameras.main.zoom -.1;
+          if (newZoom > 0.3) {
+              this.cameras.main.zoom = newZoom;     
+          }
+      }, this);
+
+      if(this.player) {
+        this.eventEmitter?.addListener("moveLeft", () => {
+            console.log("moveLeft")
+            this.player?.move("w", -1, 0);
+
+        }, this);
+
+        this.eventEmitter?.addListener("moveRight", () => {
+          
+          console.log("moveRight")
+          this.player?.move("e", 1, 0);
+
+        }, this);
+
+        this.eventEmitter?.addListener("moveTop", () => {
+          
+          console.log("moveTop")
+          this.player?.move("n", 0, 1);
+        }, this);
+
+        this.eventEmitter?.addListener("moveBottom", () => {
+            console.log("moveBottom")
+            this.player?.move("s", 0, -1);
+
+        }, this);
+      }
+    }
+
 
     // fire function only once after 300 ms
 
