@@ -53,7 +53,7 @@ export default class RPG extends Scene {
     super(sceneConfig);
     this.maps = maps;
     this.sceneKey = sceneConfig.key;
-    this.withPlayer = false;
+    this.withPlayer = true;
  
 
   }
