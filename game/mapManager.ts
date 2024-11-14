@@ -16,7 +16,7 @@ export default class MapManager {
     this.mapFile = map;
     this.rows = [];
     this.posOfAnchor = [0, 0];
-    this.distanceOfTiles = { width: 55, height: 55 };
+    this.distanceOfTiles = { width: 50, height: 50 };
     this.initMapParser();
     this.drawMap = this.drawMap.bind(this);
     this.setPosFromAnchor = this.setPosFromAnchor.bind(this);

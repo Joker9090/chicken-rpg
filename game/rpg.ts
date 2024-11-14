@@ -10,7 +10,8 @@ import { RpgIsoPlayerSecundarioTalker } from "./Assets/rpgIsoPlayerSecundarioTal
 import UIContainer from "./Assets/UIAssetsChicken/UIContainer";
 import { CubeIsoSpriteBox } from "./Assets/cubeIsoSpriteBox";
 import { PinIsoSpriteBox } from "./Assets/pinIsoSpriteBox";
-import { TrafficLightIsoSpriteBox } from "./Assets/trafficLightIsoSpriteBox"
+import { TrafficLightIsoSpriteBox } from "./Assets/trafficLightIsoSpriteBox";
+import { BuildingSpriteBox } from "./Assets/buildingSpriteBox";
 // import UIScene from "./UIScene";
 
 export type IsoSceneType = {
@@ -29,7 +30,7 @@ export enum statusEnum {
 export default class RPG extends Scene {
   maps: string[];
   withPlayer: Boolean;
-  cameraTunnel?: Phaser.GameObjects.Arc
+  cameraTunnel?: Phaser.GameObjects.Arc;
   mapsBuilded: any[] = [];
   input: any;
   isoPhysics: IsoPhysics;
@@ -42,8 +43,7 @@ export default class RPG extends Scene {
   UICamera?: Phaser.Cameras.Scene2D.Camera;
   group?: Phaser.GameObjects.Group;
   distanceBetweenFloors: number = 50;
-  eventEmitter?: Phaser.Events.EventEmitter
-
+  eventEmitter?: Phaser.Events.EventEmitter;
 
   constructor(maps: string[]) {
     const sceneConfig = {
@@ -53,9 +53,7 @@ export default class RPG extends Scene {
     super(sceneConfig);
     this.maps = maps;
     this.sceneKey = sceneConfig.key;
-    this.withPlayer = true;
- 
-
+    this.withPlayer = false;
   }
 
   preload() {
@@ -84,7 +82,7 @@ export default class RPG extends Scene {
     this.load.image("varSelector", "/assets/chickenUIAssets/varSelector.png");
 
     this.load.image("reloj", "/assets/UI/UILevel/reloj.png");
-    // <- ASSETS UI 
+    // <- ASSETS UI
 
     // otros assets
     this.load.image("tile", "/images/bloque.png");
@@ -95,6 +93,13 @@ export default class RPG extends Scene {
     this.load.image("cube1", "/images/cube1.png");
     this.load.image("traffic-light-a", "/images/traffic-light-a.png");
     this.load.image("traffic-light-b", "/images/traffic-light-b.png");
+    this.load.image("grassTEST", "/images/bloque1TEST.png");
+    this.load.image("buildingTEST", "/images/building1TEST.png");
+    this.load.image("blockBuilding", "/images/bloque3TEST.png");
+    this.load.image("blockBuilding-b", "/images/bloque4TEST.png");
+    this.load.image("blockBuildingBase", "/images/bloque2TEST.png");
+    this.load.image("blockBuildingEmpty", "/images/bloque5TEST.png");
+
     
 
     this.load.spritesheet("chicken", "/images/chicken/spritesheetChicken.png", {
@@ -154,7 +159,7 @@ export default class RPG extends Scene {
     });
   }
 
-  destroy() { }
+  destroy() {}
 
   create() {
     //default
@@ -191,7 +196,8 @@ export default class RPG extends Scene {
 
     for (let index = 0; index < 12; index++) {
       let floor = index > 0 ? index * 3 : 0;
-      let isIdleAnim = ((index + floor >= 16) && (index + floor + 3 <= 32)) ? true : false;
+      let isIdleAnim =
+        index + floor >= 16 && index + floor + 3 <= 32 ? true : false;
 
       this.anims.create({
         key: posiblePositions[index],
@@ -214,16 +220,20 @@ export default class RPG extends Scene {
     this.cameras.main.setViewport(0, 0, window.innerWidth, window.innerHeight);
 
     // WORKKSHOP NANEX
-   
-    this.UICamera = this.cameras.add(0, 0, window.innerWidth, window.innerHeight)
-    this.UICamera.ignore(this.isoGroup)
-    const forestContainers = this.forest.map((arbolito) => arbolito.container)
-    this.UICamera.ignore(forestContainers)
 
-    const UICont = new UIContainer(this, 0, 0)
+    this.UICamera = this.cameras.add(
+      0,
+      0,
+      window.innerWidth,
+      window.innerHeight
+    );
+    this.UICamera.ignore(this.isoGroup);
+    const forestContainers = this.forest.map((arbolito) => arbolito.container);
+    this.UICamera.ignore(forestContainers);
 
+    const UICont = new UIContainer(this, 0, 0);
 
-    if(!this.withPlayer) {
+    if (!this.withPlayer) {
       this.input.on("pointermove", (pointer: Phaser.Input.Pointer) => {
         if (pointer.isDown) {
           this.cameras.main.scrollX -= pointer.velocity.x / 2;
@@ -232,81 +242,102 @@ export default class RPG extends Scene {
       });
     }
 
-    this.input.on("wheel",  (pointer: Phaser.Input.Pointer, gameObjects: any[], deltaX: number, deltaY: number, deltaZ: number) => {
-
-      if (deltaY > 0) {
-          var newZoom = this.cameras.main.zoom -.1;
+    this.input.on(
+      "wheel",
+      (
+        pointer: Phaser.Input.Pointer,
+        gameObjects: any[],
+        deltaX: number,
+        deltaY: number,
+        deltaZ: number
+      ) => {
+        if (deltaY > 0) {
+          var newZoom = this.cameras.main.zoom - 0.1;
           if (newZoom > 0.3) {
-              this.cameras.main.zoom = newZoom;     
+            this.cameras.main.zoom = newZoom;
           }
-      }
-    
-      if (deltaY < 0) {
-          var newZoom = this.cameras.main.zoom +.1;
-          if (newZoom < 1.3) {
-              this.cameras.main.zoom = newZoom;     
-          }
-      }
-
-    });
-
-
-    if(window.innerWidth < 900) {
-
-      console.log("this.eventEmitter",this.eventEmitter)
-      this.eventEmitter?.addListener("zoomIn", () => {
-        var newZoom = this.cameras.main.zoom +.1;
-        if (newZoom < 1.3) {
-            this.cameras.main.zoom = newZoom;     
         }
 
-      }, this);
-      this.eventEmitter?.addListener("zoomOut", () => {
-        var newZoom = this.cameras.main.zoom -.1;
-          if (newZoom > 0.3) {
-              this.cameras.main.zoom = newZoom;     
+        if (deltaY < 0) {
+          var newZoom = this.cameras.main.zoom + 0.1;
+          if (newZoom < 1.3) {
+            this.cameras.main.zoom = newZoom;
           }
-      }, this);
+        }
+      }
+    );
 
-      if(this.player) {
-        this.eventEmitter?.addListener("moveLeft", () => {
-            console.log("moveLeft")
+    if (window.innerWidth < 900) {
+      console.log("this.eventEmitter", this.eventEmitter);
+      this.eventEmitter?.addListener(
+        "zoomIn",
+        () => {
+          var newZoom = this.cameras.main.zoom + 0.1;
+          if (newZoom < 1.3) {
+            this.cameras.main.zoom = newZoom;
+          }
+        },
+        this
+      );
+      this.eventEmitter?.addListener(
+        "zoomOut",
+        () => {
+          var newZoom = this.cameras.main.zoom - 0.1;
+          if (newZoom > 0.3) {
+            this.cameras.main.zoom = newZoom;
+          }
+        },
+        this
+      );
+
+      if (this.player) {
+        this.eventEmitter?.addListener(
+          "moveLeft",
+          () => {
+            console.log("moveLeft");
             this.player?.move("w", -1, 0);
+          },
+          this
+        );
 
-        }, this);
+        this.eventEmitter?.addListener(
+          "moveRight",
+          () => {
+            console.log("moveRight");
+            this.player?.move("e", 1, 0);
+          },
+          this
+        );
 
-        this.eventEmitter?.addListener("moveRight", () => {
-          
-          console.log("moveRight")
-          this.player?.move("e", 1, 0);
+        this.eventEmitter?.addListener(
+          "moveTop",
+          () => {
+            console.log("moveTop");
+            this.player?.move("n", 0, 1);
+          },
+          this
+        );
 
-        }, this);
-
-        this.eventEmitter?.addListener("moveTop", () => {
-          
-          console.log("moveTop")
-          this.player?.move("n", 0, 1);
-        }, this);
-
-        this.eventEmitter?.addListener("moveBottom", () => {
-            console.log("moveBottom")
+        this.eventEmitter?.addListener(
+          "moveBottom",
+          () => {
+            console.log("moveBottom");
             this.player?.move("s", 0, -1);
-
-        }, this);
+          },
+          this
+        );
       }
     }
-
 
     // fire function only once after 300 ms
 
     this.time.delayedCall(300, () => {
       this.getObjectByType("PIN")?.forEach((_pin: GameObjects.GameObject) => {
-        console.log("QUE PASO")
+        console.log("QUE PASO");
         const pin = _pin as unknown as PinIsoSpriteBox;
-        if(this.isoGroup) pin.updatePin(this.isoGroup);
-      })
-    })
-
+        if (this.isoGroup) pin.updatePin(this.isoGroup);
+      });
+    });
   }
 
   getObjectByType(type: string) {
@@ -317,15 +348,15 @@ export default class RPG extends Scene {
   }
 
   spawnObjects() {
-    this.UICamera
+    this.UICamera;
     let scalar = 0;
     let h;
 
     const _lvlConf = this.maps[0];
-    const lvlConf = JSON.parse(_lvlConf)
+    const lvlConf = JSON.parse(_lvlConf);
 
-    this.distanceBetweenFloors = lvlConf.distanceBetweenFloors
-    h = this.distanceBetweenFloors
+    this.distanceBetweenFloors = lvlConf.distanceBetweenFloors;
+    h = this.distanceBetweenFloors;
 
     const objectsMaps = JSON.parse(this.maps[1]);
 
@@ -376,7 +407,7 @@ export default class RPG extends Scene {
 
             console.log("object key: ", objectKey);
             if (objectKey == "PLAYER-S") {
-              if(this.withPlayer) {
+              if (this.withPlayer) {
                 this.player = new RpgIsoPlayerPrincipal(
                   this, // Scene
                   x, // x
@@ -401,7 +432,7 @@ export default class RPG extends Scene {
                 17, // baseFrame
                 this.isoGroup, // group
                 direction, // direction
-                matrixPosition,
+                matrixPosition
               );
               // if (direction === "n") {
               //   a.velocity = 3;
@@ -414,17 +445,17 @@ export default class RPG extends Scene {
       m.drawMap(this.isoGroup, conf, lvlConf);
     }
   }
-  
+
   spawnTiles() {
     const self = this;
     let pos = 0;
     let h: number;
 
     const _lvlConf = this.maps[0];
-    const lvlConf = JSON.parse(_lvlConf)
+    const lvlConf = JSON.parse(_lvlConf);
 
-    this.distanceBetweenFloors = lvlConf.distanceBetweenFloors
-    h = this.distanceBetweenFloors
+    this.distanceBetweenFloors = lvlConf.distanceBetweenFloors;
+    h = this.distanceBetweenFloors;
 
     function tweenTile(tile: RpgIsoSpriteBox) {
       return () => {
@@ -496,10 +527,67 @@ export default class RPG extends Scene {
               self.createPinTile(b, c, that, conf, pos, "pin");
               break;
             case "TRAFFIC-LIGHT-A":
-              self.createTrafficLightTile(b, c, that, conf, pos, "traffic-light-a");
+              self.createTrafficLightTile(
+                b,
+                c,
+                that,
+                conf,
+                pos,
+                "traffic-light-a"
+              );
               break;
             case "TRAFFIC-LIGHT-B":
-              self.createTrafficLightTile(b, c, that, conf, pos, "traffic-light-b");
+              self.createTrafficLightTile(
+                b,
+                c,
+                that,
+                conf,
+                pos,
+                "traffic-light-b"
+              );
+              break;
+            case "BUILDING":
+              self.createBuilding(b, c, that, conf, pos, "buildingTEST");
+              break;
+            case "BUILDINGBLOCK":
+              self.createBloqueBuildingTile(
+                b,
+                c,
+                that,
+                conf,
+                pos,
+                "blockBuilding"
+              );
+              break;
+            case "BUILDINGBLOCK-B":
+              self.createBloqueBuildingTile(
+                b,
+                c,
+                that,
+                conf,
+                pos,
+                "blockBuilding-b"
+              );
+              break;
+            case "BUILDINGBLOCKBASE":
+              self.createBloqueBuildingTile(
+                b,
+                c,
+                that,
+                conf,
+                pos,
+                "blockBuildingBase"
+              );
+              break;
+            case "BUILDINGBLOCKEMPTY":
+              self.createBloqueBuildingTile(
+                b,
+                c,
+                that,
+                conf,
+                pos,
+                "blockBuildingEmpty"
+              );
               break;
           }
         },
@@ -528,7 +616,16 @@ export default class RPG extends Scene {
       h: height,
     };
 
-    tileObj = new RpgIsoSpriteBox(game, x, y, height, tile, 0, this.isoGroup, matrixPosition);
+    tileObj = new RpgIsoSpriteBox(
+      game,
+      x,
+      y,
+      height,
+      tile,
+      0,
+      this.isoGroup,
+      matrixPosition
+    );
     pos++;
 
     tileObj.type = "STONE";
@@ -559,7 +656,16 @@ export default class RPG extends Scene {
       h: height,
     };
 
-    tileObj = new RpgIsoSpriteBox(game, x, y, height, tile, 0, this.isoGroup, matrixPosition);
+    tileObj = new RpgIsoSpriteBox(
+      game,
+      x,
+      y,
+      height,
+      tile,
+      0,
+      this.isoGroup,
+      matrixPosition
+    );
     pos++;
 
     tileObj.type = "STONE";
@@ -589,12 +695,21 @@ export default class RPG extends Scene {
       h: height,
     };
 
-    tileObj = new RpgIsoSpriteBox(game, x, y, height, "tree", 0, this.isoGroup, matrixPosition);
+    tileObj = new RpgIsoSpriteBox(
+      game,
+      x,
+      y,
+      height,
+      "tree",
+      0,
+      this.isoGroup,
+      matrixPosition
+    );
     tileObj.self.setAlpha(0.7);
     tileObj.self.setTint(0x000000);
-    tileObj.self.setOrigin(0.42 + 0.03, 0.80 + 0.03);
-    tileObj.self.setAngle(100)
-    tileObj.self.setScale(0.6)
+    tileObj.self.setOrigin(0.42 + 0.03, 0.8 + 0.03);
+    tileObj.self.setAngle(100);
+    tileObj.self.setScale(0.6);
     const tree = this.add.sprite(0, 0, "tree");
     tree.setOrigin(0.42, 0.75);
     tileObj.customDepth = tileObj.self.depth + this.distanceBetweenFloors;
@@ -663,8 +778,16 @@ export default class RPG extends Scene {
       h: height,
     };
 
-    tileObj = new PinIsoSpriteBox(game, x, y, height, tile, 0, this.isoGroup, matrixPosition);
-
+    tileObj = new PinIsoSpriteBox(
+      game,
+      x,
+      y,
+      height,
+      tile,
+      0,
+      this.isoGroup,
+      matrixPosition
+    );
   }
 
   createCubeTile(
@@ -686,11 +809,50 @@ export default class RPG extends Scene {
       h: height,
     };
 
-    tileObj = new CubeIsoSpriteBox(game, x, y, height, tile, 0, this.isoGroup, matrixPosition, undefined, this.distanceBetweenFloors);
-
-   
+    tileObj = new CubeIsoSpriteBox(
+      game,
+      x,
+      y,
+      height,
+      tile,
+      0,
+      this.isoGroup,
+      matrixPosition,
+      undefined,
+      this.distanceBetweenFloors
+    );
   }
 
+  createBuilding(
+    b: number,
+    c: number,
+    that: MapManager,
+    conf: ConfObjectType,
+    pos: number,
+    tile: string
+  ) {
+    const { game, setPosFromAnchor } = that;
+    const { height } = conf;
+    const x = setPosFromAnchor(b, c).x;
+    const y = setPosFromAnchor(b, c).y;
+    let tileObj;
+    let matrixPosition = {
+      x: b,
+      y: c,
+      h: height,
+    };
+
+    tileObj = new BuildingSpriteBox(
+      game,
+      x,
+      y,
+      height,
+      tile,
+      0,
+      this.isoGroup,
+      matrixPosition
+    );
+  }
 
   createTrafficLightTile(
     b: number,
@@ -711,9 +873,16 @@ export default class RPG extends Scene {
       h: height,
     };
 
-    tileObj = new TrafficLightIsoSpriteBox(game, x, y, height, tile, 0, this.isoGroup, matrixPosition);
-
-   
+    tileObj = new TrafficLightIsoSpriteBox(
+      game,
+      x,
+      y,
+      height,
+      tile,
+      0,
+      this.isoGroup,
+      matrixPosition
+    );
   }
 
   destroyTile(tileObj: RpgIsoSpriteBox) {
@@ -765,13 +934,12 @@ export default class RPG extends Scene {
         });
       }
       // tileObj.self.setTint(0xff0000);
-
     };
   }
 
   noHighlightTile(tileObj: RpgIsoSpriteBox) {
     return () => {
-      if (this.player) this.player.clearPossibleMovements()
+      if (this.player) this.player.clearPossibleMovements();
       tileObj.highlightedTiles = [];
       // clean tint from all tiles
       // @ts-ignore
@@ -779,6 +947,48 @@ export default class RPG extends Scene {
         if (t.type == "STONE") t.self.clearTint();
       });
     };
+  }
+
+  createBloqueBuildingTile(
+    b: number,
+    c: number,
+    that: MapManager,
+    conf: ConfObjectType,
+    pos: number,
+    texture: string
+  ) {
+    const { game, setPosFromAnchor } = that;
+    const { height } = conf;
+    const x = setPosFromAnchor(b, c).x;
+    const y = setPosFromAnchor(b, c).y;
+    let tileObj;
+    let matrixPosition = {
+      x: b,
+      y: c,
+      h: height,
+    };
+    tileObj = new RpgIsoSpriteBox(
+      game,
+      x,
+      y,
+      height,
+      texture,
+      0,
+      this.isoGroup,
+      matrixPosition
+    );
+    pos++;
+    tileObj.type = "STONE";
+
+    //if height is 75 tint tile
+    tileObj.tileX = b;
+    tileObj.tileY = c;
+    tileObj.self.on("pointerover", this.highlightTile(tileObj));
+    tileObj.self.on("pointerout", this.noHighlightTile(tileObj));
+    tileObj.self.on("pointerdown", this.destroyTile(tileObj));
+
+    // console.log(tileObj);
+    // log the position of tile every 10 tiles
   }
 
   createBloqueRandomTile(
@@ -848,7 +1058,7 @@ export default class RPG extends Scene {
       x,
       y,
       height,
-      "tile", //"bloque-" + Math.floor(Math.random() * 6),
+      "grassTEST", //"bloque-" + Math.floor(Math.random() * 6),
       0,
       this.isoGroup,
       matrixPosition
@@ -859,14 +1069,14 @@ export default class RPG extends Scene {
     // tileObj.self.setTint(0x0000ff);
     // tileObj.self.on("pointerdown", () => console.log('pointer en grass',tileObj));
   }
-  
+
   createStreetTile(
     b: number,
     c: number,
     that: MapManager,
     conf: ConfObjectType,
     pos: number,
-    texture: string,
+    texture: string
   ) {
     const { game, setPosFromAnchor } = that;
     const { height } = conf;
@@ -898,52 +1108,82 @@ export default class RPG extends Scene {
   }
 
   makeOpacityNearPlayer() {
-
-    if(!this.cameraTunnel) {
-      this.cameraTunnel = this.add.circle(this.player?.self.x, this.player?.self.y, 100, 0x6666ff, 0);
+    if (!this.cameraTunnel) {
+      this.cameraTunnel = this.add.circle(
+        this.player?.self.x,
+        this.player?.self.y,
+        100,
+        0x6666ff,
+        0
+      );
       this.cameraTunnel.setDepth(100000);
-    }else this.cameraTunnel.setPosition(this.player?.self.x, this.player?.self.y);
-   
-    const checkCameraContains = (t: RpgIsoSpriteBox) => {
-      return this.cameraTunnel?.getBounds().contains(t.self.x, t.self.y)
-    }
+    } else
+      this.cameraTunnel.setPosition(this.player?.self.x, this.player?.self.y);
 
-    const checkObjectIsInFrontOfPlayer = (t: RpgIsoSpriteBox, player: RpgIsoPlayerPrincipal) => {
+    const checkCameraContains = (t: RpgIsoSpriteBox) => {
+      return this.cameraTunnel?.getBounds().contains(t.self.x, t.self.y);
+    };
+
+    const checkObjectIsInFrontOfPlayer = (
+      t: RpgIsoSpriteBox,
+      player: RpgIsoPlayerPrincipal
+    ) => {
       if (t.matrixPosition && player.matrixPosition) {
         // check if x is the same and y is above
-        if (t.matrixPosition.x === player.matrixPosition.x && t.matrixPosition.y > player.matrixPosition.y) return true
+        if (
+          t.matrixPosition.x === player.matrixPosition.x &&
+          t.matrixPosition.y > player.matrixPosition.y
+        )
+          return true;
         // check if y is the same and x is above
-        if (t.matrixPosition.y === player.matrixPosition.y && t.matrixPosition.x > player.matrixPosition.x) return true
+        if (
+          t.matrixPosition.y === player.matrixPosition.y &&
+          t.matrixPosition.x > player.matrixPosition.x
+        )
+          return true;
         // check if both are above
-        if (t.matrixPosition.y > player.matrixPosition.y && t.matrixPosition.x > player.matrixPosition.x) return true
-        
-        return false
+        if (
+          t.matrixPosition.y > player.matrixPosition.y &&
+          t.matrixPosition.x > player.matrixPosition.x
+        )
+          return true;
+
+        return false;
       }
-      return false
-    }
+      return false;
+    };
 
     //@ts-ignore
     this.isoGroup?.children.each((_t) => {
       const t = _t as unknown as RpgIsoSpriteBox;
-      if (t.type == "STONE" && t.matrixPosition && this.player?.matrixPosition) {
-        if (checkCameraContains(t) && checkObjectIsInFrontOfPlayer(t, this.player)) {
-            t.self.setAlpha(0.05);
-        }
-        else t.self.setAlpha(1);
+      if (
+        t.type == "STONE" &&
+        t.matrixPosition &&
+        this.player?.matrixPosition
+      ) {
+        if (
+          checkCameraContains(t) &&
+          checkObjectIsInFrontOfPlayer(t, this.player)
+        ) {
+          t.self.setAlpha(0.05);
+        } else t.self.setAlpha(1);
       }
     });
-
   }
-
 
   update() {
     const self = this;
     if (self.player && self.cursors) {
       self.player.updateAnim(self.cursors);
-      this.makeOpacityNearPlayer()
+      this.makeOpacityNearPlayer();
       //console.log(this.player?.isoX, this.player?.isoY, "ARIEL")
-      if (this.player?.isoX === 660 && this.player?.isoY === 55 && this.player.facingDirection === 'e') this.NPCTalker?.interact()
-      else this.NPCTalker?.breakInteract()
+      if (
+        this.player?.isoX === 660 &&
+        this.player?.isoY === 55 &&
+        this.player.facingDirection === "e"
+      )
+        this.NPCTalker?.interact();
+      else this.NPCTalker?.breakInteract();
     }
   }
 }
