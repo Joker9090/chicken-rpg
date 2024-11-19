@@ -36,12 +36,20 @@ export default class MultiScene extends Phaser.Scene {
       });
   }
 
+  create(){
+    const activeScenes = this.game.scene.getScenes(true);
+
+    console.log("TEST", this.game)
+  }
+
   makeTransition(sceneName: string, data: any) {
+    console.log("data al make transition", sceneName, data);  
     const getBetweenScenesScene = this.game.scene.getScene(
       "BetweenScenes"
     ) as BetweenScenes;
     console.log("BETWEEN SCENES", getBetweenScenesScene)
     if (getBetweenScenesScene) {
+      console.log("ENTRO ACA 111111")
       if (getBetweenScenesScene.status != BetweenScenesStatus.IDLE)
         return false;
       getBetweenScenesScene.changeSceneTo(sceneName, data);
@@ -49,6 +57,7 @@ export default class MultiScene extends Phaser.Scene {
         this.scene.stop();
       });
     } else {
+      console.log("ENTRO ACA 1111112222222")
       this.scene.start(sceneName, data);
       this.time.delayedCall(1000, () => {
         this.scene.stop();

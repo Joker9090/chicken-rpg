@@ -20,6 +20,7 @@ export default class BetweenScenesScene extends Phaser.Scene {
   }
 
   changeSceneTo(sceneName: string, data: any) {
+    console.log("CHANGE SCENE TO", sceneName, data)
     if (this.status == BetweenScenesStatus.IDLE) {
       this.newSceneName = sceneName;
       this.newSceneWith = data;
@@ -32,7 +33,7 @@ export default class BetweenScenesScene extends Phaser.Scene {
     if (this.status == BetweenScenesStatus.PROCCESSING) {
       this.status = BetweenScenesStatus.WAITING;
       if (this.newSceneName) {
-        console.log(this.newSceneName, "NEW SCSENE NAME")
+        console.log(this.newSceneName,this.newSceneWith,  "NEW SCSENE NAME")
         this.scene.launch(this.newSceneName, this.newSceneWith);
         this.scene.bringToTop();
       }
@@ -81,14 +82,18 @@ export default class BetweenScenesScene extends Phaser.Scene {
   }
   
   onTurnOnComplete() {
-    // start PreLoadScene to load the next scene
+    // check if there is a scene preloadscene
+
     const preloadScene = new PreLoadScene(this.newSceneWith && this.newSceneWith.loadKey ? this.newSceneWith.loadKey : undefined, () => {
       this.loadNewScene()
       this.turnOff()
     });
-
+    console.log(preloadScene, "PRELOAD SCENE")
     const scene = this.scene.add("PreLoadScene", preloadScene, true);
-    this.game.scene.start("PreLoadScene").bringToTop("PreLoadScene");
+    
+    console.log("ACAAAA 0123", this.game.scene.getScenes())
+    // this.game.scene.start("PreLoadScene").bringToTop("PreLoadScene");
+    console.log("ACAAAA 123")
 
   }
   turnOn() {

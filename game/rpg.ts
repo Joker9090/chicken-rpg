@@ -28,7 +28,7 @@ export enum statusEnum {
 }
 
 export default class RPG extends Scene {
-  maps: string[];
+  maps?: string[];
   withPlayer: Boolean;
   cameraTunnel?: Phaser.GameObjects.Arc;
   mapsBuilded: any[] = [];
@@ -45,15 +45,13 @@ export default class RPG extends Scene {
   distanceBetweenFloors: number = 50;
   eventEmitter?: Phaser.Events.EventEmitter;
 
-  constructor(maps: string[]) {
-    console.log("MAPS", maps)
+  constructor() {
     const sceneConfig = {
       key: "RPG",
       active: false,
       mapAdd: { isoPlugin: "iso", isoPhysics: "isoPhysics" },
     };
     super(sceneConfig);
-    this.maps = maps;
     console.log(this)
     this.sceneKey = sceneConfig.key;
     this.withPlayer = false;
@@ -164,7 +162,9 @@ export default class RPG extends Scene {
 
   destroy() {}
 
-  create() {
+  create(data: {maps: string[]}) {
+    this.maps = data.maps
+    console.log(this.maps, "THIS MAPS IN CREATE")
     if (this.maps === undefined) {
       console.log("ENTRO ACA")
     } else {
@@ -357,17 +357,18 @@ export default class RPG extends Scene {
   spawnObjects() {
     this.UICamera;
     let scalar = 0;
+    if (this.maps){
     let h;
 
-    const _lvlConf = this.maps[0];
-    const lvlConf = JSON.parse(_lvlConf);
-
-    this.distanceBetweenFloors = lvlConf.distanceBetweenFloors;
-    h = this.distanceBetweenFloors;
-
-    const objectsMaps = JSON.parse(this.maps[1]);
-
-    for (let index = 0; index < objectsMaps.length; index++) {
+      const _lvlConf = this.maps[0];
+      const lvlConf = JSON.parse(_lvlConf);
+      
+      this.distanceBetweenFloors = lvlConf.distanceBetweenFloors;
+      h = this.distanceBetweenFloors;
+      
+      const objectsMaps = JSON.parse(this.maps[1]);
+      
+      for (let index = 0; index < objectsMaps.length; index++) {
       const map = objectsMaps[index];
 
       // const h = 1000 + index * 600;
@@ -404,14 +405,14 @@ export default class RPG extends Scene {
             case "PLAYER-W":
               direction = "w";
               break;
-          }
+            }
           if (direction) {
             let matrixPosition = {
               x: b,
               y: c,
               h: height,
             };
-
+            
             console.log("object key: ", objectKey);
             if (objectKey == "PLAYER-S") {
               if (this.withPlayer) {
@@ -451,30 +452,32 @@ export default class RPG extends Scene {
       //@ts-ignore
       m.drawMap(this.isoGroup, conf, lvlConf);
     }
+    }
   }
 
   spawnTiles() {
     const self = this;
     let pos = 0;
     let h: number;
+    if (this.maps){
 
-    const _lvlConf = this.maps[0];
-    const lvlConf = JSON.parse(_lvlConf);
+      const _lvlConf = this.maps[0];
+      const lvlConf = JSON.parse(_lvlConf);
 
     this.distanceBetweenFloors = lvlConf.distanceBetweenFloors;
     h = this.distanceBetweenFloors;
 
-    function tweenTile(tile: RpgIsoSpriteBox) {
-      return () => {
-        self.tweens.add({
-          targets: tile.self,
-          isoZ: tile.isoZ + 10,
-          duration: 200,
-          yoyo: true,
-          repeat: 0,
-        });
-      };
-    }
+    // function tweenTile(tile: RpgIsoSpriteBox) {
+    //   return () => {
+    //     self.tweens.add({
+    //       targets: tile.self,
+    //       isoZ: tile.isoZ + 10,
+    //       duration: 200,
+    //       yoyo: true,
+    //       repeat: 0,
+    //     });
+    //   };
+    // }
 
     let scalar = 0;
     let startOnMap = 2;
@@ -602,6 +605,7 @@ export default class RPG extends Scene {
       //@ts-ignore
       m.drawMap(this.isoGroup, conf, lvlConf);
     }
+  }
   }
 
   createColumnaTile(

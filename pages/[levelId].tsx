@@ -55,10 +55,9 @@ export default function Level() {
       const multiScene = require('@/game/Loader/MultiScene')
       const rpg = require('@/game/rpg')
       const betweenScenes = require('@/game/Loader/BetweenScenes')
-      const preloadScene = require('@/game/Loader/PreLoadScene')
       const assetLoader = require('@/game/Loader/AssetsLoader')
-      const scenes = [multiScene.default, rpg.default, betweenScenes.default, preloadScene.default, assetLoader.default]
-      // const scenes = [multiScene.default]
+      const scenes = [multiScene.default, rpg.default, betweenScenes.default, assetLoader.default]
+      // const scenes = [multiScene.default, rpg.default]
       const G = DynamicGame.default as typeof Game
       setGameConstructor(new G(canvasRef.current, maps, scenes))
     }

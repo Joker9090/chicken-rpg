@@ -27,12 +27,12 @@ const loadAssets = {
       ["image", "tree", "/images/chicken/tree.png"],
       ["image", "traffic-light-a", "/images/traffic-light-a.png"],
       ["image", "traffic-light-b", "/images/traffic-light-b.png"],
-      ["svg", "chicken", "/images/chicken/spritesheetChicken.png",
-        {
-          frameWidth: 138,
-          frameHeight: 96,
-          startFrame: 0,
-        }],
+      // ["svg", "chicken", "/images/chicken/spritesheetChicken.svg",
+      //   {
+      //     frameWidth: 138,
+      //     frameHeight: 96,
+      //     startFrame: 0,
+      //   }],
       ["assetWithCallback", (scene: Phaser.Scene) => {
         for (let index = 0; index < 6; index++) {
           scene.load.spritesheet(
