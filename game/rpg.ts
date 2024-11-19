@@ -46,105 +46,108 @@ export default class RPG extends Scene {
   eventEmitter?: Phaser.Events.EventEmitter;
 
   constructor(maps: string[]) {
+    console.log("MAPS", maps)
     const sceneConfig = {
       key: "RPG",
+      active: false,
       mapAdd: { isoPlugin: "iso", isoPhysics: "isoPhysics" },
     };
     super(sceneConfig);
     this.maps = maps;
+    console.log(this)
     this.sceneKey = sceneConfig.key;
     this.withPlayer = false;
   }
 
   preload() {
-    // ASSETS UI ->
-    this.load.image("background", "/assets/chickenUIAssets/background.png");
-    this.load.image("settingsIcon", "/assets/chickenUIAssets/settingsIcon.png");
-    this.load.image("helpIcon", "/assets/chickenUIAssets/helpIcon.png");
+    // // ASSETS UI ->
+    // this.load.image("background", "/assets/chickenUIAssets/background.png");
+    // this.load.image("settingsIcon", "/assets/chickenUIAssets/settingsIcon.png");
+    // this.load.image("helpIcon", "/assets/chickenUIAssets/helpIcon.png");
 
-    this.load.image("exit", "/assets/chickenUIAssets/cerrar.png");
-    this.load.image("exitClick", "/assets/chickenUIAssets/cerrarClick.png");
-    this.load.image("exitHover", "/assets/chickenUIAssets/cerrarHover.png");
+    // this.load.image("exit", "/assets/chickenUIAssets/cerrar.png");
+    // this.load.image("exitClick", "/assets/chickenUIAssets/cerrarClick.png");
+    // this.load.image("exitHover", "/assets/chickenUIAssets/cerrarHover.png");
 
-    this.load.image("save", "/assets/chickenUIAssets/save.png");
-    this.load.image("saveClick", "/assets/chickenUIAssets/saveClick.png");
-    this.load.image("saveHover", "/assets/chickenUIAssets/saveHover.png");
+    // this.load.image("save", "/assets/chickenUIAssets/save.png");
+    // this.load.image("saveClick", "/assets/chickenUIAssets/saveClick.png");
+    // this.load.image("saveHover", "/assets/chickenUIAssets/saveHover.png");
 
-    this.load.image("cancel", "/assets/chickenUIAssets/cancel.png");
-    this.load.image("cancelClick", "/assets/chickenUIAssets/cancelClick.png");
-    this.load.image("cancelHover", "/assets/chickenUIAssets/cancelHover.png");
+    // this.load.image("cancel", "/assets/chickenUIAssets/cancel.png");
+    // this.load.image("cancelClick", "/assets/chickenUIAssets/cancelClick.png");
+    // this.load.image("cancelHover", "/assets/chickenUIAssets/cancelHover.png");
 
-    this.load.image("on", "/assets/chickenUIAssets/on.png");
-    this.load.image("off", "/assets/chickenUIAssets/off.png");
+    // this.load.image("on", "/assets/chickenUIAssets/on.png");
+    // this.load.image("off", "/assets/chickenUIAssets/off.png");
 
-    this.load.image("varFull", "/assets/chickenUIAssets/varFull.png");
-    this.load.image("varEmpty", "/assets/chickenUIAssets/varEmpty.png");
-    this.load.image("varSelector", "/assets/chickenUIAssets/varSelector.png");
+    // this.load.image("varFull", "/assets/chickenUIAssets/varFull.png");
+    // this.load.image("varEmpty", "/assets/chickenUIAssets/varEmpty.png");
+    // this.load.image("varSelector", "/assets/chickenUIAssets/varSelector.png");
 
-    this.load.image("reloj", "/assets/UI/UILevel/reloj.png");
-    // <- ASSETS UI
+    // this.load.image("reloj", "/assets/UI/UILevel/reloj.png");
+    // // <- ASSETS UI
 
-    // otros assets
-    this.load.image("tile", "/images/bloque.png");
-    this.load.image("pin", "/images/pin.png");
-    this.load.image("street-a", "/images/street-a.png");
-    this.load.image("street-b", "/images/street-b.png");
-    this.load.image("street-c", "/images/street-c.png");
-    this.load.image("cube1", "/images/cube1.png");
-    this.load.image("traffic-light-a", "/images/traffic-light-a.png");
-    this.load.image("traffic-light-b", "/images/traffic-light-b.png");
-    this.load.image("grassTEST", "/images/bloque1TEST.png");
-    this.load.image("buildingTEST", "/images/building1TEST.png");
-    this.load.image("blockBuilding", "/images/bloque3TEST.png");
-    this.load.image("blockBuilding-b", "/images/bloque4TEST.png");
-    this.load.image("blockBuildingBase", "/images/bloque2TEST.png");
-    this.load.image("blockBuildingEmpty", "/images/bloque5TEST.png");
+    // // otros assets
+    // this.load.image("tile", "/images/bloque.png");
+    // this.load.image("pin", "/images/pin.png");
+    // this.load.image("street-a", "/images/street-a.png");
+    // this.load.image("street-b", "/images/street-b.png");
+    // this.load.image("street-c", "/images/street-c.png");
+    // this.load.image("cube1", "/images/cube1.png");
+    // this.load.image("traffic-light-a", "/images/traffic-light-a.png");
+    // this.load.image("traffic-light-b", "/images/traffic-light-b.png");
+    // this.load.image("grassTEST", "/images/bloque1TEST.png");
+    // this.load.image("buildingTEST", "/images/building1TEST.png");
+    // this.load.image("blockBuilding", "/images/bloque3TEST.png");
+    // this.load.image("blockBuilding-b", "/images/bloque4TEST.png");
+    // this.load.image("blockBuildingBase", "/images/bloque2TEST.png");
+    // this.load.image("blockBuildingEmpty", "/images/bloque5TEST.png");
 
     
 
-    this.load.spritesheet("chicken", "/images/chicken/spritesheetChicken.png", {
-      frameWidth: 552 / 4,
-      frameHeight: 1152 / 12,
-      startFrame: 0,
-    });
+    // this.load.spritesheet("chicken", "/images/chicken/spritesheetChicken.png", {
+    //   frameWidth: 552 / 4,
+    //   frameHeight: 1152 / 12,
+    //   startFrame: 0,
+    // });
 
-    this.load.image("tree", "/images/chicken/tree.png");
+    // this.load.image("tree", "/images/chicken/tree.png");
 
-    for (let index = 0; index < 6; index++) {
-      this.load.spritesheet(
-        `bloque-${index}`,
-        "/images/chicken/piedraAbajo.png",
-        {
-          frameWidth: 100,
-          frameHeight: 100,
-          startFrame: index,
-        }
-      );
-    }
+    // for (let index = 0; index < 6; index++) {
+    //   this.load.spritesheet(
+    //     `bloque-${index}`,
+    //     "/images/chicken/piedraAbajo.png",
+    //     {
+    //       frameWidth: 100,
+    //       frameHeight: 100,
+    //       startFrame: index,
+    //     }
+    //   );
+    // }
 
-    for (let index = 0; index < 6; index++) {
-      this.load.spritesheet(
-        `semibloque-${index}`,
-        "/images/chicken/piedraAbajo.png",
-        {
-          frameWidth: 100,
-          frameHeight: 100,
-          startFrame: index + 6,
-        }
-      );
-    }
+    // for (let index = 0; index < 6; index++) {
+    //   this.load.spritesheet(
+    //     `semibloque-${index}`,
+    //     "/images/chicken/piedraAbajo.png",
+    //     {
+    //       frameWidth: 100,
+    //       frameHeight: 100,
+    //       startFrame: index + 6,
+    //     }
+    //   );
+    // }
 
-    for (let index = 0; index < 6; index++) {
-      this.load.spritesheet(
-        `columna-${index}`,
-        "/images/chicken/piedraAbajo.png",
-        {
-          frameWidth: 100,
-          frameHeight: 100,
-          startFrame: index + 18,
-        }
-      );
-    }
+    // for (let index = 0; index < 6; index++) {
+    //   this.load.spritesheet(
+    //     `columna-${index}`,
+    //     "/images/chicken/piedraAbajo.png",
+    //     {
+    //       frameWidth: 100,
+    //       frameHeight: 100,
+    //       startFrame: index + 18,
+    //     }
+    //   );
+    // }
 
     this.load.scenePlugin({
       key: "IsoPlugin",
@@ -162,11 +165,14 @@ export default class RPG extends Scene {
   destroy() {}
 
   create() {
+    if (this.maps === undefined) {
+      console.log("ENTRO ACA")
+    } else {
     //default
     this.isoPhysics.world.setBounds(-1024, -1024, 1024 * 2, 1024 * 4);
     this.isoPhysics.projector.origin.setTo(0.5, 0.3); // permitime dudas
     this.isoPhysics.world.gravity.setTo(0); // permitime dudas
-
+    console.log(this.isoPhysics, "ISO PHYsICS")
     const ee = this.events;
     this.eventEmitter = ee;
 
@@ -338,6 +344,7 @@ export default class RPG extends Scene {
         if (this.isoGroup) pin.updatePin(this.isoGroup);
       });
     });
+  }
   }
 
   getObjectByType(type: string) {

@@ -13,6 +13,7 @@ export default function Home() {
     router.push('/1'); // Redirige a la ruta del primer nivel
   }, []);
 
+  
   return (
     <>
       <Head>

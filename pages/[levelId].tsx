@@ -5,6 +5,9 @@ import Phaser from 'phaser'
 import Game from '@/game'
 import axios from 'axios';
 import { useRouter } from 'next/router';
+import { scryRenderedComponentsWithType } from 'react-dom/test-utils';
+import MultiScene from '@/game/Loader/MultiScene';
+import RPG from '@/game/rpg';
 
 // Declara la interfaz global si es necesario
 declare global {
@@ -19,6 +22,7 @@ export default function Level() {
   const [game, setGame] = React.useState<Phaser.Game>();
   const canvasRef = React.useRef<HTMLCanvasElement>(null);
   const [maps, setMaps] = React.useState<string[]>();
+
   
   // Hook useRouter para acceder a los parámetros de la ruta
   const router = useRouter();
@@ -48,8 +52,15 @@ export default function Level() {
   React.useEffect(() => {
     if (canvasRef.current && maps) {
       const DynamicGame = require('@/game')
+      const multiScene = require('@/game/Loader/MultiScene')
+      const rpg = require('@/game/rpg')
+      const betweenScenes = require('@/game/Loader/BetweenScenes')
+      const preloadScene = require('@/game/Loader/PreLoadScene')
+      const assetLoader = require('@/game/Loader/AssetsLoader')
+      const scenes = [multiScene.default, rpg.default, betweenScenes.default, preloadScene.default, assetLoader.default]
+      // const scenes = [multiScene.default]
       const G = DynamicGame.default as typeof Game
-      setGameConstructor(new G(canvasRef.current, maps))
+      setGameConstructor(new G(canvasRef.current, maps, scenes))
     }
   }, [canvasRef, maps])
 
@@ -61,6 +72,16 @@ export default function Level() {
     } 
   }, [_phaser, GameConstructor])
 
+  // React.useEffect(() => {
+  //   //Load scenes async when windows is ready
+  //   Promise.all([
+  //     import("@/game/Loader/MultiScene"),
+  //     import("@/game/rpg"),
+  //   ]).then((scenes) => {
+  //     setScenes(scenes.map(s => s.default))
+  //   })
+  // }, [])
+
   return (
     <>
       <Head>
@@ -71,7 +92,7 @@ export default function Level() {
       </Head>
       <main>
         <div className="game-container">
-          <canvas ref={canvasRef} />
+          <canvas ref={canvasRef} width={'100%'} height={'100%'}/>
         </div>
       </main>
     </>
