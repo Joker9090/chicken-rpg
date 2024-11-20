@@ -12,6 +12,7 @@ import { CubeIsoSpriteBox } from "./Assets/cubeIsoSpriteBox";
 import { PinIsoSpriteBox } from "./Assets/pinIsoSpriteBox";
 import { TrafficLightIsoSpriteBox } from "./Assets/trafficLightIsoSpriteBox";
 import { BuildingSpriteBox } from "./Assets/buildingSpriteBox";
+import { ModalContainer } from "./Assets/ModalContainer";
 // import UIScene from "./UIScene";
 
 export type IsoSceneType = {
@@ -232,6 +233,8 @@ export default class RPG extends Scene {
     this.UICamera.ignore(forestContainers);
 
     const UICont = new UIContainer(this, 0, 0);
+
+    const ModalTest = new ModalContainer(this, 0 , 0 ,{title: "titulo!"});
 
     if (!this.withPlayer) {
       this.input.on("pointermove", (pointer: Phaser.Input.Pointer) => {
