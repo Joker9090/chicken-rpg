@@ -12,6 +12,7 @@ import { CubeIsoSpriteBox } from "./Assets/cubeIsoSpriteBox";
 import { PinIsoSpriteBox } from "./Assets/pinIsoSpriteBox";
 import { TrafficLightIsoSpriteBox } from "./Assets/trafficLightIsoSpriteBox";
 import { BuildingSpriteBox } from "./Assets/buildingSpriteBox";
+import MultiScene from "./Loader/MultiScene";
 // import UIScene from "./UIScene";
 
 export type IsoSceneType = {
@@ -27,7 +28,7 @@ export enum statusEnum {
   WINNING,
 }
 
-export default class RPG extends Scene {
+export default class RPG extends Phaser.Scene {
   maps?: string[];
   withPlayer: Boolean;
   cameraTunnel?: Phaser.GameObjects.Arc;
@@ -163,6 +164,9 @@ export default class RPG extends Scene {
   destroy() {}
 
   create(data: {maps: string[]}) {
+
+
+
     this.maps = data.maps
     console.log(this.maps, "THIS MAPS IN CREATE")
     if (this.maps === undefined) {
@@ -244,6 +248,7 @@ export default class RPG extends Scene {
         if (pointer.isDown) {
           this.cameras.main.scrollX -= pointer.velocity.x / 2;
           this.cameras.main.scrollY -= pointer.velocity.y / 2;
+ 
         }
       });
     }

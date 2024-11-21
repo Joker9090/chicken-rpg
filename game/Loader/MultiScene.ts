@@ -8,12 +8,15 @@ export default class MultiScene extends Phaser.Scene {
   scenekey?: string;
   assetLoaderClass?: AssetsLoader;
   sceneData?: any;
+  sceneToStop?: Phaser.Scene
 
-  constructor(scenekey?: string, sceneData?: any, loadKey?: string) {
+  constructor(sceneToStop: Phaser.Scene, scenekey?: string, sceneData?: any, loadKey?: string) {
     super({ key: "MultiScene", active: true });
     console.log("HOLA")
     this.scenekey = scenekey;
     this.sceneData = sceneData;
+    this.sceneToStop = sceneToStop;
+    
   }
 
 
@@ -31,7 +34,8 @@ export default class MultiScene extends Phaser.Scene {
           this.makeTransition(this.scenekey, this.sceneData ?? undefined);
         } else {
           console.log("ENTRO ACA 2")
-          this.makeTransition("RPG", { maps: map.map((m) => (typeof m === "string" ? m : JSON.stringify(m))) });
+          this.makeTransition("MenuScene", undefined);
+          // this.makeTransition("RPG", { maps: map.map((m) => (typeof m === "string" ? m : JSON.stringify(m))) });
         }
       });
   }
@@ -43,17 +47,16 @@ export default class MultiScene extends Phaser.Scene {
   }
 
   makeTransition(sceneName: string, data: any) {
-    console.log("data al make transition", sceneName, data);  
     const getBetweenScenesScene = this.game.scene.getScene(
       "BetweenScenes"
     ) as BetweenScenes;
-    console.log("BETWEEN SCENES", getBetweenScenesScene)
     if (getBetweenScenesScene) {
       console.log("ENTRO ACA 111111")
       if (getBetweenScenesScene.status != BetweenScenesStatus.IDLE)
         return false;
       getBetweenScenesScene.changeSceneTo(sceneName, data);
       this.time.delayedCall(1000, () => {
+        this.sceneToStop?.scene.stop()
         this.scene.stop();
       });
     } else {

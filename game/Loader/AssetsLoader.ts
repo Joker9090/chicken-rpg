@@ -11,6 +11,9 @@ const loadAssets = {
   BaseLoad: {
     assets: [
       ["image", "block", "/50x50.png"],
+      ["image", "backgroundCity", "/images/menuScene/back.png"],
+      ["image", "backgroundSky", "/images/menuScene/skyBack.png"],
+      ["image", "playButton", "/images/menuScene/playButton.png"],
       ["image", "reloj", "/assets/UI/UILevel/reloj.png"],
       ["image", "tile", "/images/bloque.png"],
       ["image", "pin", "/images/pin.png"],
@@ -102,7 +105,6 @@ class AssetsLoader {
       var progressBox = this.scene.add.graphics();
       progressBox.fillStyle(0x222222, 0.8);
       progressBox.fillRect(width / 2 - 160, height / 2 + 100, 320, 50);
-      this.scene.add.rectangle(0, 0, 550, 550, 0x00ff00)
       loadingText.setOrigin(0.5, 0.5);
 
       var percentText = this.scene.make.text({

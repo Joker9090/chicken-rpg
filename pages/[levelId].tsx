@@ -53,10 +53,11 @@ export default function Level() {
     if (canvasRef.current && maps) {
       const DynamicGame = require('@/game')
       const multiScene = require('@/game/Loader/MultiScene')
+      const MenuScene = require('@/game/MenuScene')
       const rpg = require('@/game/rpg')
       const betweenScenes = require('@/game/Loader/BetweenScenes')
       const assetLoader = require('@/game/Loader/AssetsLoader')
-      const scenes = [multiScene.default, rpg.default, betweenScenes.default, assetLoader.default]
+      const scenes = [multiScene.default, rpg.default, betweenScenes.default, assetLoader.default, MenuScene.default]
       // const scenes = [multiScene.default, rpg.default]
       const G = DynamicGame.default as typeof Game
       setGameConstructor(new G(canvasRef.current, maps, scenes))
@@ -82,18 +83,16 @@ export default function Level() {
   // }, [])
 
   return (
-    <>
+    <div style={{width: '100vw', height: '100vh'}}>
       <Head>
         <title>ChickenRPG by Noswar</title> {/* Cambia el título para mostrar el nivel actual */}
         <meta name="description" content={`Experimental Map - Level ${levelId}`} />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main>
-        <div className="game-container">
-          <canvas ref={canvasRef} width={'100%'} height={'100%'}/>
-        </div>
+      <main style={{width: '100vw', height: '100vh'}}>
+          <canvas ref={canvasRef}/>
       </main>
-    </>
+    </div>
   )
 }
