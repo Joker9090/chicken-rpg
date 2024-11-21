@@ -1,12 +1,16 @@
-import RPG from "@/game/rpg";
+import RPG, { modalType } from "@/game/rpg";
 import { ModalBox } from "./ModalBox";
 
 export type ModalConfig = {
+    type: modalType;
     title?: string;
+    time?: string;
+    picture?: string;
     text?: string;
+    reward?: string;
     agreedButtom?: any;
     closeButtom?: any;
-    background?: string;
+    background?: Phaser.GameObjects.Image;
 };
 
 
@@ -24,7 +28,7 @@ export class ModalContainer extends Phaser.GameObjects.Container {
         this.scene = scene;
         this.modalConfig = modalConfig;
 
-        this.modalBox = new ModalBox(this.scene, 0, window.innerHeight,this.modalConfig);
+        this.modalBox = new ModalBox(this.scene, window.innerWidth /2, window.innerHeight /2,this.modalConfig);
 
         this.add([
             this.modalBox,

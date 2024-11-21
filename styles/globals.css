@@ -46,6 +46,25 @@
   /* Add more font properties if needed */
 }
 
+@font-face {
+  font-family: 'Montserrat';
+  src: url('/fonts/Montserrat.ttf') format('truetype');
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: 'MontserratBold';
+  src: url('/fonts/Montserrat-Bold.ttf') format('truetype');
+  font-weight: bold;
+}
+
+@font-face {
+  font-family: 'MontserratSemiBold';
+  src: url('/fonts/Montserrat-SemiBold.ttf') format('truetype');
+  font-weight: 600; 
+}
+
+
 @media (prefers-color-scheme: dark) {
   :root {
     --foreground-rgb: 255, 255, 255;

@@ -15,6 +15,7 @@ import { BuildingSpriteBox } from "./Assets/buildingSpriteBox";
 import { ModalContainer } from "./Assets/ModalContainer";
 // import UIScene from "./UIScene";
 
+
 export type IsoSceneType = {
   isoPhysics: any;
 };
@@ -26,6 +27,11 @@ export enum statusEnum {
   LOSING,
   IDLE,
   WINNING,
+}
+
+export enum modalType {
+  QUEST,
+  PC,
 }
 
 export default class RPG extends Scene {
@@ -84,6 +90,22 @@ export default class RPG extends Scene {
 
     this.load.image("reloj", "/assets/UI/UILevel/reloj.png");
     // <- ASSETS UI
+    //Modal assets
+    this.load.image("modalBackground", "/assets/modalAssets/modal.png");
+    this.load.image("desafioTest1", "/assets/modalAssets/maskImg2.png");
+    this.load.image("desafioTest2", "/assets/modalAssets/maskImg3.png");
+    this.load.image("barraTitle", "/assets/modalAssets/barraTittle.png");
+    this.load.image("btnExit", "/assets/modalAssets/btnExit.png");
+    this.load.image("barritaOff", "/assets/modalAssets/barritaOff.png");
+    this.load.image("barritaOn", "/assets/modalAssets/barritaOn.png");
+    this.load.image("btn", "/assets/modalAssets/btn.png");
+    this.load.image("iconClock", "/assets/modalAssets/iconClock.png");
+    this.load.image("iconMoon", "/assets/modalAssets/iconMoon.png");
+    this.load.image("iconSun", "/assets/modalAssets/iconSun.png");
+    this.load.image("iconSunrise", "/assets/modalAssets/iconSunrise.png");
+    this.load.image("iconSunset", "/assets/modalAssets/iconSunset.png");
+    this.load.image("coin", "/assets/modalAssets/coin.png");
+  
 
     // otros assets
     this.load.image("tile", "/images/bloque.png");
@@ -234,7 +256,7 @@ export default class RPG extends Scene {
 
     const UICont = new UIContainer(this, 0, 0);
 
-    const ModalTest = new ModalContainer(this, 0 , 0 ,{title: "titulo!"});
+    const ModalTest = new ModalContainer(this, 0 , 0 ,{type: modalType.QUEST,title: "FOTOS EMBLEMATICAS",picture: "desafioTest2",time: "6", text: "Sal a tomar fotos al parque.", reward: "15"});
 
     if (!this.withPlayer) {
       this.input.on("pointermove", (pointer: Phaser.Input.Pointer) => {
