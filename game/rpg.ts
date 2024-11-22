@@ -60,7 +60,7 @@ export default class RPG extends Scene {
     super(sceneConfig);
     this.maps = maps;
     this.sceneKey = sceneConfig.key;
-    this.withPlayer = false;
+    this.withPlayer = true;
   }
 
   preload() {
@@ -111,6 +111,10 @@ export default class RPG extends Scene {
     this.load.image("camaraGreen", "/assets/modalAssets/masUi/camaraGreen.png");
     this.load.image("camaraShop", "/assets/modalAssets/camaraShop.png");
     this.load.image("camaraShopOn", "/assets/modalAssets/camaraShopOn.png");
+
+    //Room assets
+    this.load.image("room1", "/assets/room/room1.png");
+    this.load.image("room2", "/assets/room/room2.png");
   
 
     // otros assets
@@ -260,6 +264,15 @@ export default class RPG extends Scene {
     const forestContainers = this.forest.map((arbolito) => arbolito.container);
     this.UICamera.ignore(forestContainers);
 
+
+    console.log("data map: ",JSON.parse(this.maps[0]));
+    const lvlData = JSON.parse(this.maps[0]);
+    if(lvlData.nivel == "room") {
+      console.log("es room");
+      let backgroundRoom = this.add.image(260,200, "room1").setOrigin(0.5);
+      this.UICamera.ignore(backgroundRoom);
+    }
+
     const UICont = new UIContainer(this, 0, 0);
 
     const handleAgreeModal = () => {
@@ -285,7 +298,7 @@ export default class RPG extends Scene {
       agreeFunction:  handleAgreeModal,
     }
 
-    const ModalTest = new ModalContainer(this, 0 , 0 , roomModal);
+    //const ModalTest = new ModalContainer(this, 0 , 0 , roomModal);
 
     if (!this.withPlayer) {
       this.input.on("pointermove", (pointer: Phaser.Input.Pointer) => {

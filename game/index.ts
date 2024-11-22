@@ -1,5 +1,6 @@
 import RPG from "./rpg";
-import map from "./maps/city";
+//import map from "./maps/city";
+import map from "./maps/room";
 
 export default class Game {
   game?: Phaser.Game;
