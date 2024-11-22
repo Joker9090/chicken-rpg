@@ -11,6 +11,7 @@ export type ModalConfig = {
     agreedButtom?: any;
     closeButtom?: any;
     background?: Phaser.GameObjects.Image;
+    agreeFunction: Function;
 };
 
 

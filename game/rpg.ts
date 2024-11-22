@@ -12,7 +12,7 @@ import { CubeIsoSpriteBox } from "./Assets/cubeIsoSpriteBox";
 import { PinIsoSpriteBox } from "./Assets/pinIsoSpriteBox";
 import { TrafficLightIsoSpriteBox } from "./Assets/trafficLightIsoSpriteBox";
 import { BuildingSpriteBox } from "./Assets/buildingSpriteBox";
-import { ModalContainer } from "./Assets/ModalContainer";
+import { ModalConfig, ModalContainer } from "./Assets/ModalContainer";
 // import UIScene from "./UIScene";
 
 
@@ -90,6 +90,7 @@ export default class RPG extends Scene {
 
     this.load.image("reloj", "/assets/UI/UILevel/reloj.png");
     // <- ASSETS UI
+
     //Modal assets
     this.load.image("modalBackground", "/assets/modalAssets/modal.png");
     this.load.image("desafioTest1", "/assets/modalAssets/maskImg2.png");
@@ -105,6 +106,11 @@ export default class RPG extends Scene {
     this.load.image("iconSunrise", "/assets/modalAssets/iconSunrise.png");
     this.load.image("iconSunset", "/assets/modalAssets/iconSunset.png");
     this.load.image("coin", "/assets/modalAssets/coin.png");
+    this.load.image("camaraGrey", "/assets/modalAssets/masUi/camaraGrey.png");
+    this.load.image("camaraWhite", "/assets/modalAssets/masUi/camaraWhite.png");
+    this.load.image("camaraGreen", "/assets/modalAssets/masUi/camaraGreen.png");
+    this.load.image("camaraShop", "/assets/modalAssets/camaraShop.png");
+    this.load.image("camaraShopOn", "/assets/modalAssets/camaraShopOn.png");
   
 
     // otros assets
@@ -256,7 +262,30 @@ export default class RPG extends Scene {
 
     const UICont = new UIContainer(this, 0, 0);
 
-    const ModalTest = new ModalContainer(this, 0 , 0 ,{type: modalType.QUEST,title: "FOTOS EMBLEMATICAS",picture: "desafioTest2",time: "6", text: "Sal a tomar fotos al parque.", reward: "15"});
+    const handleAgreeModal = () => {
+      console.log("Agree OK");
+    }
+
+    const cityModal: ModalConfig = {
+      type: modalType.QUEST,
+      title: "FOTOS EMBLEMATICAS",
+      picture: "desafioTest2",
+      time: "6", 
+      text: "Sal a tomar fotos al parque.", 
+      reward: "15",
+      agreeFunction:  handleAgreeModal,
+    }
+
+    const roomModal: ModalConfig = {
+      type: modalType.PC,
+      title: "MERCADO DE PULGAS ONLINE",
+      picture: "desafioTest2",
+      text: "CAMARA", 
+      reward: "100",
+      agreeFunction:  handleAgreeModal,
+    }
+
+    const ModalTest = new ModalContainer(this, 0 , 0 , roomModal);
 
     if (!this.withPlayer) {
       this.input.on("pointermove", (pointer: Phaser.Input.Pointer) => {
