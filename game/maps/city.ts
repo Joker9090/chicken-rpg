@@ -423,7 +423,7 @@ const map = [
   },
 
   // MAP PLAYER / ITEMS CONFIG
-  [createBase(40, [13, 33])],
+  [createBase(40, [15, 31])],
   createStreets(createGrass(40, false), streetConfig, true) as number[][],
   ...buildings.map((_buildings, index) => {
     const items = objects.filter(

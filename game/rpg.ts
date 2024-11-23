@@ -42,7 +42,7 @@ export default class RPG extends Scene {
   NPCTalker?: RpgIsoPlayerSecundarioTalker;
   UICamera?: Phaser.Cameras.Scene2D.Camera;
   group?: Phaser.GameObjects.Group;
-  distanceBetweenFloors: number = 50;
+  distanceBetweenFloors: number = 300;
   eventEmitter?: Phaser.Events.EventEmitter;
 
   constructor(maps: string[]) {
@@ -53,7 +53,7 @@ export default class RPG extends Scene {
     super(sceneConfig);
     this.maps = maps;
     this.sceneKey = sceneConfig.key;
-    this.withPlayer = false;
+    this.withPlayer = true;
   }
 
   preload() {
@@ -105,6 +105,11 @@ export default class RPG extends Scene {
     this.load.spritesheet("chicken", "/images/chicken/spritesheetChicken.png", {
       frameWidth: 552 / 4,
       frameHeight: 1152 / 12,
+      startFrame: 0,
+    });
+    this.load.spritesheet("playerWalk", "/images/chicken/playerWalk.png", {
+      frameWidth: 200,
+      frameHeight: 250,
       startFrame: 0,
     });
 
@@ -201,7 +206,7 @@ export default class RPG extends Scene {
 
       this.anims.create({
         key: posiblePositions[index],
-        frames: this.anims.generateFrameNumbers("chicken", {
+        frames: this.anims.generateFrameNumbers("playerWalk", {
           start: index + floor,
           end: index + floor + 3,
         }),
@@ -413,7 +418,7 @@ export default class RPG extends Scene {
                   x, // x
                   y, // y
                   height + h, // height
-                  "chicken", // spriteName
+                  "playerWalk", // spriteName
                   17, // baseFrame
                   this.isoGroup, // group
                   direction, // direction
