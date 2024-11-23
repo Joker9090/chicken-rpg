@@ -89,6 +89,16 @@ export default class RPG extends Scene {
     this.load.image("varSelector", "/assets/chickenUIAssets/varSelector.png");
 
     this.load.image("reloj", "/assets/UI/UILevel/reloj.png");
+
+    this.load.image("coinUi", "/assets/UI/UiChiken/coinUi.png");
+    this.load.image("barEmpty", "/assets/UI/UiChiken/barEmpty.png");
+    this.load.image("varStar", "/assets/UI/UiChiken/varStar.png");
+    this.load.image("varFullLila", "/assets/UI/UiChiken/varFullLila.png");
+    this.load.image("varFullYellow", "/assets/UI/UiChiken/varFullYellow.png");
+    this.load.image("varSmile", "/assets/UI/UiChiken/varSmile.png");
+    this.load.image("iconNewsOff", "/assets/UI/UiChiken/iconNewsOff.png");
+
+
     // <- ASSETS UI
 
     //Modal assets
@@ -298,7 +308,7 @@ export default class RPG extends Scene {
       agreeFunction:  handleAgreeModal,
     }
 
-    //const ModalTest = new ModalContainer(this, 0 , 0 , roomModal);
+    //const ModalTest = new ModalContainer(this, 0 , 0 , cityModal);
 
     if (!this.withPlayer) {
       this.input.on("pointermove", (pointer: Phaser.Input.Pointer) => {
