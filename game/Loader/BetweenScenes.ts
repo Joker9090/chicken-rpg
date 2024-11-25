@@ -89,15 +89,15 @@ export default class BetweenScenes extends Phaser.Scene {
                                         const menuScene = new MenuScene()
                                         this.scene.add("MenuScene", menuScene, true);
                                     } else if (this.newSceneName == "RPG") {
-                                        console.log("ENTRO RPG SCENE")
+                                        console.log("ENTRO RPG SCENE",     this.newSceneWith)
 
                                         const rpg = new RPG(
-                                            map.map((m: any) => (typeof m === "string" ? m : JSON.stringify(m)))
+                                            this.newSceneWith.maps
                                         );
                                         this.scene.add("RPG", rpg, true);
                                     }
                                     this.scene.launch(this.newSceneName, this.newSceneWith);
-                                    this.scene.bringToTop();
+                                    this.scene.bringToTop("BetweenScenes");
                                 }
                                 this.turnOff();
                             });
@@ -112,10 +112,10 @@ export default class BetweenScenes extends Phaser.Scene {
                             const menuScene = new MenuScene()
                             this.scene.add("MenuScene", menuScene, true);
                         } else if (this.newSceneName == "RPG") {
-                            console.log("ENTRO RPG SCENE")
+                            console.log("ENTRO RPG SCENE",     this.newSceneWith)
 
                             const rpg = new RPG(
-                                map.map((m: any) => (typeof m === "string" ? m : JSON.stringify(m)))
+                                this.newSceneWith.maps
                             );
                             this.scene.add("RPG", rpg, true);
                         }
@@ -151,6 +151,8 @@ export default class BetweenScenes extends Phaser.Scene {
         this.newSceneWith = undefined;
         this.status = BetweenScenesStatus.IDLE;
         this.scene.remove('PreLoadScene')
+        this.scene.remove('MultiScene')
+        console.log("SCEBNES", this.game.scene.getScenes())
         this.scene.stop();
     }
 

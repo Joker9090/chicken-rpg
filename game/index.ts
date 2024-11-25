@@ -8,8 +8,8 @@ export default class Game {
   game?: Phaser.Game;
   config: Phaser.Types.Core.GameConfig = {
     type: Phaser.WEBGL,
-    width: 600,
-    height: 600,
+    width: window.innerWidth,
+    height: window.innerHeight,
     physics: {
       default: "arcade",
       arcade: {

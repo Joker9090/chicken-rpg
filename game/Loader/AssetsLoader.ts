@@ -199,7 +199,10 @@ class AssetsLoader {
         });
       }
       const ArcadeFont = this.scene.add.text(0, 0, " .", {
-        fontFamily: "Arcade",
+        fontFamily: "MontserratSemiBold",
+      });
+      const ArcadeFont2 = this.scene.add.text(0, 0, " .", {
+        fontFamily: "MontserratBold",
       });
     }
   }

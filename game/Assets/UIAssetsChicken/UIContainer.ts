@@ -7,7 +7,7 @@ export default class UIContainer extends Phaser.GameObjects.Container {
 
     scene: RPG;
     timer?: Timer;
-    uiInterface: UIInterface;
+    // uiInterface: UIInterface;
     leftContainer: Phaser.GameObjects.Container;
     rightContainer: Phaser.GameObjects.Container;
     constructor(
@@ -20,7 +20,7 @@ export default class UIContainer extends Phaser.GameObjects.Container {
         this.scene = scene;
        
         this.timer = new Timer(this.scene, 100, 50)
-        this.uiInterface = new UIInterface(this.scene, 0, window.innerHeight)
+        // this.uiInterface = new UIInterface(this.scene, 0, window.innerHeight)
 
         this.leftContainer = this.scene.add.container(0,0);
 
@@ -54,7 +54,7 @@ export default class UIContainer extends Phaser.GameObjects.Container {
             this.leftContainer,
             this.rightContainer,
             //this.timer,
-            this.uiInterface,
+            // this.uiInterface,
         ])
 
         this.scene.add.existing(this)

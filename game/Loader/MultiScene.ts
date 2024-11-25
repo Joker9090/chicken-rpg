@@ -2,6 +2,7 @@ import Phaser from "phaser";
 import BetweenScenes, { BetweenScenesStatus } from "./BetweenScenes";
 import AssetsLoader, { SceneKeys } from "./AssetsLoader";
 import map from "../maps/city";
+import map2 from "../maps/room";
 import RPG from "../rpg";
 
 export default class MultiScene extends Phaser.Scene {
@@ -27,8 +28,9 @@ export default class MultiScene extends Phaser.Scene {
         if(this.scenekey) {
           this.makeTransition(this.scenekey, this.sceneToStop ?? undefined, this.sceneData ?? undefined);
         } else {
-        //   this.makeTransition("MenuScene", undefined);
-          this.makeTransition("RPG", undefined, { maps: map.map((m) => (typeof m === "string" ? m : JSON.stringify(m))) });
+          // this.makeTransition("MenuScene", undefined);
+          this.makeTransition("RPG", undefined, { maps: map2.map((m) => (typeof m === "string" ? m : JSON.stringify(m))) });
+          // this.makeTransition("RPG", undefined, { maps: map.map((m) => (typeof m === "string" ? m : JSON.stringify(m))) });
         }
       });
   }
@@ -43,7 +45,7 @@ export default class MultiScene extends Phaser.Scene {
         return false;
       getBetweenScenesScene.changeSceneTo(sceneName, sceneToStop, data);
       this.time.delayedCall(1000, () => {
-        this.scene.stop();
+        this.scene.remove("MultiScene");
       });
     } else {
         const rpg = new RPG(
@@ -52,7 +54,7 @@ export default class MultiScene extends Phaser.Scene {
         this.scene.add("RPG", rpg, true);
     //   this.scene.start(sceneName, data);
       this.time.delayedCall(1000, () => {
-        this.scene.stop();
+        this.scene.remove("MultiScene");
       });
     }
   }
