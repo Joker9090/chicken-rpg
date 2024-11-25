@@ -13,7 +13,7 @@ import { PinIsoSpriteBox } from "./Assets/pinIsoSpriteBox";
 import { TrafficLightIsoSpriteBox } from "./Assets/trafficLightIsoSpriteBox";
 import { BuildingSpriteBox } from "./Assets/buildingSpriteBox";
 import { ModalConfig, ModalContainer } from "./Assets/ModalContainer";
-import MultiScene from "./Loader/MultiScene";
+import BetweenScenes from "./Loader/BetweenScenes";
 // import UIScene from "./UIScene";
 
 
@@ -61,7 +61,7 @@ export default class RPG extends Scene {
     super(sceneConfig);
     this.maps = maps;
     this.sceneKey = sceneConfig.key;
-    this.withPlayer = true;
+    this.withPlayer = false;
   }
 
   preload() {
@@ -179,17 +179,17 @@ export default class RPG extends Scene {
       );
     }
 
-    for (let index = 0; index < 6; index++) {
-      this.load.spritesheet(
-        `columna-${index}`,
-        "/images/chicken/piedraAbajo.png",
-        {
-          frameWidth: 100,
-          frameHeight: 100,
-          startFrame: index + 18,
-        }
-      );
-    }
+    // for (let index = 0; index < 6; index++) {
+    //   this.load.spritesheet(
+    //     `columna-${index}`,
+    //     "/images/chicken/piedraAbajo.png",
+    //     {
+    //       frameWidth: 100,
+    //       frameHeight: 100,
+    //       startFrame: index + 18,
+    //     }
+    //   );
+    // }
 
     this.load.scenePlugin({
       key: "IsoPlugin",
@@ -207,11 +207,9 @@ export default class RPG extends Scene {
   destroy() {}
 
   create() {
-    setTimeout(() => {
-      const newMultiScene = new MultiScene("MenuScene");
-      this.scene.add("MenuScene", newMultiScene, true);
-      this.scene.stop()
-    }, 6000)
+    // setTimeout(() => {
+    //   this.scene.restart();
+    // }, 6000)
     //default
     this.isoPhysics.world.setBounds(-1024, -1024, 1024 * 2, 1024 * 4);
     this.isoPhysics.projector.origin.setTo(0.5, 0.3); // permitime dudas
@@ -315,7 +313,7 @@ export default class RPG extends Scene {
       agreeFunction:  handleAgreeModal,
     }
 
-    const ModalTest = new ModalContainer(this, 0 , 0 , cityModal);
+    // const ModalTest = new ModalContainer(this, 0 , 0 , cityModal);
 
     if (!this.withPlayer) {
       this.input.on("pointermove", (pointer: Phaser.Input.Pointer) => {
@@ -640,9 +638,210 @@ export default class RPG extends Scene {
                 that,
                 conf,
                 pos,
-                "blockBuilding"
+                "solidBlock"
               );
               break;
+              case "BUILDINGWINDOW1":
+                self.createBloqueBuildingTile(
+                  b,
+                  c,
+                  that,
+                  conf,
+                  pos,
+                  "window1"
+                );
+                break;
+              case "BUILDINGWINDOW2":
+                self.createBloqueBuildingTile(
+                  b,
+                  c,
+                  that,
+                  conf,
+                  pos,
+                  "window2"
+                );
+                break;
+              case "BUILDINGWINDOW3":
+                self.createBloqueBuildingTile(
+                  b,
+                  c,
+                  that,
+                  conf,
+                  pos,
+                  "window3"
+                );
+                break;
+                case "BUILDINGWINDOWB1":
+                  self.createBloqueBuildingTile(
+                    b,
+                    c,
+                    that,
+                    conf,
+                    pos,
+                    "windowB1"
+                  );
+                  break;
+                case "BUILDINGWINDOWB2":
+                  self.createBloqueBuildingTile(
+                    b,
+                    c,
+                    that,
+                    conf,
+                    pos,
+                    "windowB2"
+                  );
+                  break;
+                case "BUILDINGWINDOWB3":
+                  self.createBloqueBuildingTile(
+                    b,
+                    c,
+                    that,
+                    conf,
+                    pos,
+                    "windowB3"
+                  );
+                  break;
+                  case "BUILDINGDOORLEFTCORNER":
+                  self.createBloqueBuildingTile(
+                    b,
+                    c,
+                    that,
+                    conf,
+                    pos,
+                    "buildingDoorLeftCorner"
+                  );
+                  break;
+                  case "BUILDINGDOORRIGHTCORNER":
+                  self.createBloqueBuildingTile(
+                    b,
+                    c,
+                    that,
+                    conf,
+                    pos,
+                    "buildingDoorRightCorner"
+                  );
+                  break;
+                  case "BUILDINGDOORLEFT":
+                  self.createBloqueBuildingTile(
+                    b,
+                    c,
+                    that,
+                    conf,
+                    pos,
+                    "doorLeftSide"
+                  );
+                  break;
+                  case "BUILDINGDOORRIGHT":
+                  self.createBloqueBuildingTile(
+                    b,
+                    c,
+                    that,
+                    conf,
+                    pos,
+                    "doorRightSide"
+                  );
+                  break;
+                  case "BUILDINGTOP1":
+                  self.createBloqueBuildingTile(
+                    b,
+                    c,
+                    that,
+                    conf,
+                    pos,
+                    "test1"
+                  );
+                  break;
+                  case "BUILDINGTOP2":
+                  self.createBloqueBuildingTile(
+                    b,
+                    c,
+                    that,
+                    conf,
+                    pos,
+                    "test2"
+                  );
+                  break;
+                  case "BUILDINGTOP3":
+                  self.createBloqueBuildingTile(
+                    b,
+                    c,
+                    that,
+                    conf,
+                    pos,
+                    "test3"
+                  );
+                  break;
+                  case "BUILDINGTOP4":
+                  self.createBloqueBuildingTile(
+                    b,
+                    c,
+                    that,
+                    conf,
+                    pos,
+                    "test4"
+                  );
+                  break;
+                  case "BUILDINGTOP5":
+                  self.createBloqueBuildingTile(
+                    b,
+                    c,
+                    that,
+                    conf,
+                    pos,
+                    "test5"
+                  );
+                  break;
+                  case "BUILDINGTOP1B":
+                    self.createBloqueBuildingTile(
+                      b,
+                      c,
+                      that,
+                      conf,
+                      pos,
+                      "test1B"
+                    );
+                    break;
+                    case "BUILDINGTOP2B":
+                    self.createBloqueBuildingTile(
+                      b,
+                      c,
+                      that,
+                      conf,
+                      pos,
+                      "test2B"
+                    );
+                    break;
+                    case "BUILDINGTOP3B":
+                    self.createBloqueBuildingTile(
+                      b,
+                      c,
+                      that,
+                      conf,
+                      pos,
+                      "test3B"
+                    );
+                    break;
+                    case "BUILDINGTOP4B":
+                    self.createBloqueBuildingTile(
+                      b,
+                      c,
+                      that,
+                      conf,
+                      pos,
+                      "test4B"
+                    );
+                    break;
+                    case "BUILDINGTOP5B":
+                    self.createBloqueBuildingTile(
+                      b,
+                      c,
+                      that,
+                      conf,
+                      pos,
+                      "test5B"
+                    );
+                    break;
+                //nuevo
             case "BUILDINGBLOCK-B":
               self.createBloqueBuildingTile(
                 b,

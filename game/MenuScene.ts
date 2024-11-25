@@ -37,8 +37,7 @@ export default class MenuScene extends Phaser.Scene {
     .setScale(0.30)
     .setInteractive()
       .on('pointerdown', () => {
-        const multiScene = new MultiScene("RPG", { maps: map.map((m) => (typeof m === "string" ? m : JSON.stringify(m))) });
-        console.log("THIS SCENE", this.scene)
+        const multiScene = new MultiScene("RPG", undefined, { maps: map.map((m) => (typeof m === "string" ? m : JSON.stringify(m))) });
         this.scene.add("MultiScene", multiScene, true); 
       });
 

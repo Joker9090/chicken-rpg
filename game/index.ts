@@ -8,8 +8,8 @@ export default class Game {
   game?: Phaser.Game;
   config: Phaser.Types.Core.GameConfig = {
     type: Phaser.WEBGL,
-    width: '100%',
-    height: '100%',
+    width: 600,
+    height: 600,
     physics: {
       default: "arcade",
       arcade: {
@@ -33,8 +33,8 @@ export default class Game {
     // const menu = new Menu();
     // const credits = new Credits();
     // const levelMenu = new LevelMenu();
-    const gameBetweenScenes = new BetweenScenes();
     const multiScene = new MultiScene()
+    const gameBetweenScenes = new BetweenScenes();
     
     // const rpg = new RPG(
     //   map.map((m) => (typeof m === "string" ? m : JSON.stringify(m)))

@@ -75,6 +75,28 @@ const loadAssets = {
           );
         }
       }],
+      ["image", "test1", "/images/buildingTest/test1.png"],
+      ["image", "test2", "/images/buildingTest/test2.png"],
+      ["image", "test3", "/images/buildingTest/test3.png"],
+      ["image", "test4", "/images/buildingTest/test4.png"],
+      ["image", "test5", "/images/buildingTest/test5.png"],
+      ["image", "test1B", "/images/buildingTest/probando1.png"],
+      ["image", "test2B", "/images/buildingTest/probando2.png"],
+      ["image", "test3B", "/images/buildingTest/probando3.png"],
+      ["image", "test4B", "/images/buildingTest/probando4.png"],
+      ["image", "test5B", "/images/buildingTest/probando5.png"],
+      ["image", "buildingDoorLeftCorner", "/images/buildingTest/buildingDoorLeftCorner.png"],
+      ["image", "buildingDoorRightCorner", "/images/buildingTest/buildingDoorRightCorner.png"],
+      ["image", "doorLeftSide", "/images/buildingTest/doorLeftSide.png"],
+      ["image", "doorRightSide", "/images/buildingTest/doorRightSide.png"],
+      ["image", "solidBlock", "/images/buildingTest/solidBlock.png"],
+      ["image", "window1", "/images/buildingTest/window1.png"],
+      ["image", "window2", "/images/buildingTest/window2.png"],
+      ["image", "window3", "/images/buildingTest/window3.png"],
+      ["image", "windowB1", "/images/buildingTest/windowB1.png"],
+      ["image", "windowB2", "/images/buildingTest/windowB2.png"],
+      ["image", "windowB3", "/images/buildingTest/windowB3.png"],
+
     ]
   },
 };

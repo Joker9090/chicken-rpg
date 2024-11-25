@@ -1,7 +1,9 @@
 import Phaser from "phaser";
 import PreLoadScene from "./PreLoadScene";
 import RPG from "../rpg";
-import map from "../maps/room";
+// import map from "../maps/room";
+import map from "../maps/city";
+
 import MenuScene from "../MenuScene";
 
 export enum BetweenScenesStatus {
@@ -9,10 +11,11 @@ export enum BetweenScenesStatus {
     PROCCESSING,
     WAITING,
 }
-export default class BetweenScenesScene extends Phaser.Scene {
+export default class BetweenScenes extends Phaser.Scene {
     status: BetweenScenesStatus;
     blocks?: Phaser.GameObjects.Group;
     newSceneName?: string;
+    sceneToStop?: string;
     newSceneWith?: any;
     firstRender: boolean = true
     startTime: number = 0
@@ -20,11 +23,46 @@ export default class BetweenScenesScene extends Phaser.Scene {
     constructor() {
         super({ key: "BetweenScenes" });
         this.status = BetweenScenesStatus.IDLE;
+        console.log("ENTRO AL BETWEEN")
     }
 
-    changeSceneTo(sceneName: string, data: any) {
-        console.log("CHANGE SCENE TO", sceneName, data)
+    addScene(keyName: string, url: string, callBack: Function) {
+        console.log("ENTRO AL ADD SCENE")
+        import(url).then((mainScene) => {
+            const scene = this.scene.add(keyName, mainScene.default, true);
+            callBack(scene);
+        });
+    }
+
+    stopScene(scene: Phaser.Scene, callBack: Function) {
+        console.log("ENTRO AL SCENE STOP")
+        scene.scene.stop();
+        callBack();
+    }
+
+    getSceneByName(sceneKey: string) {
+        console.log("GET SCENE ENTRO", this.scene.get(sceneKey))
+        return this.scene.get(sceneKey);
+    }
+
+    removeScene(scene: Phaser.Scene, callBack: Function) {
+        // if (scene.destroy) scene.destroy();
+        console.log("ENTRO ACA REMOVE SCENE 1")
+        scene.events.once(
+            "destroy",
+            () => {
+                console.log("ENTRO ACA REMOVE SCENE 2")
+
+                callBack();
+            },
+            this
+        );
+        scene.scene.remove();
+    }
+
+    changeSceneTo(sceneName: string, sceneToStop: string | undefined, data: any) {
         if (this.status == BetweenScenesStatus.IDLE) {
+            this.sceneToStop = sceneToStop;
             this.newSceneName = sceneName;
             this.newSceneWith = data;
             this.status = BetweenScenesStatus.PROCCESSING;
@@ -33,30 +71,86 @@ export default class BetweenScenesScene extends Phaser.Scene {
     }
 
     loadNewScene() {
+        console.log("ENTRO ACA")
         if (this.status == BetweenScenesStatus.PROCCESSING) {
             this.status = BetweenScenesStatus.WAITING;
             if (this.newSceneName) {
-                console.log(this.newSceneName, this.newSceneWith, "NEW SCSENE NAME")
-                const rpg = new RPG(
-                    map.map((m: any) => (typeof m === "string" ? m : JSON.stringify(m)))
-                );
-                this.scene.add("RPG", rpg, true);
-                // const menuScene = new MenuScene()
-                // this.scene.add("MenuScene", menuScene, true);
+                if (this.sceneToStop) {
+                    console.log("ARIEL ENTRO 0")
+                    const scene = this.getSceneByName(this.sceneToStop);
+                    if (scene) {
+                        console.log("ARIEL ENTRO 1")
+                        this.stopScene(scene, () => {
+                            console.log("ARIEL ENTRO 2")
+                            this.removeScene(scene, () => {
+                                if (this.newSceneName) {
+                                    if (this.newSceneName == "MenuScene") {
+                                        console.log("ENTRO MENU SCENE")
+                                        const menuScene = new MenuScene()
+                                        this.scene.add("MenuScene", menuScene, true);
+                                    } else if (this.newSceneName == "RPG") {
+                                        console.log("ENTRO RPG SCENE")
 
-                this.scene.launch(this.newSceneName, this.newSceneWith);
-                this.scene.bringToTop("RPG");
+                                        const rpg = new RPG(
+                                            map.map((m: any) => (typeof m === "string" ? m : JSON.stringify(m)))
+                                        );
+                                        this.scene.add("RPG", rpg, true);
+                                    }
+                                    this.scene.launch(this.newSceneName, this.newSceneWith);
+                                    this.scene.bringToTop();
+                                }
+                                this.turnOff();
+                            });
+                        });
+                    }
+                } else {
+                    if (this.newSceneName) {
+                        console.log("ARIEL ENTRO 4")
+                        console.log(this.newSceneName, this.newSceneWith, "NEW SCSENE NAME")
+                        if (this.newSceneName == "MenuScene") {
+                            console.log("ENTRO MENU SCENE")
+                            const menuScene = new MenuScene()
+                            this.scene.add("MenuScene", menuScene, true);
+                        } else if (this.newSceneName == "RPG") {
+                            console.log("ENTRO RPG SCENE")
+
+                            const rpg = new RPG(
+                                map.map((m: any) => (typeof m === "string" ? m : JSON.stringify(m)))
+                            );
+                            this.scene.add("RPG", rpg, true);
+                        }
+                    }
+                    this.turnOff();
+                    // this.scene.launch(this.newSceneName, this.newSceneWith);
+                    // this.scene.bringToTop(this.newSceneName);
+                }
             }
-            this.turnOff();
         }
     }
+    // loadNewScene() {
+    //     if (this.status == BetweenScenesStatus.PROCCESSING) {
+    //         this.status = BetweenScenesStatus.WAITING;
+    //         if (this.newSceneName) {
+    //             console.log(this.newSceneName, this.newSceneWith, "NEW SCSENE NAME")
+    //             const rpg = new RPG(
+    //                 map.map((m: any) => (typeof m === "string" ? m : JSON.stringify(m)))
+    //             );
+    //             this.scene.add("RPG", rpg, true);
+    //             // const menuScene = new MenuScene()
+    //             // this.scene.add("MenuScene", menuScene, true);
+
+    //             this.scene.launch(this.newSceneName, this.newSceneWith);
+    //             this.scene.bringToTop("RPG");
+    //         }
+    //         this.turnOff();
+    //     }
+    // }
 
     finishLogic() {
         this.newSceneName = undefined;
         this.newSceneWith = undefined;
         this.status = BetweenScenesStatus.IDLE;
         this.scene.remove('PreLoadScene')
-        this.scene.remove('MultiScene')
         this.scene.stop();
     }
 
@@ -98,12 +192,7 @@ export default class BetweenScenesScene extends Phaser.Scene {
             this.loadNewScene()
             this.turnOff()
         });
-        console.log(preloadScene, "PRELOAD SCENE")
         const scene = this.scene.add("PreLoadScene", preloadScene, true);
-
-        console.log("ACAAAA 0123", this.game.scene.getScenes())
-        // this.game.scene.start("PreLoadScene").bringToTop("PreLoadScene");
-        console.log("ACAAAA 123")
 
     }
     turnOn() {

@@ -11,7 +11,6 @@ export default class PreLoadScene extends Phaser.Scene {
   keyLoad: SceneKeys[] | undefined
   
   constructor(keyLoad: SceneKeys[] | undefined, callback: Function) {
-    console.log("TEST preload")
     super({ key: "PreLoadScene" });
     this.keyLoad = keyLoad
     this.callback = callback
@@ -20,9 +19,7 @@ export default class PreLoadScene extends Phaser.Scene {
   preload(){
       const assetLoaderClass = new AssetsLoader(this, this.keyLoad)
       assetLoaderClass.runPreload(() => {
-        console.log("CALLBACK")
         this.callback()
-
         this.scene.stop()
       })
   }
