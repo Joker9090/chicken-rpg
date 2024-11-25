@@ -125,6 +125,7 @@ export default class RPG extends Scene {
     //Room assets
     this.load.image("room1", "/assets/room/room1.png");
     this.load.image("room2", "/assets/room/room2.png");
+    this.load.image("HabitacionFinalMai", "/assets/room/HabitacionFinalMai.png");
   
 
     // otros assets
@@ -279,7 +280,7 @@ export default class RPG extends Scene {
     const lvlData = JSON.parse(this.maps[0]);
     if(lvlData.nivel == "room") {
       console.log("es room");
-      let backgroundRoom = this.add.image(260,200, "room1").setOrigin(0.5);
+      let backgroundRoom = this.add.image(300,210, "HabitacionFinalMai").setOrigin(0.5);
       this.UICamera.ignore(backgroundRoom);
     }
 
