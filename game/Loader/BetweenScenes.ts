@@ -88,15 +88,14 @@ export default class BetweenScenes extends Phaser.Scene {
                                         console.log("ENTRO MENU SCENE")
                                         const menuScene = new MenuScene()
                                         this.scene.add("MenuScene", menuScene, true);
+                                        this.scene.bringToTop("BetweenScenes");
                                     } else if (this.newSceneName == "RPG") {
-                                        console.log("ENTRO RPG SCENE",     this.newSceneWith)
-
+                                        console.log("ENTRO RPG SCENE", this.newSceneWith)
                                         const rpg = new RPG(
                                             this.newSceneWith.maps
                                         );
                                         this.scene.add("RPG", rpg, true);
                                     }
-                                    this.scene.launch(this.newSceneName, this.newSceneWith);
                                     this.scene.bringToTop("BetweenScenes");
                                 }
                                 this.turnOff();
@@ -111,13 +110,17 @@ export default class BetweenScenes extends Phaser.Scene {
                             console.log("ENTRO MENU SCENE")
                             const menuScene = new MenuScene()
                             this.scene.add("MenuScene", menuScene, true);
+                            this.scene.bringToTop("BetweenScenes");
+
                         } else if (this.newSceneName == "RPG") {
-                            console.log("ENTRO RPG SCENE",     this.newSceneWith)
+                            console.log("ENTRO RPG SCENE", this.newSceneWith)
 
                             const rpg = new RPG(
                                 this.newSceneWith.maps
                             );
                             this.scene.add("RPG", rpg, true);
+                            this.scene.bringToTop("BetweenScenes");
+
                         }
                     }
                     this.turnOff();
@@ -153,7 +156,7 @@ export default class BetweenScenes extends Phaser.Scene {
         this.scene.remove('PreLoadScene')
         this.scene.remove('MultiScene')
         console.log("SCEBNES", this.game.scene.getScenes())
-        this.scene.stop();
+        // this.scene.stop();
     }
 
     turnOff() {

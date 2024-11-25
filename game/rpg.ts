@@ -227,11 +227,26 @@ export default class RPG extends Scene {
   }
 
   create() {
-    // setTimeout(() => {
-    //   // const multiScene = new MultiScene("MenuScene", "RPG", { maps: map.map((m) => (typeof m === "string" ? m : JSON.stringify(m))) });
-    //   // this.scene.add("MultiScene", multiScene, true); 
-    //   this.makeTransition("MenuScene", "RPG", undefined);
-    // }, 6000)
+    setTimeout(() => {
+      // console log de todas las escenas
+      console.log("this.: ", this.game.scene.getScenes(true));
+      this.scene.stop();
+      const a = this.game.scene.getScene("BetweenScenes")
+      this.scene.scene.events.once(
+        "shutdown",
+        () => {
+          alert("1")
+            a?.scene.restart();
+        },
+        this
+    );
+      // this.scene.remove('RPG');
+      // setTimeout(() => {
+      // const multiScene = new MultiScene("MenuScene", "RPG");
+      // this.game.scene.getScenes(true)[0].scene.add("MultiScene", multiScene, true); 
+      // // this.makeTransition("MenuScene", "RPG", undefined);
+      // }, 1000)
+    }, 3000)
     //default
     this.isoPhysics.world.setBounds(-1024, -1024, 1024 * 2, 1024 * 4);
     this.isoPhysics.projector.origin.setTo(0.5, 0.3); // permitime dudas

@@ -16,6 +16,8 @@ export default class MenuScene extends Phaser.Scene {
   }
 
   create(data: {maps: string[]}) {
+
+
     const middlePoint = {
       x: window.innerWidth / 2,
       y: window.innerHeight / 2,
@@ -37,7 +39,7 @@ export default class MenuScene extends Phaser.Scene {
     .setScale(0.30)
     .setInteractive()
       .on('pointerdown', () => {
-        const multiScene = new MultiScene("RPG", undefined, { maps: map.map((m) => (typeof m === "string" ? m : JSON.stringify(m))) });
+        const multiScene = new MultiScene("RPG", "MenuScene", { maps: map.map((m) => (typeof m === "string" ? m : JSON.stringify(m))) });
         this.scene.add("MultiScene", multiScene, true); 
       });
 
