@@ -1,13 +1,15 @@
 import RPG from "./rpg";
 //import map from "./maps/city";
 import map from "./maps/room";
+import MultiScene from "./Loader/MultiScene";
+import BetweenScenes from "./Loader/BetweenScenes";
 
 export default class Game {
   game?: Phaser.Game;
   config: Phaser.Types.Core.GameConfig = {
     type: Phaser.WEBGL,
-    width: 800,
-    height: 600,
+    width: '100%',
+    height: '100%',
     physics: {
       default: "arcade",
       arcade: {
@@ -25,26 +27,26 @@ export default class Game {
 
   constructor(canvas: HTMLCanvasElement, maps: string[]) {
     // const gamelvl1 = new IsoExperimentalMap(maps);
-    // const gameBetweenScenes = new BetweenScenesScene();
     // const gameLoader = new SceneLoader();
     // const uiScene = new UIScene();
     // const musicManager = new MusicManager();
     // const menu = new Menu();
     // const credits = new Credits();
     // const levelMenu = new LevelMenu();
-
+    const gameBetweenScenes = new BetweenScenes();
+    const multiScene = new MultiScene()
     
-    const rpg = new RPG(
-      map.map((m) => (typeof m === "string" ? m : JSON.stringify(m)))
-    );
+    // const rpg = new RPG(
+    //   map.map((m) => (typeof m === "string" ? m : JSON.stringify(m)))
+    // );
     this.config.canvas = canvas;
     // this.config.scene = [gameLoader, gamelvl1, gameBetweenScenes, uiScene, musicManager, menu, credits, levelMenu]
-    this.config.scene = [rpg];
+    this.config.scene = [multiScene, gameBetweenScenes];
   }
 
   init() {
     const game = new Phaser.Game(this.config);
-    game.scene.start("RPG");
+    game.scene.start("MultiScene");
     this.game = game;
     return game;
   }

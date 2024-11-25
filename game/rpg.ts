@@ -13,6 +13,7 @@ import { PinIsoSpriteBox } from "./Assets/pinIsoSpriteBox";
 import { TrafficLightIsoSpriteBox } from "./Assets/trafficLightIsoSpriteBox";
 import { BuildingSpriteBox } from "./Assets/buildingSpriteBox";
 import { ModalConfig, ModalContainer } from "./Assets/ModalContainer";
+import MultiScene from "./Loader/MultiScene";
 // import UIScene from "./UIScene";
 
 
@@ -206,6 +207,11 @@ export default class RPG extends Scene {
   destroy() {}
 
   create() {
+    setTimeout(() => {
+      const newMultiScene = new MultiScene("MenuScene");
+      this.scene.add("MenuScene", newMultiScene, true);
+      this.scene.stop()
+    }, 6000)
     //default
     this.isoPhysics.world.setBounds(-1024, -1024, 1024 * 2, 1024 * 4);
     this.isoPhysics.projector.origin.setTo(0.5, 0.3); // permitime dudas
@@ -309,7 +315,7 @@ export default class RPG extends Scene {
       agreeFunction:  handleAgreeModal,
     }
 
-    //const ModalTest = new ModalContainer(this, 0 , 0 , cityModal);
+    const ModalTest = new ModalContainer(this, 0 , 0 , cityModal);
 
     if (!this.withPlayer) {
       this.input.on("pointermove", (pointer: Phaser.Input.Pointer) => {
