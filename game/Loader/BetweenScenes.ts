@@ -156,7 +156,7 @@ export default class BetweenScenes extends Phaser.Scene {
         this.scene.remove('PreLoadScene')
         this.scene.remove('MultiScene')
         console.log("SCEBNES", this.game.scene.getScenes())
-        // this.scene.stop();
+        this.scene.stop();
     }
 
     turnOff() {
