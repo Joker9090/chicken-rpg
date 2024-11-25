@@ -57,6 +57,7 @@ export default class RPG extends Scene {
   eventEmitter?: Phaser.Events.EventEmitter;
 
   rectInteractive?: Phaser.GameObjects.Rectangle;
+  rectInteractive2?: Phaser.GameObjects.Rectangle;
   constructor(maps: string[]) {
     const sceneConfig = {
       key: "RPG",
@@ -332,9 +333,14 @@ export default class RPG extends Scene {
       this.rectInteractive = this.add.rectangle(350, -20, 100, 100, 0x6666ff, 0.5).setInteractive();
       console.log(this)
       this.rectInteractive.on('pointerdown', () => {
-        const ModalTest = new ModalContainer(this, 0, 0, cityModal);
+        const roomModalTest = new ModalContainer(this, 0, 0, roomModal);
       })
-      backgroundContainer.add([backgroundRoom, this.rectInteractive]);
+      this.rectInteractive2 = this.add.rectangle(-550, 65, 150, 360, 0x6666ff, 0.5).setInteractive();
+      console.log(this)
+      this.rectInteractive2.on('pointerdown', () => {
+        console.log("Change scene for city");
+      })
+      backgroundContainer.add([backgroundRoom, this.rectInteractive, this.rectInteractive2]);
       this.UICamera.ignore(backgroundContainer);
     }
 

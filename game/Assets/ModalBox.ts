@@ -23,17 +23,53 @@ export class ModalBox extends Phaser.GameObjects.Container {
 
 
         //Modals containers
+        const modalContainerWithElements = this.scene.add.container(-2000,0);
         const topContainer = this.scene.add.container(0, -170);
         const leftContainer = this.scene.add.container(-150,0);
         const rightContainer = this.scene.add.container(150,0);
 
+
+
         //backgroundModal
         const modalBackground = this.scene.add.image(0, 0, "modalBackground").setOrigin(0.5);
 
-        this.add([
-            backgroundLess,
-            modalBackground
-        ]);
+        //modalContainerWithElements.setAngle(35);
+
+        const chain = this.scene.tweens.chain({
+            targets: modalContainerWithElements,
+            //persist: true,
+            tweens: [
+                {
+                    x: 0,
+                    ease: 'power3',
+                    duration: 750
+                },
+                /*{
+                    angle: 0,
+                    ease: 'elastic.out',
+                    duration: 500
+                },*/
+                /*{
+                    scale: { value: 0.5, duration: 1000 },
+                    y: { value: 100, duration: 750, ease: 'sine.in' }
+                },
+                {
+                    angle: 0,
+                    ease: 'power2',
+                    duration: 200
+                },
+                {
+                    scale: { value: 1, duration: 1000 },
+                    y: { value: -150, duration: 750, ease: 'sine.out' }
+                },*/
+            ],
+            onComplete: () => {
+                modalContainerWithElements.x = 0;
+                modalContainerWithElements.y = 0;
+            }
+        });
+
+
 
         const handleClose = () => {
             console.log("data?:", modalConfig);
@@ -373,10 +409,19 @@ export class ModalBox extends Phaser.GameObjects.Container {
             rightButtonContainer,
         ]);
 
-        this.add([
-            buttonsContainer,
+
+        modalContainerWithElements.add([
+            modalBackground,
+            topContainer,
+            leftContainer,
+            rightContainer,
+            buttonsContainer
         ]);
 
+        this.add([
+            backgroundLess,
+            modalContainerWithElements,       
+        ]);
  
 
         this.setVisible(true)
