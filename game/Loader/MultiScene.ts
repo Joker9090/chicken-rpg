@@ -17,22 +17,24 @@ export default class MultiScene extends Phaser.Scene {
     this.scenekey = scenekey;
     this.sceneToStop = sceneToStop;
     this.sceneData = sceneData;
-    
+
   }
 
 
   preload(data: any) {
+    this.game.plugins.removeScenePlugin("IsoPlugin");
+    this.game.plugins.removeScenePlugin("IsoPhysics");
     console.log("ARIEL 2DO ROUND", this.scenekey, this.sceneToStop, this.sceneData)
-      this.assetLoaderClass = new AssetsLoader(this, ["BaseLoad"]);
-      this.assetLoaderClass.runPreload(() => {
-        if(this.scenekey) {
-          this.makeTransition(this.scenekey, this.sceneToStop ?? undefined, this.sceneData ?? undefined);
-        } else {
-          this.makeTransition("MenuScene", undefined);
-          // this.makeTransition("RPG", undefined, { maps: map2.map((m) => (typeof m === "string" ? m : JSON.stringify(m))) });
-          // this.makeTransition("RPG", undefined, { maps: map.map((m) => (typeof m === "string" ? m : JSON.stringify(m))) });
-        }
-      });
+    this.assetLoaderClass = new AssetsLoader(this, ["BaseLoad"]);
+    this.assetLoaderClass.runPreload(() => {
+      if (this.scenekey) {
+        this.makeTransition(this.scenekey, this.sceneToStop ?? undefined, this.sceneData ?? undefined);
+      } else {
+        this.makeTransition("MenuScene", undefined);
+        // this.makeTransition("RPG", undefined, { maps: map2.map((m) => (typeof m === "string" ? m : JSON.stringify(m))) });
+        // this.makeTransition("RPG", undefined, { maps: map.map((m) => (typeof m === "string" ? m : JSON.stringify(m))) });
+      }
+    });
   }
 
   makeTransition(sceneName: string, sceneToStop?: string | undefined, data?: any) {
@@ -40,7 +42,7 @@ export default class MultiScene extends Phaser.Scene {
       "BetweenScenes"
     ) as BetweenScenes;
     if (getBetweenScenesScene) {
-        console.log("ENTRO ACA BETWEEN", sceneName)
+      console.log("ENTRO ACA BETWEEN", sceneName)
       if (getBetweenScenesScene.status != BetweenScenesStatus.IDLE)
         return false;
       getBetweenScenesScene.changeSceneTo(sceneName, sceneToStop, data);
@@ -48,11 +50,11 @@ export default class MultiScene extends Phaser.Scene {
         this.scene.remove("MultiScene");
       });
     } else {
-        const rpg = new RPG(
-            map.map((m: any) => (typeof m === "string" ? m : JSON.stringify(m)))
-        );
-        this.scene.add("RPG", rpg, true);
-    //   this.scene.start(sceneName, data);
+      const rpg = new RPG(
+        map.map((m: any) => (typeof m === "string" ? m : JSON.stringify(m)))
+      );
+      this.scene.add("RPG", rpg, true);
+      //   this.scene.start(sceneName, data);
       this.time.delayedCall(1000, () => {
         this.scene.remove("MultiScene");
       });

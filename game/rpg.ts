@@ -55,7 +55,7 @@ export default class RPG extends Scene {
   group?: Phaser.GameObjects.Group;
   distanceBetweenFloors: number = 50;
   eventEmitter?: Phaser.Events.EventEmitter;
-
+  UICont?: UIContainer;
   rectInteractive?: Phaser.GameObjects.Rectangle;
   constructor(maps: string[]) {
     const sceneConfig = {
@@ -209,23 +209,6 @@ export default class RPG extends Scene {
     });
   }
 
-  destroy() { }
-
-
-  makeTransition(
-    sceneNameStart: string,
-    sceneNameStop: string,
-    data?: any
-  ) {
-    const getBetweenScenesScene = this.game.scene.getScene(
-      "BetweenScenes"
-    ) as BetweenScenes;
-    getBetweenScenesScene.changeSceneTo(sceneNameStart, sceneNameStop, data);
-  }
-
-  moveRect(x: number, y: number) {
-    this.rectInteractive?.setPosition(x, y);
-  }
 
   openModal() {
     const handleAgreeModal = () => {
@@ -249,28 +232,17 @@ export default class RPG extends Scene {
     const ModalTest = new ModalContainer(this, 0, 0, cityModal);
   }
 
+  changeSceneTo(sceneToStart: string, sceneToStop: string, data: any) {
+    this.game.plugins.removeScenePlugin("IsoPlugin");
+    this.game.plugins.removeScenePlugin("IsoPhysics");
+    const multiScene = new MultiScene(sceneToStart, sceneToStop, data);
+    this.scene.add("MultiScene", multiScene, true); 
+  }
+
   create() {
-    // setTimeout(() => {
-    //   // console log de todas las escenas
-    //   console.log("this.: ", this.game.scene.getScenes(true));
-    //   this.scene.stop();
-    //   const a = this.game.scene.getScene("BetweenScenes")
-    //   this.scene.scene.events.once(
-    //     "shutdown",
-    //     () => {
-    //       alert("1")
-    //         a?.scene.restart();
-    //     },
-    //     this
-    // );
-    //   // this.scene.remove('RPG');
-    //   // setTimeout(() => {
-    //   // const multiScene = new MultiScene("MenuScene", "RPG");
-    //   // this.game.scene.getScenes(true)[0].scene.add("MultiScene", multiScene, true); 
-    //   // // this.makeTransition("MenuScene", "RPG", undefined);
-    //   // }, 1000)
-    // }, 3000)
-    //default
+    // setTimeout(()=>{
+    //   this.changeSceneTo("MenuScene", "RPG", { maps: map.map((m) => (typeof m === "string" ? m : JSON.stringify(m)) )})
+    // }, 6000)
     this.isoPhysics.world.setBounds(-1024, -1024, 1024 * 2, 1024 * 4);
     this.isoPhysics.projector.origin.setTo(0.5, 0.3); // permitime dudas
     this.isoPhysics.world.gravity.setTo(0); // permitime dudas
@@ -376,7 +348,7 @@ export default class RPG extends Scene {
       this.UICamera.ignore(backgroundContainer);
     }
 
-    const UICont = new UIContainer(this, 0, 0);
+    this.UICont = new UIContainer(this, 0, 0);
 
     if (!this.withPlayer) {
       this.input.on("pointermove", (pointer: Phaser.Input.Pointer) => {

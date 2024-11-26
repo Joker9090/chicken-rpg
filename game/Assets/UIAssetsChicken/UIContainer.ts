@@ -34,13 +34,30 @@ export default class UIContainer extends Phaser.GameObjects.Container {
 
         const paper = this.scene.add.image(window.innerWidth - 50, window.innerHeight - 50, "iconNewsOff").setOrigin(0, 1);
         paper.setPosition(window.innerWidth - 50 - paper.width, window.innerHeight - 50)
-        setTimeout(() => {
-            paper.setTexture("iconNewsOn").setPosition(window.innerWidth - 35 - paper.width, window.innerHeight - 50)
-        }, 5000)
 
-        setInterval(() => {
-            coinsCount.setText((parseInt(coinsCount.text) + 10).toString())
-        }, 5000)
+
+
+          const timer1 = this.scene.time.addEvent({
+            delay: 5000, // ms
+            callback: () => {
+                coinsCount.setText((parseInt(coinsCount.text) + 10).toString())
+            },
+            //args: [],
+            callbackScope: this,
+            loop: true,
+          });
+
+
+        const timer2 = this.scene.time.addEvent({
+            delay: 500, // ms
+            callback: ()=>{
+            paper.setTexture("iconNewsOn").setPosition(window.innerWidth - 35 - paper.width, window.innerHeight - 50)
+            },
+            //args: [],
+            callbackScope: this,
+            repeat: 1,
+          });
+          
 
         this.add([
             this.barSmile,

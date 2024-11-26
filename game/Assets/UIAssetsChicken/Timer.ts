@@ -20,23 +20,47 @@ export class Timer extends Phaser.GameObjects.Container {
       fontStyle: "bold"
     }).setOrigin(0, 0.5)
 
-    setInterval(() => {
-      timerCounter.setText((Number(timerCounter.text) + 1).toString())
-      const count = Number(timerCounter.text)
-      if (count > 9 && count <= 99) {
-        graphics.clear()
-        graphics.lineStyle(4, 0xffffff, 1);
-        graphics.strokeRoundedRect(-75, -30, 140, 60, 15);
-      } else if (count === 100 && count <= 999) {
-        graphics.clear()
-        graphics.lineStyle(4, 0xffffff, 1);
-        graphics.strokeRoundedRect(-75, -30, 170, 60, 15);
-      } else if (count > 999) {
-        graphics.clear()
-        graphics.lineStyle(4, 0xffffff, 1);
-        graphics.strokeRoundedRect(-75, -30, 200, 60, 15);
-      }
-    }, 1000)
+    // setInterval(() => {
+    //   timerCounter.setText((Number(timerCounter.text) + 1).toString())
+    //   const count = Number(timerCounter.text)
+    //   if (count > 9 && count <= 99) {
+    //     graphics.clear()
+    //     graphics.lineStyle(4, 0xffffff, 1);
+    //     graphics.strokeRoundedRect(-75, -30, 140, 60, 15);
+    //   } else if (count === 100 && count <= 999) {
+    //     graphics.clear()
+    //     graphics.lineStyle(4, 0xffffff, 1);
+    //     graphics.strokeRoundedRect(-75, -30, 170, 60, 15);
+    //   } else if (count > 999) {
+    //     graphics.clear()
+    //     graphics.lineStyle(4, 0xffffff, 1);
+    //     graphics.strokeRoundedRect(-75, -30, 200, 60, 15);
+    //   }
+    // }, 1000)
+
+    const timerCall = this.scene.time.addEvent({
+      delay: 1000, // ms
+      callback: () => {
+        timerCounter.setText((Number(timerCounter.text) + 1).toString())
+        const count = Number(timerCounter.text)
+        if (count > 9 && count <= 99) {
+          graphics.clear()
+          graphics.lineStyle(4, 0xffffff, 1);
+          graphics.strokeRoundedRect(-75, -30, 140, 60, 15);
+        } else if (count === 100 && count <= 999) {
+          graphics.clear()
+          graphics.lineStyle(4, 0xffffff, 1);
+          graphics.strokeRoundedRect(-75, -30, 170, 60, 15);
+        } else if (count > 999) {
+          graphics.clear()
+          graphics.lineStyle(4, 0xffffff, 1);
+          graphics.strokeRoundedRect(-75, -30, 200, 60, 15);
+        }
+      },
+      callbackScope: this,
+      loop: true,
+    });
+    
 
     this.add([
       graphics,
@@ -70,12 +94,17 @@ export class Bar extends Phaser.GameObjects.Container {
 
     const icon = this.scene.add.image(0, 0, iconTexture).setOrigin(0.5).setScale(0.1)
     let fillNumber = 190
-    setInterval(() => {
-      fillNumber -= 1
-      if (fillNumber < 150) icon.setTint(0xff0000);
-      FillRect(fillNumber)
-      
-    }, 1000)
+
+    const timerCall = this.scene.time.addEvent({
+      delay: 1000, // ms
+      callback: () => {
+        fillNumber -= 1
+        if (fillNumber < 150) icon.setTint(0xff0000);
+        FillRect(fillNumber)
+      },
+      callbackScope: this,
+      loop: true,
+    });
 
     this.add([
       graphics,
