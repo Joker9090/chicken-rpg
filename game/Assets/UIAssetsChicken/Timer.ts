@@ -2,18 +2,18 @@ import Phaser from "phaser";
 import RPG from "@/game/rpg";
 
 export class Timer extends Phaser.GameObjects.Container {
-  
+
   constructor(
     scene: RPG,
     x: number,
     y: number,
   ) {
     super(scene, x, y);
-    
+
     const graphics = this.scene.add.graphics()
     graphics.lineStyle(4, 0xffffff, 1);
-    graphics.strokeRoundedRect(-75, -30, 120, 60, 15); 
-    
+    graphics.strokeRoundedRect(-75, -30, 120, 60, 15);
+
     const timer = this.scene.add.image(-40, 0, "reloj").setOrigin(0.5)
     const timerCounter = this.scene.add.text(0, 0, "0", {
       fontSize: 40,
@@ -26,22 +26,60 @@ export class Timer extends Phaser.GameObjects.Container {
       if (count > 9 && count <= 99) {
         graphics.clear()
         graphics.lineStyle(4, 0xffffff, 1);
-        graphics.strokeRoundedRect(-75, -30, 140, 60, 15); 
+        graphics.strokeRoundedRect(-75, -30, 140, 60, 15);
       } else if (count === 100 && count <= 999) {
         graphics.clear()
         graphics.lineStyle(4, 0xffffff, 1);
-        graphics.strokeRoundedRect(-75, -30, 170, 60, 15); 
-      } else if (count > 999 ) {
+        graphics.strokeRoundedRect(-75, -30, 170, 60, 15);
+      } else if (count > 999) {
         graphics.clear()
         graphics.lineStyle(4, 0xffffff, 1);
-        graphics.strokeRoundedRect(-75, -30, 200, 60, 15); 
+        graphics.strokeRoundedRect(-75, -30, 200, 60, 15);
       }
     }, 1000)
 
     this.add([
-        graphics,
-        timer,
-        timerCounter
+      graphics,
+      timer,
+      timerCounter
+    ])
+  }
+
+}
+
+export class Bar extends Phaser.GameObjects.Container {
+  constructor(
+    scene: RPG,
+    x: number,
+    y: number,
+    iconTexture: string,
+  ) {
+    super(scene, x, y);
+
+    const graphics = this.scene.add.graphics()
+    graphics.lineStyle(4, 0xffffff, 1);
+    graphics.strokeRoundedRect(-10, -15, 200, 30, 30);
+    // create a function that recieves a number and updates the fill of the bar
+    const FillRect = (fill: number) => {
+      graphics.clear()
+      graphics.strokeRoundedRect(-10, -15, 200, 30, 30);
+      graphics.lineStyle(4, 0xffffff, 1);
+      graphics.fillStyle(0xffffff, 1);
+      graphics.fillRoundedRect(-10, -15, fill, 30, 15);
+    }
+
+    const icon = this.scene.add.image(0, 0, iconTexture).setOrigin(0.5).setScale(0.1)
+    let fillNumber = 190
+    setInterval(() => {
+      fillNumber -= 1
+      if (fillNumber < 150) icon.setTint(0xff0000);
+      FillRect(fillNumber)
+      
+    }, 1000)
+
+    this.add([
+      graphics,
+      icon,
     ])
   }
 

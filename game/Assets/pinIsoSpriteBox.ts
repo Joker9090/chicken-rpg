@@ -5,6 +5,7 @@ export const ISOSPRITE: string = "IsoSprite";
 import { RpgIsoSpriteBox } from "./rpgIsoSpriteBox";
 import { Player } from "./Player";
 import { RpgIsoPlayerPrincipal } from "./rpgIsoPlayerPrincipal";
+import RPG from "../rpg";
 
 export class PinIsoSpriteBox extends RpgIsoSpriteBox {
  
@@ -28,6 +29,11 @@ export class PinIsoSpriteBox extends RpgIsoSpriteBox {
   }
 
   updatePin(group: Phaser.GameObjects.Group) {
+    this.self.setInteractive();
+    this.self.once("pointerdown", () => {
+      const RPGScene = this.scene as RPG
+      RPGScene.openModal()
+    })
    this.scene.add.tween({
     targets: this.self,
     y: "-=50",

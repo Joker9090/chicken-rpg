@@ -12,6 +12,7 @@ const loadAssets = {
     assets: [
       ["image", "block", "/50x50.png"],
       ["image", "backgroundCity", "/images/menuScene/back.png"],
+      ["image", "statsBar", "/images/UIChicken/statsBar.png"],
       ["image", "backgroundSky", "/images/menuScene/skyBack.png"],
       ["image", "playButton", "/images/menuScene/playButton.png"],
       ["image", "reloj", "/assets/UI/UILevel/reloj.png"],
@@ -21,6 +22,7 @@ const loadAssets = {
       ["image", "street-a", "/images/street-a.png"],
       ["image", "street-b", "/images/street-b.png"],
       ["image", "street-c", "/images/street-c.png"],
+      ["image", "side-walk", "/images/side-walk.png"],
       ["image", "grassTEST", "/images/bloque1TEST.png"],
       ["image", "buildingTEST", "/images/building1TEST.png"],
       ["image", "blockBuilding", "/images/bloque3TEST.png"],
@@ -30,6 +32,7 @@ const loadAssets = {
       ["image", "tree", "/images/chicken/tree.png"],
       ["image", "traffic-light-a", "/images/traffic-light-a.png"],
       ["image", "traffic-light-b", "/images/traffic-light-b.png"],
+      ["image", "smilyFace", "/assets/UI/UiChiken/smileFace.png"],
       // ["svg", "chicken", "/images/chicken/spritesheetChicken.svg",
       //   {
       //     frameWidth: 138,

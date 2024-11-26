@@ -37,6 +37,59 @@ const createBullets = (
   return !withParser ? base : base.map((row) => row.join(" ")).join("\n");
 };
 
+const createSideWalk = (
+  base: number[][] | string,
+  sideWalkConfig: sideWalkConfig,
+  withParser: boolean = true
+): string | number[][] => {
+  if (typeof base === "string") {
+    return base;
+  }
+  let newXPos = sideWalkConfig.xPos
+    .map((x: number) => {
+      // return array of streetWidth items with x+1, x+2...
+      const street = new Array(1)
+        .fill(0)
+        .map((_, i) => x + i);
+      console.log("STR", street);
+      return street;
+    })
+    .flat();
+  let newYPos = sideWalkConfig.yPos
+    .map((y: number) => {
+      // return array of streetWidth items with x+1, x+2...
+      const street = new Array(1)
+        .fill(0)
+        .map((_, i) => y + i);
+      console.log("STRETY", street);
+      return street;
+    })
+    .flat();
+  // delete duplicated items in the arrays
+  newXPos = newXPos.filter((item, index) => newXPos.indexOf(item) === index);
+  newYPos = newYPos.filter((item, index) => newYPos.indexOf(item) === index);
+
+  const builded = base.map((row, i) => {
+    console.log("ENTRO ACA")
+    //go through sideWalkConfig and if i is equal to any xPos return all 3
+    if (newXPos.includes(i)) {
+      console.log("ENTRO ACA123123123")
+      return row.map((_, j) => 133);
+    } else {
+      // map row and if j is equal to any yPos return 10
+      return row.map((_, j) => {
+      console.log("ENTRO ACA123123123")
+        if (newYPos.includes(j)) {
+          return 133;
+        }
+        return _;
+      });
+    }
+  });
+  return !withParser ? builded : builded.map((row) => row.join(" ")).join("\n");
+
+}
+
 const createStreets = (
   base: number[][] | string,
   streetConfig: streetConfig,
@@ -150,6 +203,8 @@ const createStreets = (
     }
   }
 
+
+
   // const buildedWithStreet = builded.map((row) => row.join(" ")).join("\n");
   return !withParser ? builded : builded.map((row) => row.join(" ")).join("\n");
 };
@@ -163,6 +218,11 @@ export type ObjetsConfig = {
 
 export type streetConfig = {
   streetWidth: number;
+  xPos: number[];
+  yPos: number[];
+};
+
+export type sideWalkConfig = {
   xPos: number[];
   yPos: number[];
 };
@@ -228,69 +288,64 @@ const generateBuildings = (n: number, buildings: BuildingConfig[]) => {
   return r;
 };
 
+
+
+
 const objects: ObjetsConfig[] = [
-  // {
-  //   x: 13,
-  //   y: 38,
-  //   h: 0,
-  //   type: "9",
-  // },
-
-  // {
-  //   x: 9,
-  //   y: 32,
-  //   h: 50,
-  //   type: "16",
-  // },
-
-  // {
-  //   x: 16,
-  //   y: 32,
-  //   h: 50,
-  //   type: "17",
-  // },
-
-  // {
-  //   x: 9,
-  //   y: 30,
-  //   h: 850,
-  //   type: "15",
-  // },
-
-  // {
-  //   x: 8,
-  //   y: 30,
-  //   h: 0,
-  //   type: "18",
-  // },
+  {
+    x: 5,
+    y: 31,
+    h: 400,
+    type: "15",
+  },
+  {
+    x: 8,
+    y: 36,
+    h: 0,
+    type: "8",
+  },
+  {
+    x: 8,
+    y: 2,
+    h: 0,
+    type: "8",
+  },
+  {
+    x: 6,
+    y: 3,
+    h: 0,
+    type: "8",
+  },
+  {
+    x: 3,
+    y: 36,
+    h: 0,
+    type: "8",
+  },
 ];
+
+// create an object with type ObjetsConfig[] to add trees in random places of thje map
+for (let i = 0; i < 200; i++) {
+  objects.push({
+    x: Math.floor(20 + Math.random() * 20),
+    y: Math.floor(Math.random() * 40),
+    h: 0,
+    type: "8",
+  });
+}
+
+console.log("OBJECTS", objects);
 
 const streetConfig = {
   streetWidth: 3,
-  xPos: [10, 12, 26, 27],
-  yPos: [5, 14, 23, 32],
+  xPos: [10, 12],
+  yPos: [],
 };
-const buidling2 = [
-  [],
-  [],
-  [],
-  [
-    [21, 21, 21, 21],
-    [21, 21, 21, 21],
-    [21, 21, 21, 21],
-    [22, 21, 21, 22],
-  ],
-  [
-    [21, 21, 21, 21],
-    [21, 21, 21, 21],
-    [21, 21, 21, 21],
-    [22, 21, 21, 22],
-  ],
-  [
 
-  ],
-
-];
+const sideWalkConfig = {
+  xPos: [9, 15],
+  yPos: [],
+};
 
 const buidling1 = [
   [
@@ -466,59 +521,53 @@ const buidling3 = [
   ]
 ];
 
+const buidling4 = [
+  [
+    [18, 18, 18, 18],
+    [18, 18, 18, 28],
+    [18, 18, 18, 29],
+    [18, 18, 18, 18],
+  ],
+  [
+    [18, 18, 18, 18],
+    [18, 18, 18, 28],
+    [18, 18, 18, 29],
+    [18, 23, 23, 18],
+  ],
+  [
+    [18, 18, 18, 18],
+    [18, 18, 18, 26],
+    [18, 18, 18, 27],
+    [18, 25, 25, 18],
+  ],
+  [
+    [18, 18, 18, 18],
+    [18, 18, 18, 20],
+    [18, 18, 18, 20],
+    [18, 23, 23, 18],
+  ],
+  [
+    [18, 18, 18, 18],
+    [18, 18, 18, 22],
+    [18, 18, 18, 22],
+    [18, 25, 25, 18],
+  ],
+  [
+    [18, 18, 18, 41],
+    [18, 18, 18, 42],
+    [18, 18, 18, 42],
+    [44, 45, 45, 43],
+  ]
+];
+
 
 const buildings = generateBuildings(40, [
-  // first line
-  // { x: 1, y: 1, w: 4, z: 4, h: 4, type: "21" },
-  // { x: 6, y: 2, w: 3, z: 3, h: 6, type: "4" },
-  // // { x: 10, y: 0, w: 5, z: 5, h: 12, type: "21" },
-  // { x: 16, y: 1, w: 4, z: 4, h: 6, type: "21" },
-  // { x: 21, y: 1, w: 4, z: 4, h: 7, type: "4" },
-  // // { x: 26, y: 1, w: 4, z: 4, h: 9, type: "21" },
-  // { x: 31, y: 1, w: 4, z: 4, h: 3, type: "4" },
-  // { x: 36, y: 0, w: 4, z: 4, h: 18, type: "21" },
-  // // second line
-  // { x: 1, y: 9, w: 4, z: 4, h: 12, type: "21" },
-  // { x: 6, y: 9, w: 3, z: 4, h: 4, type: "4" },
-  // // { x: 10, y: 9, w: 5, z: 4, h: 8, type: "21" },
-  // { x: 16, y: 9, w: 4, z: 4, h: 10, type: "21" },
-  // { x: 21, y: 9, w: 4, z: 4, h: 4, type: "21" },
-  // // { x: 26, y: 9, w: 4, z: 4, h: 5, type: "21" },
-  // { x: 31, y: 9, w: 4, z: 4, h: 3, type: "21" },
-  // { x: 36, y: 9, w: 4, z: 4, h: 10, type: "20" },
-  // // thrid line
-  // { x: 1, y: 18, w: 4, z: 4, h: 6, type: "22" },
-  // { x: 6, y: 18, w: 3, z: 4, h: 12, type: "4" },
-  // // { x: 10, y: 18, w: 5, z: 4, h: 3, type: "21" },
-  // { x: 16, y: 18, w: 4, z: 4, h: 10, type: "21" },
-  // { x: 21, y: 18, w: 4, z: 4, h: 15, type: "21" },
-  // // { x: 26, y: 18, w: 4, z: 4, h: 5, type: "21" },
-  // { x: 31, y: 18, w: 4, z: 4, h: 12, type: "21" },
-  // { x: 36, y: 18, w: 4, z: 4, h: 10, type: "4" },
-  // fourth line
-  // { x: 1, y: 27, w: 4, z: 4, h: 6, type: "21", replace: buidling2 },
-  // { x: 6, y: 27, w: 3, z: 4, h: 8, type: "21" },  // <----
-  { x: 6, y: 27, w: 4, z: 4, h: 17, type: "21", replace: buidling1 }, // <----
-  { x: 1, y: 27, w: 4, z: 4, h: 11, type: "21", replace: buidling3 }, // <----
-  // { x: 16, y: 27, w: 4, z: 4, h: 10, type: "21" },
-  // { x: 21, y: 27, w: 4, z: 4, h: 4, type: "4" },
-  // // { x: 26, y: 27, w: 4, z: 4, h: 10, type: "21" },
-  // { x: 31, y: 27, w: 4, z: 4, h: 12, type: "22" },
-  // { x: 36, y: 27, w: 2, z: 2, h: 2, type: "21" },
-  // follow the patter until reach x 40
-  // // {x: 15, y: 5,w: 4, z:4, h: 4,type: "4"},
-  // { x: 15, y: 10, w: 4, z: 4, h: 4, type: "4" },
-  // { x: 15, y: 15, w: 4, z: 4, h: 4, type: "4" },
-  // { x: 15, y: 20, w: 4, z: 4, h: 4, type: "4" },
-  // { x: 15, y: 25, w: 4, z: 4, h: 4, type: "4" },
-  // { x: 15, y: 30, w: 4, z: 4, h: 4, type: "4" },
-  // { x: 15, y: 35, w: 4, z: 4, h: 4, type: "4" },
-
-  // // generate a cool city
-  // { x: 10, y: 10, w: 4, z: 4, h: 4, type: "4" },
-  // { x: 10, y: 15, w: 4, z: 4, h: 4, type: "4" },
-  // { x: 10, y: 20, w: 4, z: 4, h: 4, type: "4" },
-  // { x: 10, y: 25, w: 4, z: 4, h: 9, type: "4" },
+  { x: 4, y: 5, w: 4, z: 4, h: 17, type: "21", replace: buidling1 }, // <----
+  { x: 4, y: 10, w: 4, z: 4, h: 11, type: "21", replace: buidling3 }, // <----
+  { x: 4, y: 15, w: 4, z: 4, h: 6, type: "21", replace: buidling4 }, // <----
+  { x: 4, y: 20, w: 4, z: 4, h: 17, type: "21", replace: buidling1 }, // <----
+  { x: 4, y: 25, w: 4, z: 4, h: 11, type: "21", replace: buidling3 }, // <----
+  { x: 4, y: 30, w: 4, z: 4, h: 6, type: "21", replace: buidling4 }, // <----
 ]);
 
 
@@ -536,6 +585,7 @@ const map = [
       "10": "STREET-A",
       "11": "STREET-B",
       "12": "STREET-C",
+      "133": "SIDEWALK",
       "3": "BLOQUE-1",
       "4": "BLOQUERANDOM",
       "5": "COLUMNALARGA",
@@ -575,8 +625,8 @@ const map = [
   },
 
   // MAP PLAYER / ITEMS CONFIG
-  [createBase(40, [13, 33])],
-  createStreets(createGrass(40, false), streetConfig, true) as number[][],
+  [createBase(40, [10, 25])],
+  createSideWalk(createStreets(createGrass(40, false), streetConfig, false) as number[][], sideWalkConfig, true) as number[][],
   ...buildings.map((_buildings, index) => {
     const items = objects.filter(
       (item) => item.h === index * distanceBetweenFloors

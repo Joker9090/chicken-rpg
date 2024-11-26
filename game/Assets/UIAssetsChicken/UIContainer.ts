@@ -1,15 +1,16 @@
 import RPG from "@/game/rpg";
 import Phaser from "phaser";
 import { UIInterface } from "./UiInterface";
-import { Timer } from "./Timer";
+import { Bar, Timer } from "./Timer";
 
 export default class UIContainer extends Phaser.GameObjects.Container {
 
     scene: RPG;
     timer?: Timer;
+    barSmile?: Bar;
     // uiInterface: UIInterface;
-    leftContainer: Phaser.GameObjects.Container;
-    rightContainer: Phaser.GameObjects.Container;
+    // leftContainer: Phaser.GameObjects.Container;
+    // rightContainer: Phaser.GameObjects.Container;
     constructor(
         scene: RPG,
         x: number,
@@ -19,41 +20,36 @@ export default class UIContainer extends Phaser.GameObjects.Container {
         super(scene, x, y);
         this.scene = scene;
        
-        this.timer = new Timer(this.scene, 100, 50)
-        // this.uiInterface = new UIInterface(this.scene, 0, window.innerHeight)
+        this.timer = new Timer(this.scene, 100, 50).setScale(0.7)
+        this.barSmile = new Bar(this.scene, 70, 130, "smilyFace")
 
-        this.leftContainer = this.scene.add.container(0,0);
-
-        const smileBar = this.scene.add.image(150,150,"varSmile").setOrigin(0.5);
-        const starBar = this.scene.add.image(150,200, "varStar").setOrigin(0.5);
-
-        this.leftContainer.add([
-            smileBar,
-            starBar,
-        ]);
-
-        this.rightContainer = this.scene.add.container(window.innerWidth,0);
-
-        const walletBar = this.scene.add.image(-170,150, "coinUi").setOrigin(0.5);
-
-        const coinsCount = this.scene.add.text(-160, 150, "300", {
+        const walletBar = this.scene.add.image(-170, 250, "coinUi").setOrigin(0.5);
+        walletBar.setPosition(window.innerWidth - 50 - walletBar.width/2, 75);
+        const coinsCount = this.scene.add.text(-160, 250, "300", {
             fontFamily: "MontserratSemiBold", 
             fontSize: '24px',
             color: '#ffffff',
         }).setOrigin(0.5);
+        coinsCount.setPosition(window.innerWidth - 40 - walletBar.width/2, 75);
 
-        const paper = this.scene.add.image(-150,(window.innerHeight - 50), "iconNewsOff").setOrigin(0.5);
+        const paper = this.scene.add.image(window.innerWidth - 50, window.innerHeight - 50, "iconNewsOff").setOrigin(0, 1);
+        paper.setPosition(window.innerWidth - 50 - paper.width, window.innerHeight - 50)
+        setTimeout(() => {
+            paper.setTexture("iconNewsOn").setPosition(window.innerWidth - 35 - paper.width, window.innerHeight - 50)
+        }, 5000)
 
-        this.rightContainer.add([
+        setInterval(() => {
+            coinsCount.setText((parseInt(coinsCount.text) + 10).toString())
+        }, 5000)
+
+        this.add([
+            this.barSmile,
             paper,
             walletBar,
             coinsCount,
-        ]);
-
-        this.add([
-            this.leftContainer,
-            this.rightContainer,
-            //this.timer,
+            // this.leftContainer,
+            // this.rightContainer,
+            this.timer,
             // this.uiInterface,
         ])
 

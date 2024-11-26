@@ -102,6 +102,7 @@ export default class RPG extends Scene {
     this.load.image("varFullYellow", "/assets/UI/UiChiken/varFullYellow.png");
     this.load.image("varSmile", "/assets/UI/UiChiken/varSmile.png");
     this.load.image("iconNewsOff", "/assets/UI/UiChiken/iconNewsOff.png");
+    this.load.image("iconNewsOn", "/assets/UI/UiChiken/iconNews.png");
 
 
     // <- ASSETS UI
@@ -226,27 +227,49 @@ export default class RPG extends Scene {
     this.rectInteractive?.setPosition(x, y);
   }
 
+  openModal() {
+    const handleAgreeModal = () => {
+      console.log("Agree OK");
+      this.isoGroup?.getChildren().forEach((child) => {
+        if (child.type === "PIN") {
+          const pin = child as unknown as PinIsoSpriteBox;
+          pin.self.destroy();
+        }
+      });
+    }
+    const cityModal: ModalConfig = {
+      type: modalType.QUEST,
+      title: "FOTOS EMBLEMATICAS",
+      picture: "desafioTest2",
+      time: "6",
+      text: "Sal a tomar fotos al parque.",
+      reward: "15",
+      agreeFunction: handleAgreeModal,
+    }
+    const ModalTest = new ModalContainer(this, 0, 0, cityModal);
+  }
+
   create() {
-    setTimeout(() => {
-      // console log de todas las escenas
-      console.log("this.: ", this.game.scene.getScenes(true));
-      this.scene.stop();
-      const a = this.game.scene.getScene("BetweenScenes")
-      this.scene.scene.events.once(
-        "shutdown",
-        () => {
-          alert("1")
-            a?.scene.restart();
-        },
-        this
-    );
-      // this.scene.remove('RPG');
-      // setTimeout(() => {
-      // const multiScene = new MultiScene("MenuScene", "RPG");
-      // this.game.scene.getScenes(true)[0].scene.add("MultiScene", multiScene, true); 
-      // // this.makeTransition("MenuScene", "RPG", undefined);
-      // }, 1000)
-    }, 3000)
+    // setTimeout(() => {
+    //   // console log de todas las escenas
+    //   console.log("this.: ", this.game.scene.getScenes(true));
+    //   this.scene.stop();
+    //   const a = this.game.scene.getScene("BetweenScenes")
+    //   this.scene.scene.events.once(
+    //     "shutdown",
+    //     () => {
+    //       alert("1")
+    //         a?.scene.restart();
+    //     },
+    //     this
+    // );
+    //   // this.scene.remove('RPG');
+    //   // setTimeout(() => {
+    //   // const multiScene = new MultiScene("MenuScene", "RPG");
+    //   // this.game.scene.getScenes(true)[0].scene.add("MultiScene", multiScene, true); 
+    //   // // this.makeTransition("MenuScene", "RPG", undefined);
+    //   // }, 1000)
+    // }, 3000)
     //default
     this.isoPhysics.world.setBounds(-1024, -1024, 1024 * 2, 1024 * 4);
     this.isoPhysics.projector.origin.setTo(0.5, 0.3); // permitime dudas
@@ -354,10 +377,6 @@ export default class RPG extends Scene {
     }
 
     const UICont = new UIContainer(this, 0, 0);
-
-
-
-
 
     if (!this.withPlayer) {
       this.input.on("pointermove", (pointer: Phaser.Input.Pointer) => {
@@ -627,6 +646,9 @@ export default class RPG extends Scene {
               break;
             case "STREET-C":
               self.createStreetTile(b, c, that, conf, pos, "street-c");
+              break;
+            case "SIDEWALK":
+              self.createStreetTile(b, c, that, conf, pos, "side-walk");
               break;
             case "BLOQUERANDOM":
               self.createBloqueRandomTile(b, c, that, conf, pos, index);
@@ -1430,7 +1452,7 @@ export default class RPG extends Scene {
     pos++;
 
     tileObj.type = "GRASS";
-    tileObj.self.setTint(0x222222);
+    // tileObj.self.setTint(0x222222);
     // tileObj.self.on("pointerdown", () => console.log('pointer en grass',tileObj));
   }
 
