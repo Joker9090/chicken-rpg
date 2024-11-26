@@ -39,7 +39,7 @@ export class PinIsoSpriteBox extends RpgIsoSpriteBox {
     y: "-=50",
     duration: 2000,
     repeat: -1,
-    yoyo: true,
+    yoyo: true, 
     ease: "power1",
     });
   }
