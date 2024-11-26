@@ -57,6 +57,7 @@ export default class RPG extends Scene {
   eventEmitter?: Phaser.Events.EventEmitter;
   UICont?: UIContainer;
   rectInteractive?: Phaser.GameObjects.Rectangle;
+  rectInteractive2?: Phaser.GameObjects.Rectangle;
   constructor(maps: string[]) {
     const sceneConfig = {
       key: "RPG",
@@ -132,6 +133,8 @@ export default class RPG extends Scene {
     this.load.image("room1", "/assets/room/room1.png");
     this.load.image("room2", "/assets/room/room2.png");
     this.load.image("HabitacionFinalMai", "/assets/room/HabitacionFinalMai.png");
+    this.load.image("pcGlow", "/assets/room/CompuGlow.png");
+    this.load.image("puertaGlow", "/assets/room/PuertaGlow.png");
 
 
     // otros assets
@@ -311,6 +314,7 @@ export default class RPG extends Scene {
     const forestContainers = this.forest.map((arbolito) => arbolito.container);
     this.UICamera.ignore(forestContainers);
 
+    //Room events ---->
     const handleAgreeModal = () => {
       console.log("Agree OK");
     }
@@ -339,14 +343,35 @@ export default class RPG extends Scene {
       const firstPos = this.isoGroup.children.entries[0] as unknown as RpgIsoSpriteBox;
       const backgroundContainer = this.add.container(firstPos.self.x, firstPos.self.y);
       let backgroundRoom = this.add.image(-75, 35, "HabitacionFinalMai").setOrigin(0.5);
-      this.rectInteractive = this.add.rectangle(350, -20, 100, 100, 0x6666ff, 0.5).setInteractive();
+      this.rectInteractive = this.add.rectangle(350, -20, 100, 100, 0x6666ff, 0).setInteractive();
       console.log(this)
+      let pcGlow = this.add.image(-75, 35, "pcGlow").setOrigin(0.5).setVisible(false);
+      let puertaGlow = this.add.image(-75, 35, "puertaGlow").setOrigin(0.5).setVisible(false);
+
       this.rectInteractive.on('pointerdown', () => {
-        const ModalTest = new ModalContainer(this, 0, 0, cityModal);
-      })
-      backgroundContainer.add([backgroundRoom, this.rectInteractive]);
+        const roomModalTest = new ModalContainer(this, 0, 0, roomModal);
+      });
+      this.rectInteractive.on("pointerover", () => {
+         pcGlow.setVisible(true);
+      });
+      this.rectInteractive.on("pointerout", () => {
+        pcGlow.setVisible(false);
+      });
+      this.rectInteractive2 = this.add.rectangle(-550, 65, 150, 360, 0x6666ff, 0).setInteractive();
+      console.log(this)
+      this.rectInteractive2.on('pointerdown', () => {
+        console.log("Change scene for city");
+      });
+      this.rectInteractive2.on("pointerover", () => {
+        puertaGlow.setVisible(true);
+      });
+     this.rectInteractive2.on("pointerout", () => {
+       puertaGlow.setVisible(false);
+      });
+      backgroundContainer.add([backgroundRoom, this.rectInteractive, this.rectInteractive2, pcGlow, puertaGlow]);
       this.UICamera.ignore(backgroundContainer);
     }
+    // <--- Room events
 
     this.UICont = new UIContainer(this, 0, 0);
 

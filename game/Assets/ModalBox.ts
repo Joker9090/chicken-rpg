@@ -8,6 +8,7 @@ export class ModalBox extends Phaser.GameObjects.Container {
     scene: RPG;
     agreeButton: Phaser.GameObjects.Image;
     cancelButton: Phaser.GameObjects.Image;
+    activeTween: Phaser.Tweens.Tween | null = null;
     constructor(
         scene: RPG,
         x: number,
@@ -23,21 +24,114 @@ export class ModalBox extends Phaser.GameObjects.Container {
 
 
         //Modals containers
+        const modalContainerWithElements = this.scene.add.container(-2000,0);
         const topContainer = this.scene.add.container(0, -170);
         const leftContainer = this.scene.add.container(-150,0);
         const rightContainer = this.scene.add.container(150,0);
 
+
+
         //backgroundModal
         const modalBackground = this.scene.add.image(0, 0, "modalBackground").setOrigin(0.5);
 
-        this.add([
-            backgroundLess,
-            modalBackground
-        ]);
+        //modalContainerWithElements.setAngle(35);
+
+        const chain = this.scene.tweens.chain({
+            targets: modalContainerWithElements,
+            //persist: true,
+            tweens: [
+                {
+                    x: 0,
+                    ease: 'power3',
+                    duration: 750
+                },
+                /*{
+                    angle: 0,
+                    ease: 'elastic.out',
+                    duration: 500
+                },*/
+                /*{
+                    scale: { value: 0.5, duration: 1000 },
+                    y: { value: 100, duration: 750, ease: 'sine.in' }
+                },
+                {
+                    angle: 0,
+                    ease: 'power2',
+                    duration: 200
+                },
+                {
+                    scale: { value: 1, duration: 1000 },
+                    y: { value: -150, duration: 750, ease: 'sine.out' }
+                },*/
+            ],
+            onComplete: () => {
+                modalContainerWithElements.x = 0;
+                modalContainerWithElements.y = 0;
+            }
+        });
+
+        const tweenClose = () => {
+            const chain = this.scene.tweens.chain({
+                targets: modalContainerWithElements,
+                //persist: true,
+                tweens: [
+                    {
+                        x: -2000,
+                        ease: 'power3',
+                        duration: 100
+                    },
+                    /*{
+                        angle: 0,
+                        ease: 'elastic.out',
+                        duration: 500
+                    },*/
+                    /*{
+                        scale: { value: 0.5, duration: 1000 },
+                        y: { value: 100, duration: 750, ease: 'sine.in' }
+                    },
+                    {
+                        angle: 0,
+                        ease: 'power2',
+                        duration: 200
+                    },
+                    {
+                        scale: { value: 1, duration: 1000 },
+                        y: { value: -150, duration: 750, ease: 'sine.out' }
+                    },*/
+                ],
+                onComplete: () => {
+                    this.setVisible(!this.visible)
+                }
+            });
+        }
+
+        const tweenButtonOver = (_target: any) => {
+            this.activeTween = this.scene.tweens.add({
+                targets: _target,
+                scaleX: 1.2,
+                scaleY: 1.2,
+                duration: 300,
+                yoyo: true,
+                repeat: -1,
+                ease: 'lineal',
+            });
+        }
+
+        const tweenButtonOut = (_target: any) => {
+            this.activeTween = this.scene.tweens.add({
+                targets: _target,
+                scaleX: 1,
+                scaleY: 1,
+                duration: 200,
+                ease: 'Bounce.easeOut'
+            });
+        
+        }
 
         const handleClose = () => {
             console.log("data?:", modalConfig);
-            this.setVisible(!this.visible)
+            tweenClose();
+            //this.setVisible(!this.visible)
         }
 
         switch (modalConfig.type) {
@@ -52,11 +146,15 @@ export class ModalBox extends Phaser.GameObjects.Container {
                 });
                 btnExit.on("pointerover", () => {
                     console.log("hover");
-                    btnExit.setAlpha(0.5);
+                    //btnExit.setAlpha(0.5);
+                    if(this.activeTween)this.activeTween.stop();
+                    tweenButtonOver(btnExit);
                 });
                 btnExit.on("pointerout", () => {
                     console.log("hover out");
-                    btnExit.setAlpha(1);
+                    //btnExit.setAlpha(1);
+                    if(this.activeTween)this.activeTween.stop();
+                    tweenButtonOut(btnExit);
                 });
 
                 //@ts-ignore
@@ -178,11 +276,15 @@ export class ModalBox extends Phaser.GameObjects.Container {
                 });
                 btnExit_p.on("pointerover", () => {
                     console.log("hover");
-                    btnExit_p.setAlpha(0.5);
+                    //btnExit_p.setAlpha(0.5);
+                    if(this.activeTween)this.activeTween.stop();
+                    tweenButtonOver(btnExit_p);
                 });
                 btnExit_p.on("pointerout", () => {
                     console.log("hover out");
-                    btnExit_p.setAlpha(1);
+                    //btnExit_p.setAlpha(1);
+                    if(this.activeTween)this.activeTween.stop();
+                    tweenButtonOut(btnExit_p);
                 });
 
                 //@ts-ignore
@@ -201,10 +303,11 @@ export class ModalBox extends Phaser.GameObjects.Container {
                 //LEFT CONTAINER
 
                 //First element
+                let select = false;
                 //@ts-ignore
                 const photo_1_p = this.scene.add.image(-40,-40, "camaraShop").setScale(1).setAlpha(0.5).setInteractive();
                 
-                let select = false;
+                
                 photo_1_p.on('pointerup', () => {
                     photo_1_p.setTexture("camaraShopOn");
                     select = !select;
@@ -243,7 +346,7 @@ export class ModalBox extends Phaser.GameObjects.Container {
                 const rewardBackground_2_p = this.scene.add.image(110, 10,"barraTitle").setOrigin(0,-0.1).setScale(0.28,1.3);
 
                 //@ts-ignore
-                const reward_2_p = this.scene.add.text(135, 30, "-", {
+                const reward_2_p = this.scene.add.text(125, 30, "-", {
                     fontFamily: "MontserratSemiBold", 
                     fontSize: '24px',
                     color: '#ffffff',
@@ -287,7 +390,7 @@ export class ModalBox extends Phaser.GameObjects.Container {
    
                 ]);
 
-                console.log("ENTRO QUEST");
+                console.log("ENTRO PC");
                 this.add([
                     topContainer,
                     leftContainer,
@@ -321,13 +424,17 @@ export class ModalBox extends Phaser.GameObjects.Container {
 
         this.agreeButton.on("pointerover", () => {
             console.log("hover");
-            this.agreeButton.setAlpha(0.5);
-            leftTextButton.setAlpha(0.5);
+            //this.agreeButton.setAlpha(0.5);
+            //leftTextButton.setAlpha(0.5);
+            if(this.activeTween)this.activeTween.stop();
+            tweenButtonOver(leftButtonContainer);
         });
         this.agreeButton.on("pointerout", () => {
             console.log("hover out");
-            this.agreeButton.setAlpha(1);
-            leftTextButton.setAlpha(1);
+            //this.agreeButton.setAlpha(1);
+            //leftTextButton.setAlpha(1);
+            if(this.activeTween)this.activeTween.stop();
+            tweenButtonOut(leftButtonContainer);
         });
 
 
@@ -352,13 +459,17 @@ export class ModalBox extends Phaser.GameObjects.Container {
 
         this.cancelButton.on("pointerover", () => {
             console.log("hover");
-            this.cancelButton.setAlpha(0.5);
-            rightTextButton.setAlpha(0.5);
+            //this.cancelButton.setAlpha(0.5);
+            //rightTextButton.setAlpha(0.5);
+            if(this.activeTween)this.activeTween.stop();
+            tweenButtonOver(rightButtonContainer);
         });
         this.cancelButton.on("pointerout", () => {
             console.log("hover out");
-            this.cancelButton.setAlpha(1);
-            rightTextButton.setAlpha(1);
+            //this.cancelButton.setAlpha(1);
+            //rightTextButton.setAlpha(1);
+            if(this.activeTween)this.activeTween.stop();
+            tweenButtonOut(rightButtonContainer);
         });
 
 
@@ -373,10 +484,19 @@ export class ModalBox extends Phaser.GameObjects.Container {
             rightButtonContainer,
         ]);
 
-        this.add([
-            buttonsContainer,
+
+        modalContainerWithElements.add([
+            modalBackground,
+            topContainer,
+            leftContainer,
+            rightContainer,
+            buttonsContainer
         ]);
 
+        this.add([
+            backgroundLess,
+            modalContainerWithElements,       
+        ]);
  
 
         this.setVisible(true)
