@@ -30,7 +30,7 @@ export class PinIsoSpriteBox extends RpgIsoSpriteBox {
 
   updatePin(group: Phaser.GameObjects.Group) {
     this.self.setInteractive();
-    this.self.once("pointerdown", () => {
+    this.self.on("pointerdown", () => {
       const RPGScene = this.scene as RPG
       RPGScene.openModal()
     })
