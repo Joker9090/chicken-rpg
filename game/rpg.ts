@@ -15,7 +15,8 @@ import { BuildingSpriteBox } from "./Assets/buildingSpriteBox";
 import { ModalConfig, ModalContainer } from "./Assets/ModalContainer";
 import BetweenScenes from "./Loader/BetweenScenes";
 import MultiScene from "./Loader/MultiScene";
-import map from "./maps/room";
+import roomMap from "./maps/room";
+import cityMap from "./maps/city";
 
 // import UIScene from "./UIScene";
 
@@ -239,12 +240,13 @@ export default class RPG extends Scene {
     this.game.plugins.removeScenePlugin("IsoPlugin");
     this.game.plugins.removeScenePlugin("IsoPhysics");
     const multiScene = new MultiScene(sceneToStart, sceneToStop, data);
-    this.scene.add("MultiScene", multiScene, true); 
+    this.game.scene.getScenes(true)[0].scene.add("MultiScene", multiScene, true);
+    // this.scene.add("MultiScene", multiScene, true); 
   }
 
   create() {
     // setTimeout(()=>{
-    //   this.changeSceneTo("MenuScene", "RPG", { maps: map.map((m) => (typeof m === "string" ? m : JSON.stringify(m)) )})
+    //   this.changeSceneTo("RPG", "RPG", { maps: cityMap.map((m) => (typeof m === "string" ? m : JSON.stringify(m)) )})
     // }, 6000)
     this.isoPhysics.world.setBounds(-1024, -1024, 1024 * 2, 1024 * 4);
     this.isoPhysics.projector.origin.setTo(0.5, 0.3); // permitime dudas
@@ -361,6 +363,7 @@ export default class RPG extends Scene {
       console.log(this)
       this.rectInteractive2.on('pointerdown', () => {
         console.log("Change scene for city");
+        this.changeSceneTo("RPG", "RPG", { maps: cityMap.map((m) => (typeof m === "string" ? m : JSON.stringify(m))) })
       });
       this.rectInteractive2.on("pointerover", () => {
         puertaGlow.setVisible(true);

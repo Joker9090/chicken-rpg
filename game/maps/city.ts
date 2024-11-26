@@ -571,6 +571,7 @@ const buildings = generateBuildings(40, [
 ]);
 
 
+
 let distanceBetweenFloors = 50;
 const map = [
   {

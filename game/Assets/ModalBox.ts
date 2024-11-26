@@ -78,7 +78,7 @@ export class ModalBox extends Phaser.GameObjects.Container {
                     {
                         x: -2000,
                         ease: 'power3',
-                        duration: 100
+                        duration: 750
                     },
                     /*{
                         angle: 0,

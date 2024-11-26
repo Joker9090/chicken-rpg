@@ -1,6 +1,8 @@
 import Phaser from "phaser";
 import MultiScene from "./Loader/MultiScene";
-import map from "./maps/city";
+import roomMap from "./maps/room";
+import cityMap from "./maps/city";
+
 
 export default class MenuScene extends Phaser.Scene {
   backgroundCity?: Phaser.GameObjects.Image;
@@ -39,7 +41,7 @@ export default class MenuScene extends Phaser.Scene {
     .setScale(0.30)
     .setInteractive()
       .on('pointerdown', () => {
-        const multiScene = new MultiScene("RPG", "MenuScene", { maps: map.map((m) => (typeof m === "string" ? m : JSON.stringify(m))) });
+        const multiScene = new MultiScene("RPG", "MenuScene", { maps: roomMap.map((m) => (typeof m === "string" ? m : JSON.stringify(m))) });
         this.scene.add("MultiScene", multiScene, true); 
       });
 

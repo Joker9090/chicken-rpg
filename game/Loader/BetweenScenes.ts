@@ -23,36 +23,21 @@ export default class BetweenScenes extends Phaser.Scene {
     constructor() {
         super({ key: "BetweenScenes" });
         this.status = BetweenScenesStatus.IDLE;
-        console.log("ENTRO AL BETWEEN")
-    }
-
-    addScene(keyName: string, url: string, callBack: Function) {
-        console.log("ENTRO AL ADD SCENE")
-        import(url).then((mainScene) => {
-            const scene = this.scene.add(keyName, mainScene.default, true);
-            callBack(scene);
-        });
     }
 
     stopScene(scene: Phaser.Scene, callBack: Function) {
-        console.log("ENTRO AL SCENE STOP")
         scene.scene.stop();
         callBack();
     }
 
     getSceneByName(sceneKey: string) {
-        console.log("GET SCENE ENTRO", this.scene.get(sceneKey))
         return this.scene.get(sceneKey);
     }
 
     removeScene(scene: Phaser.Scene, callBack: Function) {
-        // if (scene.destroy) scene.destroy();
-        console.log("ENTRO ACA REMOVE SCENE 1")
         scene.events.once(
             "destroy",
             () => {
-                console.log("ENTRO ACA REMOVE SCENE 2")
-
                 callBack();
             },
             this
@@ -71,32 +56,28 @@ export default class BetweenScenes extends Phaser.Scene {
     }
 
     loadNewScene() {
-        console.log("ENTRO ACA")
         if (this.status == BetweenScenesStatus.PROCCESSING) {
             this.status = BetweenScenesStatus.WAITING;
             if (this.newSceneName) {
                 if (this.sceneToStop) {
-                    console.log("ARIEL ENTRO 0")
                     const scene = this.getSceneByName(this.sceneToStop);
                     if (scene) {
-                        console.log("ARIEL ENTRO 1")
                         this.stopScene(scene, () => {
-                            console.log("ARIEL ENTRO 2")
                             this.removeScene(scene, () => {
                                 if (this.newSceneName) {
                                     if (this.newSceneName == "MenuScene") {
-                                        console.log("ENTRO MENU SCENE")
                                         const menuScene = new MenuScene()
                                         this.scene.add("MenuScene", menuScene, true);
                                         this.scene.bringToTop("BetweenScenes");
                                     } else if (this.newSceneName == "RPG") {
-                                        console.log("ENTRO RPG SCENE", this.newSceneWith)
-                                        const rpg = new RPG(
-                                            this.newSceneWith.maps
-                                        );
-                                        this.scene.add("RPG", rpg, true);
+                                        this.time.delayedCall(50, () => {
+                                            const rpg = new RPG(
+                                                this.newSceneWith.maps
+                                            );
+                                            this.scene.add("RPG", rpg, true)
+                                            this.scene.bringToTop("BetweenScenes");
+                                        }, undefined, this); // delay in ms
                                     }
-                                    this.scene.bringToTop("BetweenScenes");
                                 }
                                 this.turnOff();
                             });
@@ -104,28 +85,20 @@ export default class BetweenScenes extends Phaser.Scene {
                     }
                 } else {
                     if (this.newSceneName) {
-                        console.log("ARIEL ENTRO 4")
                         console.log(this.newSceneName, this.newSceneWith, "NEW SCSENE NAME")
                         if (this.newSceneName == "MenuScene") {
-                            console.log("ENTRO MENU SCENE")
                             const menuScene = new MenuScene()
                             this.scene.add("MenuScene", menuScene, true);
                             this.scene.bringToTop("BetweenScenes");
-
                         } else if (this.newSceneName == "RPG") {
-                            console.log("ENTRO RPG SCENE", this.newSceneWith)
-
                             const rpg = new RPG(
                                 this.newSceneWith.maps
                             );
                             this.scene.add("RPG", rpg, true);
                             this.scene.bringToTop("BetweenScenes");
-
                         }
                     }
                     this.turnOff();
-                    // this.scene.launch(this.newSceneName, this.newSceneWith);
-                    // this.scene.bringToTop(this.newSceneName);
                 }
             }
         }
@@ -155,7 +128,7 @@ export default class BetweenScenes extends Phaser.Scene {
         this.status = BetweenScenesStatus.IDLE;
         this.scene.remove('PreLoadScene')
         this.scene.remove('MultiScene')
-        console.log("SCEBNES", this.game.scene.getScenes())
+        console.log("SCEBNES", this.game.scene.getScenes(true))
         // this.scene.stop();
     }
 
