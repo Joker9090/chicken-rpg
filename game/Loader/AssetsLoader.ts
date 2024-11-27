@@ -25,6 +25,7 @@ const loadAssets = {
       ["image", "rightMenuItem", "/images/menuScene/rightMenuItem.png"],
       ["image", "reloj", "/assets/UI/UILevel/reloj.png"],
       ["image", "tile", "/images/bloque.png"],
+      ["image", "imageModalPhoto", "/assets/modalAssets/imageModalPhoto.jpg"],
       ["image", "pin", "/images/pin.png"],
       ["image", "cube1", "/images/cube1.png"],
       ["image", "street-a", "/images/street-a.png"],

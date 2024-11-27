@@ -59,6 +59,7 @@ export default class RPG extends Scene {
   UICont?: UIContainer;
   rectInteractive?: Phaser.GameObjects.Rectangle;
   rectInteractive2?: Phaser.GameObjects.Rectangle;
+  rectInteractive3?: Phaser.GameObjects.Rectangle;
   constructor(maps: string[]) {
     const sceneConfig = {
       key: "RPG",
@@ -135,6 +136,7 @@ export default class RPG extends Scene {
     this.load.image("room2", "/assets/room/room2.png");
     this.load.image("HabitacionFinalMai", "/assets/room/HabitacionFinalMai.png");
     this.load.image("pcGlow", "/assets/room/CompuGlow.png");
+    this.load.image("cama", "/assets/room/cama.png");
     this.load.image("puertaGlow", "/assets/room/PuertaGlow.png");
 
 
@@ -227,7 +229,7 @@ export default class RPG extends Scene {
     const cityModal: ModalConfig = {
       type: modalType.QUEST,
       title: "FOTOS EMBLEMATICAS",
-      picture: "desafioTest2",
+      picture: "imageModalPhoto",
       time: "6",
       text: "Sal a tomar fotos al parque.",
       reward: "15",
@@ -245,9 +247,100 @@ export default class RPG extends Scene {
   }
 
   create() {
-    // setTimeout(()=>{
-    //   this.changeSceneTo("RPG", "RPG", { maps: cityMap.map((m) => (typeof m === "string" ? m : JSON.stringify(m)) )})
-    // }, 6000)
+    // SKY
+    const skyCam = this.cameras.add(0, 0, window.innerWidth, window.innerHeight);
+    this.cameras.cameras = [skyCam, this.cameras.main];
+    const sky1 = this.add.rectangle(0, 0, window.innerWidth, window.innerHeight, 0xaefbff).setAlpha(1).setOrigin(1)
+    const sky2 = this.add.rectangle(0, 0, window.innerWidth, window.innerHeight, 0x4ddbff).setAlpha(0).setOrigin(0)
+    const sky3 = this.add.rectangle(0, 0, window.innerWidth, window.innerHeight, 0xffd194).setAlpha(0).setOrigin(0)
+    const sky4 = this.add.rectangle(0, 0, window.innerWidth, window.innerHeight, 0x1f3558).setAlpha(0).setOrigin(0)
+    let timeCounter = 0
+    this.cameras.main.ignore([sky1, sky2, sky3, sky4])
+
+    const makeDayCycle = (index: number, callback: Function) => {
+      console.log(index, "start index")
+      const DayDuration = 60000
+      const skies = [sky1, sky2, sky3, sky4]
+      if (index === 3) {
+        this.tweens.add({
+          targets: skies[index],
+          alpha: 0,
+          duration: DayDuration/4,
+          onComplete: () => {
+            skies[index].setAlpha(0)
+          }
+        })
+        console.log(index, "end index")
+        this.tweens.add({
+          targets: skies[0],
+          alpha: 1,
+          duration: DayDuration/4,
+          onComplete: () => {
+            skies[0].setAlpha(1)
+            callback(0, callback)
+          }
+        })
+      } else {
+        this.tweens.add({
+          targets: skies[index],
+          alpha: 0,
+          duration: DayDuration/4,
+          onComplete: () => {
+            skies[index].setAlpha(0)
+          }
+        })
+        console.log(index, "end index")
+        this.tweens.add({
+          targets: skies[index + 1],
+          alpha: 1,
+          duration: DayDuration/4,
+          onComplete: () => {
+            skies[index + 1].setAlpha(1)
+            callback(index + 1, callback)
+          }
+        })
+      }
+    }
+
+    makeDayCycle(0, makeDayCycle)
+    // const timerCall = this.time.addEvent({
+    //   delay: 250, // ms
+    //   callback: () => {
+    //     timeCounter += 1
+    //     // change the alpha of skys to simulate a day cycle
+    //     if (timeCounter > 0 && timeCounter < 60) {
+    //       console.log(timeCounter, "ARIEL")
+    //       sky1.setAlpha(1 - 60/(60 * timeCounter))
+    //       sky2.setAlpha(timeCounter/60)
+    //       sky3.setAlpha(0)
+    //       sky4.setAlpha(0)
+    //     } else if (timeCounter >= 60 && timeCounter < 120) {
+    //       sky1.setAlpha(0)
+    //       sky2.setAlpha(1 - 1/(60 * (timeCounter - 60)))
+    //       sky3.setAlpha((timeCounter - 60)/60)
+    //       sky4.setAlpha(0)
+    //     } else if (timeCounter >= 120 && timeCounter < 180) {
+    //       sky1.setAlpha(0)
+    //       sky2.setAlpha(0)
+    //       sky3.setAlpha(1 - 1/(60 * (timeCounter - 120)))
+    //       sky4.setAlpha((timeCounter - 120)/60)
+    //     }
+    //     else if (timeCounter >= 180 && timeCounter < 240) {
+    //       sky1.setAlpha((timeCounter - 180)/60)
+    //       sky2.setAlpha(0)
+    //       sky3.setAlpha(0)
+    //       sky4.setAlpha(1 - 1/(60 * (timeCounter - 180)))
+    //     }
+    //     else {
+    //       timeCounter = 0
+    //     }
+    //   },
+    //   callbackScope: this,
+    //   loop: true,
+    // });
+    // SKY 
+
+
     this.isoPhysics.world.setBounds(-1024, -1024, 1024 * 2, 1024 * 4);
     this.isoPhysics.projector.origin.setTo(0.5, 0.3); // permitime dudas
     this.isoPhysics.world.gravity.setTo(0); // permitime dudas
@@ -316,9 +409,12 @@ export default class RPG extends Scene {
       window.innerHeight
     );
     this.UICamera.ignore(this.isoGroup);
+    skyCam.ignore(this.isoGroup);
     const forestContainers = this.forest.map((arbolito) => arbolito.container);
+    this.UICamera.ignore([sky1, sky2, sky3, sky4])
     this.UICamera.ignore(forestContainers);
-
+    skyCam.ignore(forestContainers);
+    skyCam.ignore(this.UICont);
     //Room events ---->
     const handleAgreeModal = () => {
       console.log("Agree OK");
@@ -331,7 +427,7 @@ export default class RPG extends Scene {
     const cityModal: ModalConfig = {
       type: modalType.QUEST,
       title: "FOTOS EMBLEMATICAS",
-      picture: "desafioTest2",
+      picture: "imageModalPhoto",
       time: "6",
       text: "Sal a tomar fotos al parque.",
       reward: "15",
@@ -357,12 +453,13 @@ export default class RPG extends Scene {
       console.log(this)
       let pcGlow = this.add.image(-75, 35, "pcGlow").setOrigin(0.5).setVisible(false);
       let puertaGlow = this.add.image(-75, 35, "puertaGlow").setOrigin(0.5).setVisible(false);
+      let cama = this.add.image(-75, 35, "cama").setOrigin(0.5).setVisible(false);
 
       this.rectInteractive.on('pointerdown', () => {
         const roomModalTest = new ModalContainer(this, 0, 0, roomModal);
       });
       this.rectInteractive.on("pointerover", () => {
-         pcGlow.setVisible(true);
+        pcGlow.setVisible(true);
       });
       this.rectInteractive.on("pointerout", () => {
         pcGlow.setVisible(false);
@@ -376,10 +473,22 @@ export default class RPG extends Scene {
       this.rectInteractive2.on("pointerover", () => {
         puertaGlow.setVisible(true);
       });
-     this.rectInteractive2.on("pointerout", () => {
-       puertaGlow.setVisible(false);
+      this.rectInteractive2.on("pointerout", () => {
+        puertaGlow.setVisible(false);
       });
-      backgroundContainer.add([background, backgroundRoom, this.rectInteractive, this.rectInteractive2, pcGlow, puertaGlow]);
+      this.rectInteractive3 = this.add.rectangle(-100, 0, 150, 150, 0x6666ff, 0).setInteractive();
+      console.log(this)
+      this.rectInteractive3.on('pointerdown', () => {
+        console.log("Change scene for city");
+        this.changeSceneTo("RPG", "RPG", { maps: cityMap.map((m) => (typeof m === "string" ? m : JSON.stringify(m))) })
+      });
+      this.rectInteractive3.on("pointerover", () => {
+        cama.setVisible(true);
+      });
+      this.rectInteractive3.on("pointerout", () => {
+        cama.setVisible(false);
+      });
+      backgroundContainer.add([background, backgroundRoom, pcGlow, puertaGlow, cama, this.rectInteractive, this.rectInteractive2, this.rectInteractive3]);
       this.UICamera.ignore(backgroundContainer);
     }
     // <--- Room events

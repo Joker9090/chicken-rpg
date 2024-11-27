@@ -127,24 +127,22 @@ export class Clock extends Phaser.GameObjects.Container {
     super(scene, x, y);
 
     this.clock = this.scene.add.image(0, 0, 'clockDay').setOrigin(0.5).setScale(1)
-    this.clockPointer = this.scene.add.image(0, 0, 'clockPointer').setOrigin(0.5).setScale(1)
+    this.clockPointer = this.scene.add.image(0, 0, 'clockPointer').setOrigin(0.5).setScale(1).setRotation(-Math.PI/4)
 
-    this.timerCall = this.scene.time.addEvent({
-      delay: 1000, // ms
-      callback: () => {
-        this.clockPointer.angle += 6
-      },
-      callbackScope: this,
-      loop: true,
-    });
-
-    const timerCall2 = this.scene.time.addEvent({
-      delay: 4000, // ms
-      callback: () => {
-        this.setMomentDay(3)
-      },
-      callbackScope: this,
-    });
+    // this.timerCall = this.scene.time.addEvent({
+    //   delay: 1000, // ms
+    //   callback: () => {
+    //     this.clockPointer.angle += Math.PI
+    //   },
+    //   callbackScope: this,
+    //   loop: true,
+    // });
+    this.scene.tweens.add({
+      targets: this.clockPointer,
+      rotation: Math.PI*2 - Math.PI/4,
+      duration: 60000,
+      repeat: -1,
+    })
 
     this.add([
       this.clock,
