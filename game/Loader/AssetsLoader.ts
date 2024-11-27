@@ -16,6 +16,8 @@ const loadAssets = {
       ["image", "clockDay", "/images/UIChicken/clockDay.png"],
       ["image", "clockPointer", "/images/UIChicken/clockPointer.png"],
       ["image", "lvlMarker", "/images/UIChicken/lvlMarker.png"],
+      ["image", "goBack", "/images/UIChicken/goBack.png"],
+      ["image", "goRoom", "/images/UIChicken/goRoom.png"],
       ["image", "backgroundSky", "/images/menuScene/skyBack.png"],
       ["image", "playButton", "/images/menuScene/playButton.png"],
       ["image", "backgroundMenu", "/images/menuScene/backgroundMenu.png"],

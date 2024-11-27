@@ -305,7 +305,9 @@ export default class RPG extends Scene {
     this.cameras.main.setViewport(0, 0, window.innerWidth, window.innerHeight);
 
     // WORKKSHOP NANEX
-    this.UICont = new UIContainer(this, 0, 0);
+    const lvlData = JSON.parse(this.maps[0]);
+
+    this.UICont = new UIContainer(this, 0, 0, lvlData.nivel);
 
     this.UICamera = this.cameras.add(
       0,
@@ -345,7 +347,6 @@ export default class RPG extends Scene {
       agreeFunction: handleAgreeModalRoom,
     }
     console.log("data map: ", JSON.parse(this.maps[0]));
-    const lvlData = JSON.parse(this.maps[0]);
     if (lvlData.nivel == "room") {
       console.log("es room");
       const firstPos = this.isoGroup.children.entries[0] as unknown as RpgIsoSpriteBox;
