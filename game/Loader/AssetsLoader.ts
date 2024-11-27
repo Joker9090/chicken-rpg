@@ -11,10 +11,13 @@ const loadAssets = {
   BaseLoad: {
     assets: [
       ["image", "block", "/50x50.png"],
-      ["image", "backgroundCity", "/images/menuScene/back.png"],
+      ["image", "backgroundCity", "/images/menuScene/backgroundCity.png"],
       ["image", "statsBar", "/images/UIChicken/statsBar.png"],
       ["image", "backgroundSky", "/images/menuScene/skyBack.png"],
       ["image", "playButton", "/images/menuScene/playButton.png"],
+      ["image", "backgroundMenu", "/images/menuScene/backgroundMenu.png"],
+      ["image", "leftMenuItem", "/images/menuScene/leftMenuItem.png"],
+      ["image", "rightMenuItem", "/images/menuScene/rightMenuItem.png"],
       ["image", "reloj", "/assets/UI/UILevel/reloj.png"],
       ["image", "tile", "/images/bloque.png"],
       ["image", "pin", "/images/pin.png"],

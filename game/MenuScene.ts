@@ -5,6 +5,8 @@ import cityMap from "./maps/city";
 
 
 export default class MenuScene extends Phaser.Scene {
+  leftMenuItem?: Phaser.GameObjects.Image;
+  rightMenuItem?: Phaser.GameObjects.Image;
   backgroundCity?: Phaser.GameObjects.Image;
   backgroundSky?: Phaser.GameObjects.Image;
   playButton?: Phaser.GameObjects.Image;
@@ -26,19 +28,42 @@ export default class MenuScene extends Phaser.Scene {
     }
     this.container = this.add.container(middlePoint.x, middlePoint.y)
     // create a simple menu
-    this.backgroundSky = this.add.image(0, 0, "backgroundSky").setScale(1.5)
-    this.backgroundCity = this.add.image(-200, 50, "backgroundCity")
+    this.backgroundSky = this.add.image(0, 0, "backgroundMenu").setScale(1)
+    this.backgroundCity = this.add.image(-50, 0, "backgroundCity").setScale(0.5)
     this.tweens.add({
       targets: this.backgroundCity,
       y: '+=40',
       duration: 8000,
+      scale: 0.55,
       ease: 'ease',
       yoyo: true,
       loop: -1
     })
 
-    this.playButton = this.add.image(400, -200, "playButton")
-    .setScale(0.30)
+    this.leftMenuItem = this.add.image(-window.innerWidth/2, -window.innerHeight/2, "leftMenuItem").setScale(1).setOrigin(0).setScale(0.8)
+    this.tweens.add({
+      targets: this.leftMenuItem,
+      y: '-=150',
+      x: '-=150',
+      duration: 6666,
+      ease: 'ease',
+      yoyo: true,
+      loop: -1
+    })
+    this.rightMenuItem = this.add.image(window.innerWidth/2, window.innerHeight/2, "rightMenuItem").setScale(1).setOrigin(1).setScale(0.8)
+    this.tweens.add({
+      targets: this.rightMenuItem,
+      y: '+=150',
+      x: '+=150',
+      duration: 5555,
+      ease: 'ease',
+      yoyo: true,
+      loop: -1
+    })
+
+
+    this.playButton = this.add.image(0, 0, "playButton")
+    .setScale(0)
     .setInteractive()
       .on('pointerdown', () => {
         const multiScene = new MultiScene("RPG", "MenuScene", { maps: roomMap.map((m) => (typeof m === "string" ? m : JSON.stringify(m))) });
@@ -47,24 +72,28 @@ export default class MenuScene extends Phaser.Scene {
 
       this.tweens.add({
         targets: this.playButton,
-        scale: '+=0.05',
+        scale: 1.5,
         duration: 1000,
-        ease: 'ease',
-        yoyo: true,
-        loop: -1,
+        delay: 2000,
+        ease: 'bounce',
+        onComplete: () => {
+          this.tweens.add({
+            targets: this.playButton,
+            scale: 1.45,
+            duration: 1000,
+            ease: 'bounce',
+            yoyo: true,
+            loop: -1
+          })
+        }
       })
 
-    const title = this.add.text(0, -middlePoint.y + 200, "NOMBRE DEL JUEGO", { 
-      color: "#000000",
-      fontSize: 55,
-      fontFamily: "Arcade",
-    }).setOrigin(0.5, 0.5)
-    title.setPosition(0, -middlePoint.y + title.height)
     this.container.add([
       this.backgroundSky, 
+      this.leftMenuItem, 
+      this.rightMenuItem, 
       this.backgroundCity, 
       this.playButton, 
-      title
     ])
 
   } 
