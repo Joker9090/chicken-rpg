@@ -113,3 +113,50 @@ export class Bar extends Phaser.GameObjects.Container {
   }
 
 }
+
+
+export class Clock extends Phaser.GameObjects.Container {
+  clockPointer: Phaser.GameObjects.Image;
+  clock: Phaser.GameObjects.Image;
+  timerCall: Phaser.Time.TimerEvent;
+  constructor(
+    scene: RPG,
+    x: number,
+    y: number,
+  ) {
+    super(scene, x, y);
+
+    this.clock = this.scene.add.image(0, 0, 'clockDay').setOrigin(0.5).setScale(1)
+    this.clockPointer = this.scene.add.image(0, 0, 'clockPointer').setOrigin(0.5).setScale(1)
+
+    this.timerCall = this.scene.time.addEvent({
+      delay: 1000, // ms
+      callback: () => {
+        this.clockPointer.angle += 6
+      },
+      callbackScope: this,
+      loop: true,
+    });
+
+    const timerCall2 = this.scene.time.addEvent({
+      delay: 4000, // ms
+      callback: () => {
+        this.setMomentDay(3)
+      },
+      callbackScope: this,
+    });
+
+    this.add([
+      this.clock,
+      this.clockPointer,
+    ])
+  }
+
+  stopOrStartClock() {
+    this.timerCall.paused = this.timerCall.paused ? false : true
+  }
+
+  setMomentDay(time: 1 | 2 | 3 | 4) {
+    this.clockPointer.setRotation(time*Math.PI/2)
+  }
+}

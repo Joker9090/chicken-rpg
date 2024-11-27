@@ -305,6 +305,7 @@ export default class RPG extends Scene {
     this.cameras.main.setViewport(0, 0, window.innerWidth, window.innerHeight);
 
     // WORKKSHOP NANEX
+    this.UICont = new UIContainer(this, 0, 0);
 
     this.UICamera = this.cameras.add(
       0,
@@ -319,6 +320,11 @@ export default class RPG extends Scene {
     //Room events ---->
     const handleAgreeModal = () => {
       console.log("Agree OK");
+    }
+    const handleAgreeModalRoom = () => {
+      console.log("Agree OK");
+      this.UICont?.changeMoney(100)
+
     }
     const cityModal: ModalConfig = {
       type: modalType.QUEST,
@@ -336,7 +342,7 @@ export default class RPG extends Scene {
       picture: "desafioTest2",
       text: "CAMARA",
       reward: "100",
-      agreeFunction: handleAgreeModal,
+      agreeFunction: handleAgreeModalRoom,
     }
     console.log("data map: ", JSON.parse(this.maps[0]));
     const lvlData = JSON.parse(this.maps[0]);
@@ -344,6 +350,7 @@ export default class RPG extends Scene {
       console.log("es room");
       const firstPos = this.isoGroup.children.entries[0] as unknown as RpgIsoSpriteBox;
       const backgroundContainer = this.add.container(firstPos.self.x, firstPos.self.y);
+      const background = this.add.image(-300, 300, "backgroundMenu").setScale(1).setScale(2.5).setScrollFactor(1);
       let backgroundRoom = this.add.image(-75, 35, "HabitacionFinalMai").setOrigin(0.5);
       this.rectInteractive = this.add.rectangle(350, -20, 100, 100, 0x6666ff, 0).setInteractive();
       console.log(this)
@@ -371,12 +378,11 @@ export default class RPG extends Scene {
      this.rectInteractive2.on("pointerout", () => {
        puertaGlow.setVisible(false);
       });
-      backgroundContainer.add([backgroundRoom, this.rectInteractive, this.rectInteractive2, pcGlow, puertaGlow]);
+      backgroundContainer.add([background, backgroundRoom, this.rectInteractive, this.rectInteractive2, pcGlow, puertaGlow]);
       this.UICamera.ignore(backgroundContainer);
     }
     // <--- Room events
 
-    this.UICont = new UIContainer(this, 0, 0);
 
     if (!this.withPlayer) {
       this.input.on("pointermove", (pointer: Phaser.Input.Pointer) => {
