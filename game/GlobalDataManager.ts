@@ -10,7 +10,7 @@ export default class GlobalDataManager extends Phaser.Scene {
     timeOfDay: 0 | 1 | 2 | 3;
     newNews: boolean;
   }
-
+  dayState: 'IDLE' | 'RUNNING' = 'IDLE'
   constructor() {
     super({ key: "GlobalDataManager", active: true });
 
@@ -25,15 +25,22 @@ export default class GlobalDataManager extends Phaser.Scene {
     this.state.newNews = state;
   }
 
-  changeMoney(amount: number) {
+  changeMoney(amount: number) { 
     this.state.playerMoney += amount;
   }
 
   passTime(amount: number) {
-    const gameScene = this.game.scene.getScene("RPG") as RPG
-    gameScene.UICont?.clock.passTime(amount)
-    gameScene.makeDayCycle(this.state.timeOfDay, ()=>{})
-    this.state.timeOfDay += amount
+    if (this.dayState === 'RUNNING') return
+    else {
+      this.dayState = 'RUNNING'
+      const gameScene = this.game.scene.getScene("RPG") as RPG
+      gameScene.UICont?.clock.passTime(amount)
+      gameScene.makeDayCycle(this.state.timeOfDay, ()=>{
+        this.dayState = 'IDLE'
+      })
+      this.state.timeOfDay += amount
+      if (this.state.timeOfDay > 3) this.state.timeOfDay = 0
+    }
   }
 
   getState(){

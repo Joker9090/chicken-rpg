@@ -170,6 +170,34 @@ export default class RPG extends Scene {
       startFrame: 0,
     });
 
+    this.load.spritesheet("walkRight-1", "/images/chicken/playerWalk.png", {
+      frameWidth: 200,
+      frameHeight: 250,
+      startFrame: 0,
+      endFrame: 9
+    });
+
+    this.load.spritesheet("walkRight-2", "/images/chicken/playerWalk.png", {
+      frameWidth: 200,
+      frameHeight: 250,
+      startFrame: 10,
+      endFrame: 19
+    });
+
+    this.load.spritesheet("walkTop-1", "/images/chicken/playerWalk2.png", {
+      frameWidth: 200,
+      frameHeight: 250,
+      startFrame: 0,
+      endFrame: 9
+    });
+
+    this.load.spritesheet("walkTop-2", "/images/chicken/playerWalk2.png", {
+      frameWidth: 200,
+      frameHeight: 250,
+      startFrame: 10,
+      endFrame: 19
+    });
+
     this.load.image("tree", "/images/chicken/tree.png");
 
     for (let index = 0; index < 6; index++) {
@@ -236,7 +264,7 @@ export default class RPG extends Scene {
     const cityModal: ModalConfig = {
       type: modalType.QUEST,
       title: "FOTOS EMBLEMATICAS",
-      picture: "imageModalPhoto",
+      picture: "fotoCamara",
       time: "6",
       text: "Sal a tomar fotos al parque.",
       reward: "15",
@@ -421,7 +449,8 @@ export default class RPG extends Scene {
 
     if (lvlData.nivel == "room") {
       const firstPos = this.isoGroup.children.entries[0] as unknown as RpgIsoSpriteBox;
-      const backgroundContainer = this.add.container(firstPos.self.x, firstPos.self.y);
+      const backgroundContainer = this.add.container(firstPos.self.x, firstPos.self.y).setDepth(999999)
+      const backgroundContainer2 = this.add.container(firstPos.self.x, firstPos.self.y)
       const background = this.add.image(-300, 300, "backgroundMenu").setScale(1).setScale(2.5).setScrollFactor(1);
       let backgroundRoom = this.add.image(-75, 35, "HabitacionFinalMai").setOrigin(0.5);
       let pcGlow = this.add.image(-75, 35, "pcGlow").setOrigin(0.5).setVisible(false);
@@ -462,9 +491,12 @@ export default class RPG extends Scene {
         cama.setVisible(false);
       });
 
-      backgroundContainer.add([
+      backgroundContainer2.add([
         background,
         backgroundRoom,
+      ])
+
+      backgroundContainer.add([
         pcGlow,
         puertaGlow,
         cama,
@@ -473,7 +505,9 @@ export default class RPG extends Scene {
         this.rectInteractive3,
       ]);
       this.UICamera.ignore(backgroundContainer);
+      this.UICamera.ignore(backgroundContainer2);
       skyCam.ignore(backgroundContainer);
+      skyCam.ignore(backgroundContainer2);
     }
     // <--- Room events
 

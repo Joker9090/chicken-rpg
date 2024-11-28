@@ -27,6 +27,7 @@ const loadAssets = {
       ["image", "tile", "/images/bloque.png"],
       ["image", "imageModalPhoto", "/assets/modalAssets/imageModalPhoto.png"],
       ["image", "modalNews", "/assets/modalAssets/modalNews.png"],
+      ["image", "fotoCamara", "/assets/modalAssets/fotoCamara.png"],
       ["image", "pin", "/images/pin.png"],
       ["image", "cube1", "/images/cube1.png"],
       ["image", "street-a", "/images/street-a.png"],
