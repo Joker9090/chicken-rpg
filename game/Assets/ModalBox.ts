@@ -173,7 +173,7 @@ export class ModalBox extends Phaser.GameObjects.Container {
                 //LEFT CONTAINER
 
                 //@ts-ignore
-                const photo_q = this.scene.add.image(-20,10, modalConfig.picture).setScale(0.11);
+                const photo_q = this.scene.add.image(-20,10, modalConfig.picture).setScale(0.22);
                 const graphics = this.scene.make.graphics();
                 graphics.fillRoundedRect(-100, -100, 170, 220, 20);
                 const mask = graphics.createGeometryMask();

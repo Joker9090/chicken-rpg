@@ -1,5 +1,6 @@
 import Phaser from "phaser";
 import RPG from "@/game/rpg";
+import GlobalDataManager from "@/game/GlobalDataManager";
 
 export class Timer extends Phaser.GameObjects.Container {
 
@@ -118,7 +119,7 @@ export class Bar extends Phaser.GameObjects.Container {
 export class Clock extends Phaser.GameObjects.Container {
   clockPointer: Phaser.GameObjects.Image;
   clock: Phaser.GameObjects.Image;
-  timerCall: Phaser.Time.TimerEvent;
+  // timerCall: Phaser.Time.TimerEvent;
   constructor(
     scene: RPG,
     x: number,
@@ -126,23 +127,10 @@ export class Clock extends Phaser.GameObjects.Container {
   ) {
     super(scene, x, y);
 
+    const globalDataManager = this.scene.game.scene.getScene("GlobalDataManager") as GlobalDataManager
+    const globalState = globalDataManager.getState()
     this.clock = this.scene.add.image(0, 0, 'clockDay').setOrigin(0.5).setScale(1)
-    this.clockPointer = this.scene.add.image(0, 0, 'clockPointer').setOrigin(0.5).setScale(1).setRotation(-Math.PI/4)
-
-    // this.timerCall = this.scene.time.addEvent({
-    //   delay: 1000, // ms
-    //   callback: () => {
-    //     this.clockPointer.angle += Math.PI
-    //   },
-    //   callbackScope: this,
-    //   loop: true,
-    // });
-    this.scene.tweens.add({
-      targets: this.clockPointer,
-      rotation: Math.PI*2 - Math.PI/4,
-      duration: 60000,
-      repeat: -1,
-    })
+    this.clockPointer = this.scene.add.image(0, 0, 'clockPointer').setOrigin(0.5).setScale(1).setRotation((globalState.timeOfDay)*Math.PI/2)
 
     this.add([
       this.clock,
@@ -150,11 +138,19 @@ export class Clock extends Phaser.GameObjects.Container {
     ])
   }
 
-  stopOrStartClock() {
-    this.timerCall.paused = this.timerCall.paused ? false : true
+  passTime(amount: number) {
+    this.scene.add.tween({
+      targets: this.clockPointer,
+      rotation: this.clockPointer.rotation + amount*Math.PI/2,
+      duration: 2000,
+      ease: 'linear',
+    })
   }
+  // stopOrStartClock() {
+  //   this.timerCall.paused = this.timerCall.paused ? false : true
+  // }
 
-  setMomentDay(time: 1 | 2 | 3 | 4) {
-    this.clockPointer.setRotation(time*Math.PI/2)
-  }
+  // setMomentDay(time: 1 | 2 | 3 | 4) {
+  //   this.clockPointer.setRotation(time*Math.PI/2)
+  // }
 }

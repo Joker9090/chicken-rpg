@@ -3,6 +3,7 @@ import RPG from "./rpg";
 import map from "./maps/room";
 import MultiScene from "./Loader/MultiScene";
 import BetweenScenes from "./Loader/BetweenScenes";
+import GlobalDataManager from "./GlobalDataManager";
 
 export default class Game {
   game?: Phaser.Game;
@@ -32,7 +33,7 @@ export default class Game {
     // const musicManager = new MusicManager();
     // const menu = new Menu();
     // const credits = new Credits();
-    // const levelMenu = new LevelMenu();
+    const globalData = new GlobalDataManager();
     const multiScene = new MultiScene()
     const gameBetweenScenes = new BetweenScenes();
     
@@ -41,7 +42,7 @@ export default class Game {
     // );
     this.config.canvas = canvas;
     // this.config.scene = [gameLoader, gamelvl1, gameBetweenScenes, uiScene, musicManager, menu, credits, levelMenu]
-    this.config.scene = [multiScene, gameBetweenScenes];
+    this.config.scene = [multiScene, gameBetweenScenes, globalData];
   }
 
   init() {

@@ -17,6 +17,7 @@ import BetweenScenes from "./Loader/BetweenScenes";
 import MultiScene from "./Loader/MultiScene";
 import roomMap from "./maps/room";
 import cityMap from "./maps/city";
+import GlobalDataManager from "./GlobalDataManager";
 
 // import UIScene from "./UIScene";
 
@@ -60,6 +61,10 @@ export default class RPG extends Scene {
   rectInteractive?: Phaser.GameObjects.Rectangle;
   rectInteractive2?: Phaser.GameObjects.Rectangle;
   rectInteractive3?: Phaser.GameObjects.Rectangle;
+  sky1?: Phaser.GameObjects.Rectangle;
+  sky2?: Phaser.GameObjects.Rectangle;
+  sky3?: Phaser.GameObjects.Rectangle;
+  sky4?: Phaser.GameObjects.Rectangle;
   constructor(maps: string[]) {
     const sceneConfig = {
       key: "RPG",
@@ -69,6 +74,7 @@ export default class RPG extends Scene {
     this.maps = maps;
     this.sceneKey = sceneConfig.key;
     this.withPlayer = true;
+
   }
 
   preload() {
@@ -217,8 +223,9 @@ export default class RPG extends Scene {
 
 
   openModal() {
+    const globalDataManager = this.game.scene.getScene("GlobalDataManager") as GlobalDataManager
     const handleAgreeModal = () => {
-      console.log("Agree OK");
+      globalDataManager.passTime(1)
       this.isoGroup?.getChildren().forEach((child) => {
         if (child.type === "PIN") {
           const pin = child as unknown as PinIsoSpriteBox;
@@ -246,35 +253,23 @@ export default class RPG extends Scene {
     // this.scene.add("MultiScene", multiScene, true); 
   }
 
-  create() {
-    // SKY
-    const skyCam = this.cameras.add(0, 0, window.innerWidth, window.innerHeight);
-    this.cameras.cameras = [skyCam, this.cameras.main];
-    const sky1 = this.add.rectangle(0, 0, window.innerWidth, window.innerHeight, 0xaefbff).setAlpha(1).setOrigin(1)
-    const sky2 = this.add.rectangle(0, 0, window.innerWidth, window.innerHeight, 0x4ddbff).setAlpha(0).setOrigin(0)
-    const sky3 = this.add.rectangle(0, 0, window.innerWidth, window.innerHeight, 0xffd194).setAlpha(0).setOrigin(0)
-    const sky4 = this.add.rectangle(0, 0, window.innerWidth, window.innerHeight, 0x1f3558).setAlpha(0).setOrigin(0)
-    let timeCounter = 0
-    this.cameras.main.ignore([sky1, sky2, sky3, sky4])
-
-    const makeDayCycle = (index: number, callback: Function) => {
-      console.log(index, "start index")
-      const DayDuration = 60000
-      const skies = [sky1, sky2, sky3, sky4]
+  makeDayCycle = (index: number, callback: Function) => {
+    if (this.sky1 && this.sky2 && this.sky3 && this.sky4) {
+      const DayDuration = 2000
+      const skies = [this.sky1, this.sky2, this.sky3, this.sky4]
       if (index === 3) {
         this.tweens.add({
           targets: skies[index],
           alpha: 0,
-          duration: DayDuration/4,
+          duration: DayDuration / 4,
           onComplete: () => {
             skies[index].setAlpha(0)
           }
         })
-        console.log(index, "end index")
         this.tweens.add({
           targets: skies[0],
           alpha: 1,
-          duration: DayDuration/4,
+          duration: DayDuration / 4,
           onComplete: () => {
             skies[0].setAlpha(1)
             callback(0, callback)
@@ -284,16 +279,15 @@ export default class RPG extends Scene {
         this.tweens.add({
           targets: skies[index],
           alpha: 0,
-          duration: DayDuration/4,
+          duration: DayDuration / 4,
           onComplete: () => {
             skies[index].setAlpha(0)
           }
         })
-        console.log(index, "end index")
         this.tweens.add({
           targets: skies[index + 1],
           alpha: 1,
-          duration: DayDuration/4,
+          duration: DayDuration / 4,
           onComplete: () => {
             skies[index + 1].setAlpha(1)
             callback(index + 1, callback)
@@ -301,50 +295,32 @@ export default class RPG extends Scene {
         })
       }
     }
+  }
 
-    makeDayCycle(0, makeDayCycle)
-    // const timerCall = this.time.addEvent({
-    //   delay: 250, // ms
-    //   callback: () => {
-    //     timeCounter += 1
-    //     // change the alpha of skys to simulate a day cycle
-    //     if (timeCounter > 0 && timeCounter < 60) {
-    //       console.log(timeCounter, "ARIEL")
-    //       sky1.setAlpha(1 - 60/(60 * timeCounter))
-    //       sky2.setAlpha(timeCounter/60)
-    //       sky3.setAlpha(0)
-    //       sky4.setAlpha(0)
-    //     } else if (timeCounter >= 60 && timeCounter < 120) {
-    //       sky1.setAlpha(0)
-    //       sky2.setAlpha(1 - 1/(60 * (timeCounter - 60)))
-    //       sky3.setAlpha((timeCounter - 60)/60)
-    //       sky4.setAlpha(0)
-    //     } else if (timeCounter >= 120 && timeCounter < 180) {
-    //       sky1.setAlpha(0)
-    //       sky2.setAlpha(0)
-    //       sky3.setAlpha(1 - 1/(60 * (timeCounter - 120)))
-    //       sky4.setAlpha((timeCounter - 120)/60)
-    //     }
-    //     else if (timeCounter >= 180 && timeCounter < 240) {
-    //       sky1.setAlpha((timeCounter - 180)/60)
-    //       sky2.setAlpha(0)
-    //       sky3.setAlpha(0)
-    //       sky4.setAlpha(1 - 1/(60 * (timeCounter - 180)))
-    //     }
-    //     else {
-    //       timeCounter = 0
-    //     }
-    //   },
-    //   callbackScope: this,
-    //   loop: true,
-    // });
+  create() {
+    const lvlData = JSON.parse(this.maps[0]);
+
+    // SKY
+    const skyCam = this.cameras.add(0, 0, window.innerWidth, window.innerHeight);
+    this.cameras.cameras = [skyCam, this.cameras.main];
+
+    this.sky4 = this.add.rectangle(0, 0, window.innerWidth, window.innerHeight, 0x1f3558).setAlpha(0).setOrigin(0)
+    this.sky1 = this.add.rectangle(0, 0, window.innerWidth, window.innerHeight, 0xaefbff).setAlpha(0).setOrigin(0)
+    this.sky2 = this.add.rectangle(0, 0, window.innerWidth, window.innerHeight, 0x4ddbff).setAlpha(0).setOrigin(0)
+    this.sky3 = this.add.rectangle(0, 0, window.innerWidth, window.innerHeight, 0xffd194).setAlpha(0).setOrigin(0)
+    const skies = [this.sky1, this.sky2, this.sky3, this.sky4]
+
+    this.cameras.main.ignore([this.sky1, this.sky2, this.sky3, this.sky4])
+
+
+
+    // makeDayCycle(0, makeDayCycle)
     // SKY 
 
 
     this.isoPhysics.world.setBounds(-1024, -1024, 1024 * 2, 1024 * 4);
     this.isoPhysics.projector.origin.setTo(0.5, 0.3); // permitime dudas
     this.isoPhysics.world.gravity.setTo(0); // permitime dudas
-    console.log("This", this)
     const ee = this.events;
     this.eventEmitter = ee;
 
@@ -386,22 +362,18 @@ export default class RPG extends Scene {
         frameRate: 10,
         repeat: isIdleAnim ? -1 : 1,
       });
-      if (index + floor >= 16 && index + floor + 3 <= 32)
-        console.log("es idle: ", index + floor, index + floor + 3);
+      // if (index + floor >= 16 && index + floor + 3 <= 32)
+      //   console.log("es idle: ", index + floor, index + floor + 3);
     }
 
     // crea lo tiles
     this.spawnTiles();
     this.spawnObjects();
-
     this.cameras.main.setZoom(0.6);
     this.cameras.main.setViewport(0, 0, window.innerWidth, window.innerHeight);
 
     // WORKKSHOP NANEX
-    const lvlData = JSON.parse(this.maps[0]);
-
     this.UICont = new UIContainer(this, 0, 0, lvlData.nivel);
-
     this.UICamera = this.cameras.add(
       0,
       0,
@@ -411,19 +383,23 @@ export default class RPG extends Scene {
     this.UICamera.ignore(this.isoGroup);
     skyCam.ignore(this.isoGroup);
     const forestContainers = this.forest.map((arbolito) => arbolito.container);
-    this.UICamera.ignore([sky1, sky2, sky3, sky4])
+    this.UICamera.ignore([this.sky1, this.sky2, this.sky3, this.sky4])
     this.UICamera.ignore(forestContainers);
     skyCam.ignore(forestContainers);
     skyCam.ignore(this.UICont);
+
+
+    const globalDataManager = this.game.scene.getScene("GlobalDataManager") as GlobalDataManager
+    skies[globalDataManager.state.timeOfDay].setAlpha(1)
     //Room events ---->
     const handleAgreeModal = () => {
-      console.log("Agree OK");
+      globalDataManager.passTime(1)
     }
-    const handleAgreeModalRoom = () => {
-      console.log("Agree OK");
-      this.UICont?.changeMoney(100)
 
+    const handleAgreeModalRoom = () => {
+      globalDataManager.changeMoney(-100)
     }
+
     const cityModal: ModalConfig = {
       type: modalType.QUEST,
       title: "FOTOS EMBLEMATICAS",
@@ -442,19 +418,17 @@ export default class RPG extends Scene {
       reward: "100",
       agreeFunction: handleAgreeModalRoom,
     }
-    console.log("data map: ", JSON.parse(this.maps[0]));
+
     if (lvlData.nivel == "room") {
-      console.log("es room");
       const firstPos = this.isoGroup.children.entries[0] as unknown as RpgIsoSpriteBox;
       const backgroundContainer = this.add.container(firstPos.self.x, firstPos.self.y);
       const background = this.add.image(-300, 300, "backgroundMenu").setScale(1).setScale(2.5).setScrollFactor(1);
       let backgroundRoom = this.add.image(-75, 35, "HabitacionFinalMai").setOrigin(0.5);
-      this.rectInteractive = this.add.rectangle(350, -20, 100, 100, 0x6666ff, 0).setInteractive();
-      console.log(this)
       let pcGlow = this.add.image(-75, 35, "pcGlow").setOrigin(0.5).setVisible(false);
       let puertaGlow = this.add.image(-75, 35, "puertaGlow").setOrigin(0.5).setVisible(false);
       let cama = this.add.image(-75, 35, "cama").setOrigin(0.5).setVisible(false);
 
+      this.rectInteractive = this.add.rectangle(350, -20, 100, 100, 0x6666ff, 0).setInteractive();
       this.rectInteractive.on('pointerdown', () => {
         const roomModalTest = new ModalContainer(this, 0, 0, roomModal);
       });
@@ -464,10 +438,9 @@ export default class RPG extends Scene {
       this.rectInteractive.on("pointerout", () => {
         pcGlow.setVisible(false);
       });
+
       this.rectInteractive2 = this.add.rectangle(-550, 65, 150, 360, 0x6666ff, 0).setInteractive();
-      console.log(this)
       this.rectInteractive2.on('pointerdown', () => {
-        console.log("Change scene for city");
         this.changeSceneTo("RPG", "RPG", { maps: cityMap.map((m) => (typeof m === "string" ? m : JSON.stringify(m))) })
       });
       this.rectInteractive2.on("pointerover", () => {
@@ -476,11 +449,11 @@ export default class RPG extends Scene {
       this.rectInteractive2.on("pointerout", () => {
         puertaGlow.setVisible(false);
       });
-      this.rectInteractive3 = this.add.rectangle(-100, 0, 150, 150, 0x6666ff, 0).setInteractive();
-      console.log(this)
+
+      this.rectInteractive3 = this.add.rectangle(- 50, - 20, 100, 100, 0x6666ff, 0).setInteractive();
+
       this.rectInteractive3.on('pointerdown', () => {
-        console.log("Change scene for city");
-        this.changeSceneTo("RPG", "RPG", { maps: cityMap.map((m) => (typeof m === "string" ? m : JSON.stringify(m))) })
+        globalDataManager.passTime(1)
       });
       this.rectInteractive3.on("pointerover", () => {
         cama.setVisible(true);
@@ -488,8 +461,19 @@ export default class RPG extends Scene {
       this.rectInteractive3.on("pointerout", () => {
         cama.setVisible(false);
       });
-      backgroundContainer.add([background, backgroundRoom, pcGlow, puertaGlow, cama, this.rectInteractive, this.rectInteractive2, this.rectInteractive3]);
+
+      backgroundContainer.add([
+        background,
+        backgroundRoom,
+        pcGlow,
+        puertaGlow,
+        cama,
+        this.rectInteractive,
+        this.rectInteractive2,
+        this.rectInteractive3,
+      ]);
       this.UICamera.ignore(backgroundContainer);
+      skyCam.ignore(backgroundContainer);
     }
     // <--- Room events
 
@@ -529,7 +513,6 @@ export default class RPG extends Scene {
     );
 
     if (window.innerWidth < 900) {
-      console.log("this.eventEmitter", this.eventEmitter);
       this.eventEmitter?.addListener(
         "zoomIn",
         () => {
@@ -555,7 +538,6 @@ export default class RPG extends Scene {
         this.eventEmitter?.addListener(
           "moveLeft",
           () => {
-            console.log("moveLeft");
             this.player?.move("w", -1, 0);
           },
           this
@@ -564,7 +546,6 @@ export default class RPG extends Scene {
         this.eventEmitter?.addListener(
           "moveRight",
           () => {
-            console.log("moveRight");
             this.player?.move("e", 1, 0);
           },
           this
@@ -573,7 +554,6 @@ export default class RPG extends Scene {
         this.eventEmitter?.addListener(
           "moveTop",
           () => {
-            console.log("moveTop");
             this.player?.move("n", 0, 1);
           },
           this
@@ -582,7 +562,6 @@ export default class RPG extends Scene {
         this.eventEmitter?.addListener(
           "moveBottom",
           () => {
-            console.log("moveBottom");
             this.player?.move("s", 0, -1);
           },
           this
@@ -594,11 +573,17 @@ export default class RPG extends Scene {
 
     this.time.delayedCall(300, () => {
       this.getObjectByType("PIN")?.forEach((_pin: GameObjects.GameObject) => {
-        console.log("QUE PASO");
         const pin = _pin as unknown as PinIsoSpriteBox;
         if (this.isoGroup) pin.updatePin(this.isoGroup);
       });
     });
+
+    // if (lvlData.nivel == "room") this.cameras.main.stopFollow().setPosition(500, -300);
+    if (this.player) {
+      //@ts-ignore
+      if (lvlData.nivel == "room") this.cameras.main.stopFollow().centerOn(this.player.x + 400, this.player.y - 250);
+    }
+
   }
 
   getObjectByType(type: string) {
@@ -666,7 +651,6 @@ export default class RPG extends Scene {
               h: height,
             };
 
-            console.log("object key: ", objectKey);
             if (objectKey == "PLAYER-S") {
               if (this.withPlayer) {
                 this.player = new RpgIsoPlayerPrincipal(

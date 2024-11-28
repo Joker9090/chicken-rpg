@@ -78,7 +78,7 @@ const createSideWalk = (
     } else {
       // map row and if j is equal to any yPos return 10
       return row.map((_, j) => {
-      console.log("ENTRO ACA123123123")
+        console.log("ENTRO ACA123123123")
         if (newYPos.includes(j)) {
           return 133;
         }
@@ -289,15 +289,12 @@ const generateBuildings = (n: number, buildings: BuildingConfig[]) => {
 };
 
 
+const randomYPin = [ 11, 16, 26, 31]
+const randomHPin = [ 11, 6, 11, 6]
 
 
 const objects: ObjetsConfig[] = [
-  {
-    x: 5,
-    y: 31,
-    h: 400,
-    type: "15",
-  },
+ 
   {
     x: 8,
     y: 36,
@@ -326,6 +323,18 @@ const objects: ObjetsConfig[] = [
 
 // create an object with type ObjetsConfig[] to add trees in random places of thje map
 for (let i = 0; i < 200; i++) {
+  if (i === 0) {
+    const randomNumber = Math.floor(Math.random() * randomYPin.length)
+    console.log("RANDOM NUMBEr", randomNumber)
+    objects.push(
+      {
+        x: 5,
+        y: randomYPin[randomNumber],
+        h: randomHPin[randomNumber]*50 + 100,
+        type: "15",
+      },
+    )
+  }
   objects.push({
     x: Math.floor(20 + Math.random() * 20),
     y: Math.floor(Math.random() * 40),
@@ -562,14 +571,13 @@ const buidling4 = [
 
 
 const buildings = generateBuildings(40, [
-  { x: 4, y: 5, w: 4, z: 4, h: 17, type: "21", replace: buidling1 }, // <----
+  { x: 4, y: 5, w: 4, z: 4, h:  17, type: "21", replace: buidling1 }, // <----
   { x: 4, y: 10, w: 4, z: 4, h: 11, type: "21", replace: buidling3 }, // <----
   { x: 4, y: 15, w: 4, z: 4, h: 6, type: "21", replace: buidling4 }, // <----
   { x: 4, y: 20, w: 4, z: 4, h: 17, type: "21", replace: buidling1 }, // <----
   { x: 4, y: 25, w: 4, z: 4, h: 11, type: "21", replace: buidling3 }, // <----
   { x: 4, y: 30, w: 4, z: 4, h: 6, type: "21", replace: buidling4 }, // <----
 ]);
-
 
 
 let distanceBetweenFloors = 50;

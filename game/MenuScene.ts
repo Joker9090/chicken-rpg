@@ -29,12 +29,11 @@ export default class MenuScene extends Phaser.Scene {
     this.container = this.add.container(middlePoint.x, middlePoint.y)
     // create a simple menu
     this.backgroundSky = this.add.image(0, 0, "backgroundMenu").setScale(1)
-    this.backgroundCity = this.add.image(-50, 0, "backgroundCity").setScale(0.5)
+    this.backgroundCity = this.add.image(-50, 100, "backgroundCity").setScale(0.8)
     this.tweens.add({
       targets: this.backgroundCity,
       y: '+=40',
-      duration: 8000,
-      scale: 0.55,
+      duration: 28000,
       ease: 'ease',
       yoyo: true,
       loop: -1
@@ -45,7 +44,7 @@ export default class MenuScene extends Phaser.Scene {
       targets: this.leftMenuItem,
       y: '-=150',
       x: '-=150',
-      duration: 6666,
+      duration: 66666,
       ease: 'ease',
       yoyo: true,
       loop: -1
@@ -55,7 +54,7 @@ export default class MenuScene extends Phaser.Scene {
       targets: this.rightMenuItem,
       y: '+=150',
       x: '+=150',
-      duration: 5555,
+      duration: 65555,
       ease: 'ease',
       yoyo: true,
       loop: -1

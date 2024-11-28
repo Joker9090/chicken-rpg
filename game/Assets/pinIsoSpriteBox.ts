@@ -24,7 +24,7 @@ export class PinIsoSpriteBox extends RpgIsoSpriteBox {
   ) {
     super(scene, x, y, z, texture, frame, group, matrixPosition, interactivityPosition);
 
-    this.self.setScale(0.8);
+    this.self.setScale(1);
 
   }
 
