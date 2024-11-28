@@ -170,33 +170,13 @@ export default class RPG extends Scene {
       startFrame: 0,
     });
 
-    this.load.spritesheet("walkRight-1", "/images/chicken/playerWalk.png", {
+    this.load.spritesheet("player", "/images/chicken/spritesheetPlayer.png", {
       frameWidth: 200,
       frameHeight: 250,
       startFrame: 0,
-      endFrame: 9
     });
 
-    this.load.spritesheet("walkRight-2", "/images/chicken/playerWalk.png", {
-      frameWidth: 200,
-      frameHeight: 250,
-      startFrame: 10,
-      endFrame: 19
-    });
 
-    this.load.spritesheet("walkTop-1", "/images/chicken/playerWalk2.png", {
-      frameWidth: 200,
-      frameHeight: 250,
-      startFrame: 0,
-      endFrame: 9
-    });
-
-    this.load.spritesheet("walkTop-2", "/images/chicken/playerWalk2.png", {
-      frameWidth: 200,
-      frameHeight: 250,
-      startFrame: 10,
-      endFrame: 19
-    });
 
     this.load.image("tree", "/images/chicken/tree.png");
 
@@ -362,36 +342,38 @@ export default class RPG extends Scene {
     this.isoGroup = this.add.group();
 
     const posiblePositions = [
-      "attack-s",
-      "attack-e",
-      "attack-n",
-      "attack-w",
+      "idle-w",
       "idle-s",
       "idle-e",
       "idle-n",
-      "idle-w",
+      "walk-w",
       "walk-s",
       "walk-e",
       "walk-n",
-      "walk-w",
     ];
-
-    for (let index = 0; index < 12; index++) {
-      let floor = index > 0 ? index * 3 : 0;
-      let isIdleAnim =
-        index + floor >= 16 && index + floor + 3 <= 32 ? true : false;
-
-      this.anims.create({
-        key: posiblePositions[index],
-        frames: this.anims.generateFrameNumbers("chicken", {
-          start: index + floor,
-          end: index + floor + 3,
-        }),
-        frameRate: 10,
-        repeat: isIdleAnim ? -1 : 1,
-      });
-      // if (index + floor >= 16 && index + floor + 3 <= 32)
-      //   console.log("es idle: ", index + floor, index + floor + 3);
+ 
+    for (let index = 0; index < 8; index++) {
+      if (index >= 0 && index <= 3) {
+        this.anims.create({
+          key: posiblePositions[index],
+          frames: this.anims.generateFrameNumbers("player", {
+            start: index === 0 ? 14 : index === 1 ? 34 : index === 2 ? 55 : 65,
+            end: index === 0 ? 14 : index === 1 ? 34 : index === 2 ? 55 : 65,
+          }),
+          frameRate: 20,
+          repeat: -1,
+        });
+      } else {
+        this.anims.create({
+          key: posiblePositions[index],
+          frames: this.anims.generateFrameNumbers("player", {
+            start: index === 4 ? 0 : index === 5 ? 20 : index === 6 ? 40 : 60,
+            end: index === 4 ? 19 : index === 5 ? 39 : index === 6 ? 59 : 79,
+          }),
+          frameRate: 40,
+          repeat: -1,
+        });
+      }
     }
 
     // crea lo tiles
