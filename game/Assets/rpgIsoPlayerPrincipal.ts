@@ -16,7 +16,7 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
   possibleMovements: RpgIsoSpriteBox[] = [];
   levelConfig: any;
   distanceBetweenFloors: number
-
+  
   constructor(
     scene: Phaser.Scene,
     x: number,
@@ -34,17 +34,18 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
     const interactivityBox = {
       x: 50,
       y: 25,
-      w: 50,
+      w: 80,
       h: 80,
     };
-    
+    console.log(x, y, z, "xyz")
     // @ts-ignore
-    super(scene, x, y, z, texture, frame, group, matrixPosition, interactivityBox);
+    super(scene, x, y, z + 20, texture, frame, group, matrixPosition, interactivityBox);
     this.direction = direction;
     this.name = name;
     this.distanceBetweenFloors = distanceBetweenFloors;
     this.self.play("idle-" + this.direction);
     scene.cameras.main.startFollow(this);
+    this.self.setScale(0.75)
 
     //this.self.on("pointerover", () => this.pointerover());
     this.self.on("pointerout", () => this.pointerout());

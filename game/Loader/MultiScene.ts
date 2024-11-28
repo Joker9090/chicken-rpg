@@ -31,8 +31,8 @@ export default class MultiScene extends Phaser.Scene {
         this.makeTransition(this.scenekey, this.sceneToStop ?? undefined, this.sceneData ?? undefined);
       } else {
         // this.makeTransition("MenuScene", undefined);
-        this.makeTransition("RPG", undefined, { maps: map2.map((m) => (typeof m === "string" ? m : JSON.stringify(m))) });
-        // this.makeTransition("RPG", undefined, { maps: map.map((m) => (typeof m === "string" ? m : JSON.stringify(m))) });
+        // this.makeTransition("RPG", undefined, { maps: map2.map((m) => (typeof m === "string" ? m : JSON.stringify(m))) });
+        this.makeTransition("RPG", undefined, { maps: map.map((m) => (typeof m === "string" ? m : JSON.stringify(m))) });
       }
     });
   }
