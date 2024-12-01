@@ -18,6 +18,7 @@ import MultiScene from "./Loader/MultiScene";
 import roomMap from "./maps/room";
 import cityMap from "./maps/city";
 import GlobalDataManager from "./GlobalDataManager";
+import { possibleEvents, turnEventOn } from "./EventsCenter";
 
 // import UIScene from "./UIScene";
 
@@ -328,6 +329,7 @@ export default class RPG extends Scene {
   create() {
     const lvlData = JSON.parse(this.maps[0]);
 
+
     // SKY
     const skyCam = this.cameras.add(0, 0, window.innerWidth, window.innerHeight);
     this.cameras.cameras = [skyCam, this.cameras.main];
@@ -400,6 +402,16 @@ export default class RPG extends Scene {
     this.cameras.main.setZoom(0.6);
     this.cameras.main.setViewport(0, 0, window.innerWidth, window.innerHeight);
 
+
+    // let playerInfo = globalDataManager.getState()
+
+    // const ui = new UI(this)
+
+    // ui.hidrate(playerInfo)
+    // turnEventOn(this.scene.key, possibleEvents.INFO_UPDATE, ui.hidrate, this)
+
+
+
     // WORKKSHOP NANEX
     this.UICont = new UIContainer(this, 0, 0, lvlData.nivel);
     this.UICamera = this.cameras.add(
@@ -418,7 +430,8 @@ export default class RPG extends Scene {
 
 
     const globalDataManager = this.game.scene.getScene("GlobalDataManager") as GlobalDataManager
-    skies[globalDataManager.state.timeOfDay].setAlpha(1)
+    skies[globalDataManager.getState().timeOfDay].setAlpha(1)
+    
     //Room events ---->
     const handleAgreeModal = () => {
       globalDataManager.passTime(1)

@@ -2,6 +2,7 @@ import Phaser from "phaser";
 import MultiScene from "./Loader/MultiScene";
 import roomMap from "./maps/room";
 import cityMap from "./maps/city";
+import { possibleEvents, turnEventOn } from "./EventsCenter";
 
 
 export default class MenuScene extends Phaser.Scene {
@@ -20,6 +21,8 @@ export default class MenuScene extends Phaser.Scene {
   }
 
   create(data: {maps: string[]}) {
+
+    turnEventOn(this.scene.key, possibleEvents.READY, this.addPlayBtn, this)
 
 
     const middlePoint = {
@@ -61,41 +64,49 @@ export default class MenuScene extends Phaser.Scene {
     })
 
 
-    this.playButton = this.add.image(0, 0, "playButton")
-    .setScale(0)
-    .setInteractive()
-      .on('pointerdown', () => {
-        const multiScene = new MultiScene("RPG", "MenuScene", { maps: roomMap.map((m) => (typeof m === "string" ? m : JSON.stringify(m))) });
-        this.scene.add("MultiScene", multiScene, true); 
-      });
-
-      this.tweens.add({
-        targets: this.playButton,
-        scale: 1.5,
-        duration: 1000,
-        delay: 2000,
-        ease: 'bounce',
-        onComplete: () => {
-          this.tweens.add({
-            targets: this.playButton,
-            scale: 1.45,
-            duration: 1000,
-            ease: 'bounce',
-            yoyo: true,
-            loop: -1
-          })
-        }
-      })
-
+    
     this.container.add([
       this.backgroundSky, 
       this.leftMenuItem, 
       this.rightMenuItem, 
       this.backgroundCity, 
-      this.playButton, 
     ])
-
+    
   } 
+
+  addPlayBtn() {
+    if(this.container) {
+      this.playButton = this.add.image(0, 0, "playButton")
+      .setScale(0)
+      .setInteractive()
+        .on('pointerdown', () => {
+          const multiScene = new MultiScene("RPG", "MenuScene", { maps: roomMap.map((m) => (typeof m === "string" ? m : JSON.stringify(m))) });
+          this.scene.add("MultiScene", multiScene, true); 
+        });
+  
+        this.tweens.add({
+          targets: this.playButton,
+          scale: 1.5,
+          duration: 1000,
+          delay: 2000,
+          ease: 'bounce',
+          onComplete: () => {
+            this.tweens.add({
+              targets: this.playButton,
+              scale: 1.45,
+              duration: 1000,
+              ease: 'bounce',
+              yoyo: true,
+              loop: -1
+            })
+          }
+        })
+  
+      this.container.add([
+        this.playButton, 
+      ])
+    }
+  }
 
   update() {
   }
