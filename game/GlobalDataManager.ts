@@ -1,16 +1,20 @@
 import Phaser from "phaser";
-import MultiScene from "./Loader/MultiScene";
 import RPG from "./rpg";
-
+import {
+  turnEventOn,
+  possibleEvents,
+  turnEventOff,
+  emitEvent,
+} from "./EventsCenter";
+// import missions from "./missions";
 
 export default class GlobalDataManager extends Phaser.Scene {
-
-  state: {
+  private state: {
     playerMoney: number;
     timeOfDay: 0 | 1 | 2 | 3;
     newNews: boolean;
-  }
-  dayState: 'IDLE' | 'RUNNING' = 'IDLE'
+  };
+  dayState: "IDLE" | "RUNNING" = "IDLE";
   constructor() {
     super({ key: "GlobalDataManager", active: true });
 
@@ -18,46 +22,50 @@ export default class GlobalDataManager extends Phaser.Scene {
       playerMoney: 300,
       timeOfDay: 0,
       newNews: false,
+    };
   }
-}
+  
+  // getRandomMissions(){
+  //   missions.random()
+  // }
 
   newNews(state: boolean) {
     this.state.newNews = state;
   }
 
-  changeMoney(amount: number) { 
+  changeMoney(amount: number) {
     this.state.playerMoney += amount;
   }
 
   passTime(amount: number) {
-    if (this.dayState === 'RUNNING') return
+    if (this.dayState === "RUNNING") return;
     else {
-      this.dayState = 'RUNNING'
-      const gameScene = this.game.scene.getScene("RPG") as RPG
-      gameScene.UICont?.clock.passTime(amount)
-      gameScene.makeDayCycle(this.state.timeOfDay, ()=>{
-        this.dayState = 'IDLE'
-      })
-      this.state.timeOfDay += amount
-      if (this.state.timeOfDay > 3) this.state.timeOfDay = 0
+      this.dayState = "RUNNING";
+      const gameScene = this.game.scene.getScene("RPG") as RPG;
+      gameScene.UICont?.clock.passTime(amount);
+      gameScene.makeDayCycle(this.state.timeOfDay, () => {
+        this.dayState = "IDLE";
+      });
+      this.state.timeOfDay += amount;
+      if (this.state.timeOfDay > 3) this.state.timeOfDay = 0;
     }
   }
 
-  getState(){
-    return this.state
+  public getState() {
+    return this.state;
   }
 
   create() {
     const timer0 = this.time.addEvent({
       delay: 10000, // ms
       callback: () => {
-          this.newNews(true)
+        emitEvent(possibleEvents.READY, null);
+        this.newNews(true);
       },
       //args: [],
       callbackScope: this,
-  });
+    });
   }
 
-  update() {
-  }
+  update() {}
 }
