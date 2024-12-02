@@ -18,10 +18,15 @@ export default class GlobalDataManager extends Phaser.Scene {
   constructor() {
     super({ key: "GlobalDataManager", active: true });
 
+    // axios
+
     this.state = {
       playerMoney: 300,
       timeOfDay: 0,
       newNews: false,
+      // missionsActive: any[]
+      // items: any[]
+      // news: any[{}]
     };
   }
   

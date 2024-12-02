@@ -2,8 +2,9 @@ import RPG from "@/game/rpg";
 import Phaser from "phaser";
 import { UIInterface } from "./UiInterface";
 import { Bar, Clock, Timer } from "./Timer";
-import roomMap from "../../maps/room";
+import roomMap from "../../maps/Room";
 import GlobalDataManager from "@/game/GlobalDataManager";
+import { changeSceneTo } from "@/game/helpers/helpers";
 
 
 export default class UIContainer extends Phaser.GameObjects.Container {
@@ -16,7 +17,7 @@ export default class UIContainer extends Phaser.GameObjects.Container {
     lvlMarker: Phaser.GameObjects.Image;
     bar1: Phaser.GameObjects.Image;
     bar2: Phaser.GameObjects.Image;
-    nivel: string;
+    nivel: 'ROOM' | 'CITY';
     globalState?: {
         playerMoney: number;
         timeOfDay: 0 | 1 | 2 | 3;
@@ -26,7 +27,7 @@ export default class UIContainer extends Phaser.GameObjects.Container {
         scene: RPG,
         x: number,
         y: number,
-        nivel: string,
+        nivel: 'ROOM' | 'CITY',
     ) {
         super(scene, x, y);
         this.scene = scene;
@@ -102,12 +103,12 @@ export default class UIContainer extends Phaser.GameObjects.Container {
             loop: true,
         });
 
-        const buttonChangeScene = this.scene.add.image(50, window.innerHeight - 50, nivel === "room" ? "goBack" : "goRoom").setOrigin(0, 1).setInteractive();
+        const buttonChangeScene = this.scene.add.image(50, window.innerHeight - 50, nivel === "ROOM" ? "goBack" : "goRoom").setOrigin(0, 1).setInteractive();
         buttonChangeScene.on('pointerdown', () => {
-            if (nivel === "room") {
-                this.scene.changeSceneTo("MenuScene", "RPG", undefined)
+            if (nivel === "ROOM") {
+                changeSceneTo(this.scene, "MenuScene", "RPG", undefined)
             } else {
-                this.scene.changeSceneTo("RPG", "RPG", { maps: roomMap.map((m) => (typeof m === "string" ? m : JSON.stringify(m))) })
+                changeSceneTo(this.scene, "RPG", "RPG", "ROOM")
             }
         })
 
