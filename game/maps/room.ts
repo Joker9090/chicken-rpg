@@ -6,7 +6,7 @@ import RPG, { modalType } from "../rpg";
 export default class Room {
 
   scene: RPG;
-  map: any;
+  map: any[];
   rectInteractive?: Phaser.GameObjects.Rectangle;
   rectInteractive2?: Phaser.GameObjects.Rectangle;
   rectInteractive3?: Phaser.GameObjects.Rectangle;
@@ -130,7 +130,7 @@ export default class Room {
 
     this.rectInteractive2 = this.scene.add.rectangle(-550, 65, 150, 360, 0x6666ff, 0).setInteractive();
     this.rectInteractive2.on('pointerdown', () => {
-      changeSceneTo(this.scene, "RPG", "RPG", "ROOM")
+      changeSceneTo(this.scene, "RPG", "RPG", "CITY")
     });
     this.rectInteractive2.on("pointerover", () => {
       puertaGlow.setVisible(true);

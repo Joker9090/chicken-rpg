@@ -13,6 +13,7 @@ import GlobalDataManager from "./GlobalDataManager";
 import { changeSceneTo, getObjectByType, makeOpacityNearPlayer } from "./helpers/helpers";
 import Room from "./maps/Room";
 import TileCreator from "./helpers/TileCreator";
+import City from "./maps/City";
 
 // import UIScene from "./UIScene";
 
@@ -38,8 +39,9 @@ export enum modalType {
 export default class RPG extends Scene {
 
   tileCreator: TileCreator;
-  map: 'ROOM' | 'CITY' = 'ROOM';
-  mapBlueprint?: Room;
+  mapType: 'ROOM' | 'CITY' = 'ROOM';
+  map?: Room;
+  mapBlueprint?: any[];
   UIContainer?: UIContainer;
 
 
@@ -67,16 +69,29 @@ export default class RPG extends Scene {
   // sky3?: Phaser.GameObjects.Rectangle;
   // sky4?: Phaser.GameObjects.Rectangle;
 
-  constructor(map: 'ROOM' | 'CITY') {
-    console.log("MAP", map)
+  constructor(mapType: 'ROOM' | 'CITY') {
     const sceneConfig = {
       key: "RPG",
       mapAdd: { isoPlugin: "iso", isoPhysics: "isoPhysics" },
     };
     super(sceneConfig);
-    this.map = map;
+    this.mapType = mapType;
     this.sceneKey = sceneConfig.key;
     this.withPlayer = true;
+    switch (this.mapType) {
+      case 'ROOM':
+        this.map = new Room(this)
+        this.mapBlueprint = this.map.map.map((m) => (typeof m === "string" ? m : JSON.stringify(m)));
+        break;
+      case 'CITY':
+        this.map = new City(this)
+        this.mapBlueprint = this.map.map.map((m) => (typeof m === "string" ? m : JSON.stringify(m)));
+        break;
+      default:
+        this.map = new Room(this)
+        this.mapBlueprint = this.map.map.map((m) => (typeof m === "string" ? m : JSON.stringify(m)));
+        break;
+    }
     this.tileCreator = new TileCreator(this)
   }
 
@@ -207,18 +222,6 @@ export default class RPG extends Scene {
       );
     }
 
-    // for (let index = 0; index < 6; index++) {
-    //   this.load.spritesheet(
-    //     `columna-${index}`,
-    //     "/images/chicken/piedraAbajo.png",
-    //     {
-    //       frameWidth: 100,
-    //       frameHeight: 100,
-    //       startFrame: index + 18,
-    //     }
-    //   );
-    // }
-
     this.load.scenePlugin({
       key: "IsoPlugin",
       url: IsoPlugin,
@@ -233,28 +236,28 @@ export default class RPG extends Scene {
   }
 
 
-  openModal() {
-    const globalDataManager = this.game.scene.getScene("GlobalDataManager") as GlobalDataManager
-    const handleAgreeModal = () => {
-      globalDataManager.passTime(1)
-      this.isoGroup?.getChildren().forEach((child) => {
-        if (child.type === "PIN") {
-          const pin = child as unknown as PinIsoSpriteBox;
-          pin.self.destroy();
-        }
-      });
-    }
-    const cityModal: ModalConfig = {
-      type: modalType.QUEST,
-      title: "FOTOS EMBLEMATICAS",
-      picture: "fotoCamara",
-      time: "6",
-      text: "Sal a tomar fotos al parque.",
-      reward: "15",
-      agreeFunction: handleAgreeModal,
-    }
-    const ModalTest = new ModalContainer(this, 0, 0, cityModal);
-  }
+  // openModal() {
+  //   const globalDataManager = this.game.scene.getScene("GlobalDataManager") as GlobalDataManager
+  //   const handleAgreeModal = () => {
+  //     globalDataManager.passTime(1)
+  //     this.isoGroup?.getChildren().forEach((child) => {
+  //       if (child.type === "PIN") {
+  //         const pin = child as unknown as PinIsoSpriteBox;
+  //         pin.self.destroy();
+  //       }
+  //     });
+  //   }
+  //   const cityModal: ModalConfig = {
+  //     type: modalType.QUEST,
+  //     title: "FOTOS EMBLEMATICAS",
+  //     picture: "fotoCamara",
+  //     time: "6",
+  //     text: "Sal a tomar fotos al parque.",
+  //     reward: "15",
+  //     agreeFunction: handleAgreeModal,
+  //   }
+  //   const ModalTest = new ModalContainer(this, 0, 0, cityModal);
+  // }
 
 
   // makeDayCycle = (index: number, callback: Function) => {
@@ -303,22 +306,6 @@ export default class RPG extends Scene {
 
   create() {
     this.isoGroup = this.add.group();
-    switch (this.map) {
-      case 'ROOM':
-        console.log("ENTRO ACA ARI 1")
-        this.mapBlueprint = new Room(this)
-        console.log("TEST ARI", this.mapBlueprint.map)
-        break;
-      case 'CITY':
-        console.log("ENTRO ACA ARI 2")
-        // new cityMap(this)
-        break;
-      default:
-        console.log("ENTRO ACA ARI 3")
-        this.mapBlueprint = new Room(this)
-        break;
-    }
-
 
     // SKY
     // const skyCam = this.cameras.add(0, 0, window.innerWidth, window.innerHeight);
@@ -390,7 +377,6 @@ export default class RPG extends Scene {
     // crea lo tiles
     this.spawnTiles();
     this.spawnObjects();
-    this.mapBlueprint?.addMapFunctionalities();
     this.cameras.main.setZoom(0.6);
     this.cameras.main.setViewport(0, 0, window.innerWidth, window.innerHeight);
 
@@ -405,7 +391,7 @@ export default class RPG extends Scene {
 
 
     // WORKKSHOP NANEX
-    this.UIContainer = new UIContainer(this, 0, 0, this.map);
+    this.UIContainer = new UIContainer(this, 0, 0, this.mapType);
     this.UICamera = this.cameras.add(
       0,
       0,
@@ -426,94 +412,9 @@ export default class RPG extends Scene {
     // skies[globalDataManager.getState().timeOfDay].setAlpha(1)
 
     //Room events ---->
-    const handleAgreeModal = () => {
-      globalDataManager.passTime(1)
-    }
+  
 
-
-    const cityModal: ModalConfig = {
-      type: modalType.QUEST,
-      title: "FOTOS EMBLEMATICAS",
-      picture: "imageModalPhoto",
-      time: "6",
-      text: "Sal a tomar fotos al parque.",
-      reward: "15",
-      agreeFunction: handleAgreeModal,
-    }
-
-    // const roomModal: ModalConfig = {
-    //   type: modalType.PC,
-    //   title: "MERCADO DE PULGAS ONLINE",
-    //   picture: "desafioTest2",
-    //   text: "CAMARA",
-    //   reward: "100",
-    //   agreeFunction: handleAgreeModalRoom,
-    // }
-
-    // if (lvlData.nivel == "room") {
-    //   const firstPos = this.isoGroup.children.entries[0] as unknown as RpgIsoSpriteBox;
-    //   const backgroundContainer = this.add.container(firstPos.self.x, firstPos.self.y).setDepth(999999)
-    //   const backgroundContainer2 = this.add.container(firstPos.self.x, firstPos.self.y)
-    //   const background = this.add.image(-300, 300, "backgroundMenu").setScale(1).setScale(2.5).setScrollFactor(1);
-    //   let backgroundRoom = this.add.image(-75, 35, "HabitacionFinalMai").setOrigin(0.5);
-    //   let pcGlow = this.add.image(-75, 35, "pcGlow").setOrigin(0.5).setVisible(false);
-    //   let puertaGlow = this.add.image(-75, 35, "puertaGlow").setOrigin(0.5).setVisible(false);
-    //   let cama = this.add.image(-75, 35, "cama").setOrigin(0.5).setVisible(false);
-
-    //   this.rectInteractive = this.add.rectangle(350, -20, 100, 100, 0x6666ff, 0).setInteractive();
-    //   this.rectInteractive.on('pointerdown', () => {
-    //     const roomModalTest = new ModalContainer(this, 0, 0, roomModal);
-    //   });
-    //   this.rectInteractive.on("pointerover", () => {
-    //     pcGlow.setVisible(true);
-    //   });
-    //   this.rectInteractive.on("pointerout", () => {
-    //     pcGlow.setVisible(false);
-    //   });
-
-    //   this.rectInteractive2 = this.add.rectangle(-550, 65, 150, 360, 0x6666ff, 0).setInteractive();
-    //   this.rectInteractive2.on('pointerdown', () => {
-    //     changeSceneTo(this, "RPG", "RPG", { maps: cityMap.map((m) => (typeof m === "string" ? m : JSON.stringify(m))) })
-    //   });
-    //   this.rectInteractive2.on("pointerover", () => {
-    //     puertaGlow.setVisible(true);
-    //   });
-    //   this.rectInteractive2.on("pointerout", () => {
-    //     puertaGlow.setVisible(false);
-    //   });
-
-    //   this.rectInteractive3 = this.add.rectangle(- 50, - 20, 100, 100, 0x6666ff, 0).setInteractive();
-
-    //   this.rectInteractive3.on('pointerdown', () => {
-    //     globalDataManager.passTime(1)
-    //   });
-    //   this.rectInteractive3.on("pointerover", () => {
-    //     cama.setVisible(true);
-    //   });
-    //   this.rectInteractive3.on("pointerout", () => {
-    //     cama.setVisible(false);
-    //   });
-
-    //   backgroundContainer2.add([
-    //     background,
-    //     backgroundRoom,
-    //   ])
-
-    //   backgroundContainer.add([
-    //     pcGlow,
-    //     puertaGlow,
-    //     cama,
-    //     this.rectInteractive,
-    //     this.rectInteractive2,
-    //     this.rectInteractive3,
-    //   ]);
-    //   this.UICamera.ignore(backgroundContainer);
-    //   this.UICamera.ignore(backgroundContainer2);
-    //   skyCam.ignore(backgroundContainer);
-    //   skyCam.ignore(backgroundContainer2);
-    // }
-    // <--- Room events
-
+    this.map?.addMapFunctionalities();
 
     if (!this.withPlayer) {
       this.input.on("pointermove", (pointer: Phaser.Input.Pointer) => {
@@ -616,15 +517,17 @@ export default class RPG extends Scene {
 
 
   spawnObjects() {
+    if (this.mapBlueprint){
+
     let scalar = 0;
     let h;
-    const _lvlConf = this.mapBlueprint?.map[0];
+    const _lvlConf = this.mapBlueprint[0];
     const lvlConf = JSON.parse(_lvlConf);
 
     this.distanceBetweenFloors = lvlConf.distanceBetweenFloors;
     h = this.distanceBetweenFloors;
 
-    const objectsMaps = JSON.parse(this.mapBlueprint?.map[1]);
+    const objectsMaps = JSON.parse(this.mapBlueprint[1]);
 
     for (let index = 0; index < objectsMaps.length; index++) {
       const map = objectsMaps[index];
@@ -711,35 +614,38 @@ export default class RPG extends Scene {
     }
   }
 
+  }
+
   spawnTiles() {
+    if (this.mapBlueprint){
     const self = this;
     let pos = 0;
     let h: number;
-
-    const _lvlConf = this.mapBlueprint?.map[0];
+// this.makeTransition("RPG", undefined, { maps: map2.map((m) => (typeof m === "string" ? m : JSON.stringify(m))) });
+    const _lvlConf = this.mapBlueprint[0];
     const lvlConf = JSON.parse(_lvlConf);
 
     this.distanceBetweenFloors = lvlConf.distanceBetweenFloors;
     h = this.distanceBetweenFloors;
 
-    function tweenTile(tile: RpgIsoSpriteBox) {
-      return () => {
-        self.tweens.add({
-          targets: tile.self,
-          isoZ: tile.isoZ + 10,
-          duration: 200,
-          yoyo: true,
-          repeat: 0,
-        });
-      };
-    }
+    // function tweenTile(tile: RpgIsoSpriteBox) {
+    //   return () => {
+    //     self.tweens.add({
+    //       targets: tile.self,
+    //       isoZ: tile.isoZ + 10,
+    //       duration: 200,
+    //       yoyo: true,
+    //       repeat: 0,
+    //     });
+    //   };
+    // }
 
     let scalar = 0;
     let startOnMap = 2;
 
-    for (let index = startOnMap; index < this.mapBlueprint?.map.length; index++) {
+    for (let index = startOnMap; index < this.mapBlueprint.length; index++) {
       // reverse the map string
-      const map = this.map[index];
+      const map = this.mapBlueprint[index];
 
       // const h = 1000 + index * 600;
       scalar = index - startOnMap;
@@ -1064,6 +970,7 @@ export default class RPG extends Scene {
       //@ts-ignore
       m.drawMap(this.isoGroup, conf, lvlConf);
     }
+  }
   }
 
 
