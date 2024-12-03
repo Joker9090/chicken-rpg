@@ -2,7 +2,7 @@ import RPG from "@/game/rpg";
 import Phaser from "phaser";
 import { UIInterface } from "./UiInterface";
 import { Bar, Clock, Timer } from "./Timer";
-import roomMap from "../../maps/Room";
+import roomMap from "../../maps/Roomi";
 import GlobalDataManager from "@/game/GlobalDataManager";
 import { changeSceneTo } from "@/game/helpers/helpers";
 

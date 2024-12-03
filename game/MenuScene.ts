@@ -1,7 +1,7 @@
 import Phaser from "phaser";
 import MultiScene from "./Loader/MultiScene";
-import roomMap from "./maps/Room";
-import cityMap from "./maps/City";
+import roomMap from "./maps/Roomi";
+import cityMap from "./maps/Cityi";
 import { possibleEvents, turnEventOn } from "./EventsCenter";
 
 

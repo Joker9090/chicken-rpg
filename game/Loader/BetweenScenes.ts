@@ -2,7 +2,7 @@ import Phaser from "phaser";
 import PreLoadScene from "./PreLoadScene";
 import RPG from "../rpg";
 // import map from "../maps/room";
-import map from "../maps/City";
+import map from "../maps/Cityi";
 
 import MenuScene from "../MenuScene";
 
