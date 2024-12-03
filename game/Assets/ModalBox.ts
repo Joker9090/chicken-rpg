@@ -26,6 +26,7 @@ export class ModalBox extends Phaser.GameObjects.Container {
         const selectStates: boolean[] = (modalConfig.products ?? []).map(() => false);
         const createdProducts: {image: Phaser.GameObjects.Image, rewardBackground: Phaser.GameObjects.Image , coinIcon: Phaser.GameObjects.Image , text: Phaser.GameObjects.Text, isSelected: boolean}[] = [];
 
+        const globalDataManager = this.scene.game.scene.getScene("GlobalDataManager") as GlobalDataManager;
 
 
         //Modals containers
@@ -277,7 +278,7 @@ export class ModalBox extends Phaser.GameObjects.Container {
                 break;
             case modalType.PC:
                 
-                const globalDataManager = this.scene.game.scene.getScene("GlobalDataManager") as GlobalDataManager
+                
                 globalDataManager.addInventary("");
                 console.log("GlobalDataManager", globalDataManager.getState());
                 //TOP CONTAINER
