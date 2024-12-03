@@ -18,11 +18,9 @@ export default class GlobalDataManager extends Phaser.Scene {
     inventary: string[];
   };
   dayState: "IDLE" | "RUNNING" = "IDLE";
-  //@ts-ignore
-  eventCenter: EventsCenterManager;
+  eventCenter = EventsCenterManager.getInstance();
   constructor() {
     super({ key: "GlobalDataManager", active: true });
-    this.eventCenter = EventsCenterManager.getInstance();
     this.eventCenter.turnEventOn("GlobalDataManager", this.eventCenter.possibleEvents.BUY_ITEM, (payload: string) => {
       console.log("nano pre paco: ", this.state.inventary);
       console.log("Nano destructor",payload);
