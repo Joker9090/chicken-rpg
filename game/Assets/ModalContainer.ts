@@ -1,6 +1,14 @@
 import RPG, { modalType } from "@/game/rpg";
 import { ModalBox } from "./ModalBox";
 
+export type ProductToBuy = {
+    title: string,
+    picture: string,
+    pictureOn: string,
+    text: string,
+    reward: number,
+}
+
 export type ModalConfig = {
     type: modalType;
     title?: string;
@@ -11,6 +19,7 @@ export type ModalConfig = {
     agreedButtom?: any;
     closeButtom?: any;
     background?: Phaser.GameObjects.Image;
+    products?: ProductToBuy[];
     agreeFunction: Function;
 };
 

@@ -13,6 +13,7 @@ export default class GlobalDataManager extends Phaser.Scene {
     playerMoney: number;
     timeOfDay: 0 | 1 | 2 | 3;
     newNews: boolean;
+    inventary: string[];
   };
   dayState: "IDLE" | "RUNNING" = "IDLE";
   constructor() {
@@ -22,6 +23,7 @@ export default class GlobalDataManager extends Phaser.Scene {
       playerMoney: 300,
       timeOfDay: 0,
       newNews: false,
+      inventary: [],
     };
   }
   
@@ -48,6 +50,17 @@ export default class GlobalDataManager extends Phaser.Scene {
       });
       this.state.timeOfDay += amount;
       if (this.state.timeOfDay > 3) this.state.timeOfDay = 0;
+    }
+  }
+
+  addInventary(item: string) {
+    console.log("Item a agregar: ", item);
+    if(this.state.inventary.includes(item)) {
+      console.log("1");
+      return;
+    }else {
+      console.log("2");
+      this.state.inventary.push(item);
     }
   }
 

@@ -419,8 +419,15 @@ export default class RPG extends Scene {
       globalDataManager.passTime(1)
     }
 
-    const handleAgreeModalRoom = () => {
-      globalDataManager.changeMoney(-100)
+    const handleAgreeModalRoom = (bought: any[]) => {
+      console.log("bought", bought);
+      console.log("primer estado", globalDataManager.getState());
+      const selectedItem = bought.find(item => item.isSelected === true);
+      if (selectedItem && !globalDataManager.getState().inventary.includes(selectedItem.title.toLowerCase())) {
+        globalDataManager.addInventary(selectedItem.title.toLowerCase());
+        globalDataManager.changeMoney(-selectedItem.reward);
+        console.log("ultimo estado", globalDataManager.getState());
+      }
     }
 
     const cityModal: ModalConfig = {
@@ -439,6 +446,27 @@ export default class RPG extends Scene {
       picture: "desafioTest2",
       text: "CAMARA",
       reward: "100",
+      products: [
+        {
+          title: "CAMARA",
+          picture: "camaraShop",
+          pictureOn: "camaraShopOn",
+          text: "CAMARA",
+          reward: 100,
+        },{
+          title: "CAMARA2",
+          picture: "camaraShop",
+          pictureOn: "camaraShop",
+          text: "CAMARA",
+          reward: 0,
+        },{
+          title: "CAMARA3",
+          picture: "camaraShop",
+          pictureOn: "camaraShop",
+          text: "CAMARA",
+          reward: 0,
+        }
+      ],
       agreeFunction: handleAgreeModalRoom,
     }
 

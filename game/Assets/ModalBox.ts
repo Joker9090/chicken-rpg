@@ -1,3 +1,4 @@
+import GlobalDataManager from "../GlobalDataManager";
 import RPG, { modalType } from "../rpg";
 import { ModalConfig } from "./ModalContainer";
 
@@ -20,6 +21,10 @@ export class ModalBox extends Phaser.GameObjects.Container {
 
         const backgroundLess = scene.add.rectangle(0, 0,  window.innerWidth, window.innerHeight, 0x000000, 0.5);
         backgroundLess.setInteractive();
+        
+
+        const selectStates: boolean[] = (modalConfig.products ?? []).map(() => false);
+        const createdProducts: {image: Phaser.GameObjects.Image, rewardBackground: Phaser.GameObjects.Image , coinIcon: Phaser.GameObjects.Image , text: Phaser.GameObjects.Text, isSelected: boolean}[] = [];
 
 
 
@@ -272,6 +277,9 @@ export class ModalBox extends Phaser.GameObjects.Container {
                 break;
             case modalType.PC:
                 
+                const globalDataManager = this.scene.game.scene.getScene("GlobalDataManager") as GlobalDataManager
+                globalDataManager.addInventary("");
+                console.log("GlobalDataManager", globalDataManager.getState());
                 //TOP CONTAINER
                 const btnExit_p = this.scene.add.image(255, 0, "btnExit").setInteractive();
 
@@ -304,89 +312,71 @@ export class ModalBox extends Phaser.GameObjects.Container {
                     title_p,
                     btnExit_p,
                 ]);
+
+                const baseX = -40;
+                const baseY = -40;
+                const offsetX = 190;
                 
                 //LEFT CONTAINER
+                modalConfig.products?.forEach((product, index) => {
+                    const x = baseX + index * offsetX;
+                    const y = baseY;
 
-                //First element
-                let select = false;
-                //@ts-ignore
-                const photo_1_p = this.scene.add.image(-40,-40, "camaraShop").setScale(1).setAlpha(0.5).setInteractive();
-                
-                
-                photo_1_p.on('pointerup', () => {
-                    photo_1_p.setTexture("camaraShopOn");
-                    select = !select;
-                });
-                photo_1_p.on("pointerover", () => {
-                    console.log("hover");
-                    if(!select) {
-                        photo_1_p.setTexture("camaraShop");
-                        photo_1_p.setAlpha(1);
+                    let isSelected = selectStates[index];
+
+                    const productImage = this.scene.add.image(x, y, product.picture)
+                    .setScale(1)
+                    .setAlpha(0.5)
+                    .setInteractive();
+
+                    if (globalDataManager.getState().inventary.includes(product.title.toLowerCase())) {
+                        productImage.setTexture(product.pictureOn);
+                        selectStates[index] = true;
+                    } else {
+                        if(product.reward > 0){
+                            if(globalDataManager.getState().playerMoney >= product.reward){
+                                productImage.on('pointerup', () => {
+                                    isSelected = !isSelected;
+                                    productImage.setTexture(isSelected ? product.pictureOn : product.picture);
+                                    selectStates[index] = isSelected;
+                                });
+                            }
+                            productImage.on("pointerover", () => {
+                                if (!isSelected) {
+                                    productImage.setTexture(product.picture);
+                                    productImage.setAlpha(1);
+                                }
+                            });
+                            productImage.on("pointerout", () => {
+                                if (!isSelected) {
+                                    productImage.setTexture(product.picture);
+                                    productImage.setAlpha(0.5);
+                                }
+                            });
+                        }
                     }
+
+                    
+                    const rewardBackground = this.scene.add.image(x - 40, 10, "barraTitle")
+                        .setOrigin(0, -0.1)
+                        .setScale(0.28, 1.3);
+
+                    
+                    const rewardText = this.scene.add.text(x - 15, 30, `${product.reward}`, {
+                        fontFamily: "MontserratSemiBold",
+                        fontSize: '24px',
+                        color: '#ffffff',
+                    }).setOrigin(0.5);
+
+                    
+                    const coinIcon = this.scene.add.image(x + 20, 30, "coin");
+
+                    createdProducts.push({ image: productImage,rewardBackground: rewardBackground, coinIcon: coinIcon, text: rewardText, isSelected: isSelected});
                 });
-                photo_1_p.on("pointerout", () => {
-                    console.log("hover out");
-                    if(!select) {
-                        photo_1_p.setTexture("camaraShop");
-                        photo_1_p.setAlpha(0.5);
-                    }
-                });
-
-                const rewardBackground_1_p = this.scene.add.image(-80, 10,"barraTitle").setOrigin(0,-0.1).setScale(0.28,1.3);
-
-                //@ts-ignore
-                const reward_1_p = this.scene.add.text(-55, 30, modalConfig.reward, {
-                    fontFamily: "MontserratSemiBold", 
-                    fontSize: '24px',
-                    color: '#ffffff',
-                }).setOrigin(0.5);
-                
-                const coinIcon_1_p = this.scene.add.image(-20 , 30, "coin");
-
-                //Second element
-
-                //@ts-ignore
-                const photo_2_p = this.scene.add.image(150,-40, "camaraShop").setScale(1).setAlpha(0.5).setInteractive();
-
-                const rewardBackground_2_p = this.scene.add.image(110, 10,"barraTitle").setOrigin(0,-0.1).setScale(0.28,1.3);
-
-                //@ts-ignore
-                const reward_2_p = this.scene.add.text(125, 30, "-", {
-                    fontFamily: "MontserratSemiBold", 
-                    fontSize: '24px',
-                    color: '#ffffff',
-                }).setOrigin(0.5);
-                
-                const coinIcon_2_p = this.scene.add.image(160 , 30, "coin");
-
-                //Third element
-                //@ts-ignore
-                const photo_3_p = this.scene.add.image(340,-40, "camaraShop").setScale(1).setAlpha(0.5).setInteractive();
-
-                const rewardBackground_3_p = this.scene.add.image(300, 10,"barraTitle").setOrigin(0,-0.1).setScale(0.28,1.3);
-
-                //@ts-ignore
-                const reward_3_p = this.scene.add.text(315, 30, "-", {
-                    fontFamily: "MontserratSemiBold", 
-                    fontSize: '24px',
-                    color: '#ffffff',
-                }).setOrigin(0.5);
-                
-                const coinIcon_3_p = this.scene.add.image(350 , 30, "coin");
+                   
 
                 leftContainer.add([
-                    photo_1_p,
-                    rewardBackground_1_p,
-                    reward_1_p,
-                    coinIcon_1_p,
-                    photo_2_p,
-                    rewardBackground_2_p,
-                    reward_2_p,
-                    coinIcon_2_p,
-                    photo_3_p,
-                    rewardBackground_3_p,
-                    reward_3_p,
-                    coinIcon_3_p,
+                    ...createdProducts.map(product => [product.image, product.rewardBackground, product.coinIcon, product.text]).flat(),
                 ]);
 
                 //RIGHT CONTAINER
@@ -423,7 +413,13 @@ export class ModalBox extends Phaser.GameObjects.Container {
         }).setOrigin(0.5);
 
         this.agreeButton.on('pointerup', () => {
-            modalConfig.agreeFunction();
+
+            const updatedProductsBought = modalConfig.products?.map((product, index) => ({
+                ...product,
+                isSelected: selectStates[index],
+            }));
+
+            modalConfig.agreeFunction(updatedProductsBought);
             handleClose();
         });
 
