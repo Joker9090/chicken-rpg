@@ -11,9 +11,9 @@ import { PinIsoSpriteBox } from "./Assets/pinIsoSpriteBox";
 import { ModalConfig, ModalContainer } from "./Assets/ModalContainer";
 import GlobalDataManager from "./GlobalDataManager";
 import { changeSceneTo, getObjectByType, makeOpacityNearPlayer } from "./helpers/helpers";
-import Room from "./maps/Roomi";
+import Room from "./maps/Room";
 import TileCreator from "./helpers/TileCreator";
-import City from "./maps/Cityi";
+import City from "./maps/City";
 
 // import UIScene from "./UIScene";
 
