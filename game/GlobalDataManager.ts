@@ -19,11 +19,16 @@ export default class GlobalDataManager extends Phaser.Scene {
   constructor() {
     super({ key: "GlobalDataManager", active: true });
 
+    // axios
+
     this.state = {
       playerMoney: 300,
       timeOfDay: 0,
       newNews: false,
       inventary: [],
+      // missionsActive: any[]
+      // items: any[]
+      // news: any[{}]
     };
   }
   
@@ -44,10 +49,10 @@ export default class GlobalDataManager extends Phaser.Scene {
     else {
       this.dayState = "RUNNING";
       const gameScene = this.game.scene.getScene("RPG") as RPG;
-      gameScene.UICont?.clock.passTime(amount);
-      gameScene.makeDayCycle(this.state.timeOfDay, () => {
-        this.dayState = "IDLE";
-      });
+      // gameScene.UICont?.clock.passTime(amount);
+      // gameScene.makeDayCycle(this.state.timeOfDay, () => {
+      //   this.dayState = "IDLE";
+      // });
       this.state.timeOfDay += amount;
       if (this.state.timeOfDay > 3) this.state.timeOfDay = 0;
     }

@@ -45,7 +45,7 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
     this.distanceBetweenFloors = distanceBetweenFloors;
     this.self.play("idle-" + this.direction);
     scene.cameras.main.startFollow(this);
-    this.self.setScale(0.75)
+    // this.self.setScale(0.75)
 
     //this.self.on("pointerover", () => this.pointerover());
     this.self.on("pointerout", () => this.pointerout());

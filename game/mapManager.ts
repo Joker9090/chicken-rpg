@@ -1,6 +1,6 @@
 import { Physics, Game, Scene, GameObjects } from "phaser";
 import { Player } from "./Assets/Player";
-import IsoExperimentalMap from "./scene";
+import IsoExperimentalMap from "./rpg";
 import { ConfObjectType, GameObjectsIsoSpriteType, IsoAddType } from "./types";
 import { IsoSpriteBox } from "./Assets/IsoSpriteBox";
 

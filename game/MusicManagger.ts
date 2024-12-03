@@ -60,7 +60,7 @@ export default class MusicManager extends Phaser.Scene {
     //TODO: el create se ejecuta cuando entras al juego, no en el menu
     // this.game.events.on('toggleMusic', this.handleToggleMusic, this);
     this.game.events.on('musicVolumeChanged', this.musicVolumeChanged, this);
-    this.gameScene = this.game.scene.getScene("IsoExperimentalMap")
+    // this.gameScene = this.game.scene.getScene("IsoExperimentalMap")
   }
 
   handleToggleMusic(status: boolean) {

@@ -1,10 +1,7 @@
 import Phaser from "phaser";
 import BetweenScenes, { BetweenScenesStatus } from "./BetweenScenes";
 import AssetsLoader, { SceneKeys } from "./AssetsLoader";
-import map from "../maps/city";
-import map2 from "../maps/room";
 import RPG from "../rpg";
-
 export default class MultiScene extends Phaser.Scene {
 
   scenekey?: string;
@@ -17,9 +14,7 @@ export default class MultiScene extends Phaser.Scene {
     this.scenekey = scenekey;
     this.sceneToStop = sceneToStop;
     this.sceneData = sceneData;
-
   }
-
 
   preload(data: any) {
     this.game.plugins.removeScenePlugin("IsoPlugin");
@@ -31,8 +26,8 @@ export default class MultiScene extends Phaser.Scene {
         this.makeTransition(this.scenekey, this.sceneToStop ?? undefined, this.sceneData ?? undefined);
       } else {
         this.makeTransition("MenuScene", undefined);
-        // this.makeTransition("RPG", undefined, { maps: map2.map((m) => (typeof m === "string" ? m : JSON.stringify(m))) });
-        // this.makeTransition("RPG", undefined, { maps: map.map((m) => (typeof m === "string" ? m : JSON.stringify(m))) });
+        // this.makeTransition("RPG", undefined, "ROOM");
+        // this.makeTransition("RPG", undefined, "CITY");
       }
     });
   }
@@ -42,7 +37,6 @@ export default class MultiScene extends Phaser.Scene {
       "BetweenScenes"
     ) as BetweenScenes;
     if (getBetweenScenesScene) {
-      console.log("ENTRO ACA BETWEEN", sceneName)
       if (getBetweenScenesScene.status != BetweenScenesStatus.IDLE)
         return false;
       getBetweenScenesScene.changeSceneTo(sceneName, sceneToStop, data);
@@ -50,11 +44,8 @@ export default class MultiScene extends Phaser.Scene {
         this.scene.remove("MultiScene");
       });
     } else {
-      const rpg = new RPG(
-        map.map((m: any) => (typeof m === "string" ? m : JSON.stringify(m)))
-      );
+      const rpg = new RPG("ROOM");
       this.scene.add("RPG", rpg, true);
-      //   this.scene.start(sceneName, data);
       this.time.delayedCall(1000, () => {
         this.scene.remove("MultiScene");
       });

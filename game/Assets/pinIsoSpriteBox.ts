@@ -32,7 +32,7 @@ export class PinIsoSpriteBox extends RpgIsoSpriteBox {
     this.self.setInteractive();
     this.self.on("pointerdown", () => {
       const RPGScene = this.scene as RPG
-      RPGScene.openModal()
+      // RPGScene.openModal()
     })
    this.scene.add.tween({
     targets: this.self,
