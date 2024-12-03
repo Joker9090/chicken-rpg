@@ -1,6 +1,7 @@
 import { ModalConfig, ModalContainer } from "../Assets/ModalContainer";
 import { RpgIsoSpriteBox } from "../Assets/rpgIsoSpriteBox";
 import { changeSceneTo } from "../helpers/helpers";
+import EventsCenter from "../services/EventsCenter";
 import RPG, { modalType } from "../rpg";
 
 export default class Room {
@@ -10,9 +11,10 @@ export default class Room {
   rectInteractive?: Phaser.GameObjects.Rectangle;
   rectInteractive2?: Phaser.GameObjects.Rectangle;
   rectInteractive3?: Phaser.GameObjects.Rectangle;
-
+  
   constructor(scene: RPG) {
     this.scene = scene;
+
 
     this.map = [
       {
@@ -106,8 +108,17 @@ export default class Room {
       // @ts-ignore
       this.scene.cameras.main.stopFollow().centerOn(this.scene.player.x + 400, this.scene.player.y - 250);
     }
-    const handleAgreeModalRoom = () => {
-      // globalDataManager.changeMoney(-100)
+    const handleAgreeModalRoom = (bought: any[]) => {
+      console.log("bought", bought);
+      const eventCenter = EventsCenter.getInstance();
+      eventCenter.emitEvent(eventCenter.possibleEvents.BUY_ITEM, "camera");
+      /*console.log("primer estado", globalDataManager.getState());
+      const selectedItem = bought.find(item => item.isSelected === true);
+      if (selectedItem && !globalDataManager.getState().inventary.includes(selectedItem.title.toLowerCase())) {
+        globalDataManager.addInventary(selectedItem.title.toLowerCase());
+        globalDataManager.changeMoney(-selectedItem.reward);
+        console.log("ultimo estado", globalDataManager.getState());
+      }*/
     }
     const roomModal: ModalConfig = {
       type: modalType.PC,
@@ -115,6 +126,27 @@ export default class Room {
       picture: "desafioTest2",
       text: "CAMARA",
       reward: "100",
+      products: [
+        {
+          title: "CAMARA",
+          picture: "camaraShop",
+          pictureOn: "camaraShopOn",
+          text: "CAMARA",
+          reward: 100,
+        },{
+          title: "CAMARA2",
+          picture: "camaraShop",
+          pictureOn: "camaraShop",
+          text: "CAMARA",
+          reward: 0,
+        },{
+          title: "CAMARA3",
+          picture: "camaraShop",
+          pictureOn: "camaraShop",
+          text: "CAMARA",
+          reward: 0,
+        }
+      ],
       agreeFunction: handleAgreeModalRoom,
     }
     this.rectInteractive = this.scene.add.rectangle(350, -20, 100, 100, 0x6666ff, 0).setInteractive();

@@ -1,5 +1,5 @@
 import Phaser, { Scene } from "phaser";
-import EventsCenter from "./EventsCenter";
+import EventsCenter from "./services/EventsCenter";
 
 export default class MusicManager extends Phaser.Scene {
   music?:

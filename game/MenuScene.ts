@@ -2,7 +2,8 @@ import Phaser from "phaser";
 import MultiScene from "./Loader/MultiScene";
 import roomMap from "./maps/Room";
 import cityMap from "./maps/City";
-import { possibleEvents, turnEventOn } from "./EventsCenter";
+import EventsCenterManager from "./services/EventsCenter";
+
 
 
 export default class MenuScene extends Phaser.Scene {
@@ -22,7 +23,9 @@ export default class MenuScene extends Phaser.Scene {
 
   create(data: {maps: string[]}) {
 
-    turnEventOn(this.scene.key, possibleEvents.READY, this.addPlayBtn, this)
+    const eventsCenter = EventsCenterManager.getInstance();
+
+    eventsCenter.turnEventOn(this.scene.key, eventsCenter.possibleEvents.READY, this.addPlayBtn, this)
 
 
     const middlePoint = {

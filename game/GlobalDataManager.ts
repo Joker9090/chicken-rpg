@@ -1,11 +1,13 @@
 import Phaser from "phaser";
 import RPG from "./rpg";
-import {
+import { Events } from "matter";
+import EventsCenterManager from "./services/EventsCenter";
+/*import {
   turnEventOn,
   possibleEvents,
   turnEventOff,
   emitEvent,
-} from "./EventsCenter";
+} from "./services/EventsCenter"; */
 // import missions from "./missions";
 
 export default class GlobalDataManager extends Phaser.Scene {
@@ -16,9 +18,17 @@ export default class GlobalDataManager extends Phaser.Scene {
     inventary: string[];
   };
   dayState: "IDLE" | "RUNNING" = "IDLE";
+  //@ts-ignore
+  eventCenter: EventsCenterManager;
   constructor() {
     super({ key: "GlobalDataManager", active: true });
-
+    this.eventCenter = EventsCenterManager.getInstance();
+    this.eventCenter.turnEventOn("GlobalDataManager", this.eventCenter.possibleEvents.BUY_ITEM, (payload: string) => {
+      console.log("nano pre paco: ", this.state.inventary);
+      console.log("Nano destructor",payload);
+      this.addInventary(payload);
+      console.log("nano deja el paco: ", this.state.inventary);
+    },this);
     // axios
 
     this.state = {
@@ -74,10 +84,12 @@ export default class GlobalDataManager extends Phaser.Scene {
   }
 
   create() {
+    const eventCenter = EventsCenterManager.getInstance();
+
     const timer0 = this.time.addEvent({
       delay: 10000, // ms
       callback: () => {
-        emitEvent(possibleEvents.READY, null);
+        eventCenter.emitEvent(eventCenter.possibleEvents.READY, null);
         this.newNews(true);
       },
       //args: [],
