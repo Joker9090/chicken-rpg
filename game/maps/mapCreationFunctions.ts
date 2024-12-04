@@ -75,12 +75,10 @@ export const createBase = (n: number, playerPos: number[] = [0, 0]): string => {
       console.log("ENTRO ACA")
       //go through sideWalkConfig and if i is equal to any xPos return all 3
       if (newXPos.includes(i)) {
-        console.log("ENTRO ACA123123123")
         return row.map((_, j) => 133);
       } else {
         // map row and if j is equal to any yPos return 10
         return row.map((_, j) => {
-          console.log("ENTRO ACA123123123")
           if (newYPos.includes(j)) {
             return 133;
           }

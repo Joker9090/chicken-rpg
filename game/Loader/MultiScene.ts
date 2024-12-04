@@ -2,6 +2,7 @@ import Phaser from "phaser";
 import BetweenScenes, { BetweenScenesStatus } from "./BetweenScenes";
 import AssetsLoader, { SceneKeys } from "./AssetsLoader";
 import RPG from "../rpg";
+import AmbientBackgroundScene from "../ambientAssets/backgroundScene";
 export default class MultiScene extends Phaser.Scene {
 
   scenekey?: string;
@@ -25,9 +26,10 @@ export default class MultiScene extends Phaser.Scene {
       if (this.scenekey) {
         this.makeTransition(this.scenekey, this.sceneToStop ?? undefined, this.sceneData ?? undefined);
       } else {
-        this.makeTransition("MenuScene", undefined);
-        // this.makeTransition("RPG", undefined, "ROOM");
+        // this.makeTransition("MenuScene", undefined);
+        this.makeTransition("RPG", undefined, "ROOM");
         // this.makeTransition("RPG", undefined, "CITY");
+   
       }
     });
   }

@@ -111,6 +111,11 @@ const loadAssets = {
       ["image", "windowB2", "/images/buildingTest/windowB2.png"],
       ["image", "windowB3", "/images/buildingTest/windowB3.png"],
 
+      // ambient
+      ["image", "day", "/ambient/day.png"],
+      ["image", "night", "/ambient/night.png"],
+      ["image", "stars", "/ambient/stars.png"],
+      ["image", "snowFlake", "/ambient/snowFlake.png"],
     ]
   },
 };
