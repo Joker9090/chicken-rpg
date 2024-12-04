@@ -159,12 +159,18 @@ export default class City {
     }
     const cityModal: ModalConfig = {
       type: modalType.QUEST,
+      requires: "camera",
+      requirePicture: "camaraWhite",
       title: "FOTOS EMBLEMATICAS",
-      picture: "imageModalPhoto",
+      picture: "fotoCamara",
       time: "6",
       text: "Sal a tomar fotos al parque.",
-      reward: "15",
+      reward: 15,
       agreeFunction: handleAgreeModal,
+    }
+    const cityModalTest = new ModalContainer(this.scene, 0, 0, cityModal);
+    if(this.scene.player){
+      this.scene.player.self.setScale(0.7);
     }
   }
 }

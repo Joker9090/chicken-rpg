@@ -2,6 +2,7 @@ import Phaser from "phaser";
 import RPG from "./rpg";
 import { Events } from "matter";
 import EventsCenterManager from "./services/EventsCenter";
+import { ProductToBuy } from "./Assets/ModalContainer";
 /*import {
   turnEventOn,
   possibleEvents,
@@ -15,22 +16,41 @@ export default class GlobalDataManager extends Phaser.Scene {
     playerMoney: number;
     timeOfDay: 0 | 1 | 2 | 3;
     newNews: boolean;
-    inventary: string[];
+    inventary: ProductToBuy[];
   };
   dayState: "IDLE" | "RUNNING" = "IDLE";
   eventCenter = EventsCenterManager.getInstance();
   constructor() {
     super({ key: "GlobalDataManager", active: true });
-    this.eventCenter.turnEventOn("GlobalDataManager", this.eventCenter.possibleEvents.BUY_ITEM, (payload: string) => {
+
+    //Events  -->
+
+    this.eventCenter.turnEventOn("GlobalDataManager", this.eventCenter.possibleEvents.BUY_ITEM, (payload: ProductToBuy) => {
       console.log("nano pre paco: ", this.state.inventary);
       console.log("Nano destructor",payload);
       this.addInventary(payload);
+      this.changeMoney(-payload.reward);
       console.log("nano deja el paco: ", this.state.inventary);
     },this);
+
+    this.eventCenter.turnEventOn("GlobalDataManager", this.eventCenter.possibleEvents.GET_INVENTARY, () => {
+      console.log("Inventary global: ", this.state.inventary);
+      return this.getInventary();
+    },this);
+
+    this.eventCenter.turnEventOn("GlobalDataManager", this.eventCenter.possibleEvents.GET_STATE, () => {
+      return this.getState();
+    },this);
+
+    this.eventCenter.turnEventOn("GlobalDataManager", this.eventCenter.possibleEvents.GET_OBJECTINVENTARY, (payload: string) => {
+      return this.getObjectInventary(payload);
+    },this);
+
+    // <--- Events
     // axios
 
     this.state = {
-      playerMoney: 300,
+      playerMoney: 30,
       timeOfDay: 0,
       newNews: false,
       inventary: [],
@@ -66,9 +86,9 @@ export default class GlobalDataManager extends Phaser.Scene {
     }
   }
 
-  addInventary(item: string) {
+  addInventary(item: ProductToBuy) {
     console.log("Item a agregar: ", item);
-    if(this.state.inventary.includes(item)) {
+    if(this.state.inventary.some(product => product.title === item.title)) {
       console.log("1");
       return;
     }else {
@@ -77,8 +97,16 @@ export default class GlobalDataManager extends Phaser.Scene {
     }
   }
 
+  getObjectInventary(title: string) {
+    return this.state.inventary.find((product) => product.title === title);
+  }
+
   public getState() {
     return this.state;
+  }
+
+  public getInventary() {
+    return this.state.inventary;
   }
 
   create() {

@@ -188,7 +188,13 @@ export default class RPG extends Scene {
       startFrame: 0,
     });
 
-    this.load.spritesheet("player", "/images/chicken/spritesheetPlayer.png", {
+    /*this.load.spritesheet("player", "/images/chicken/spritesheetPlayer.png", {
+      frameWidth: 200,
+      frameHeight: 250,
+      startFrame: 0,
+    });*/
+
+    this.load.spritesheet("player", "/images/chicken/spritesheetPlayer2.png", {
       frameWidth: 200,
       frameHeight: 250,
       startFrame: 0,

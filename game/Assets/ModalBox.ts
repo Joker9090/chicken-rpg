@@ -1,7 +1,8 @@
+import { Events } from "matter";
 import GlobalDataManager from "../GlobalDataManager";
 import RPG, { modalType } from "../rpg";
-import { ModalConfig } from "./ModalContainer";
-
+import { ModalConfig, ProductToBuy } from "./ModalContainer";
+import EventsCenterManager from "../services/EventsCenter";
 
 
 
@@ -10,6 +11,7 @@ export class ModalBox extends Phaser.GameObjects.Container {
     agreeButton: Phaser.GameObjects.Image;
     cancelButton: Phaser.GameObjects.Image;
     activeTween: Phaser.Tweens.Tween | null = null;
+    eventCenter = EventsCenterManager.getInstance();
     constructor(
         scene: RPG,
         x: number,
@@ -26,9 +28,9 @@ export class ModalBox extends Phaser.GameObjects.Container {
         const selectStates: boolean[] = (modalConfig.products ?? []).map(() => false);
         const createdProducts: {image: Phaser.GameObjects.Image, rewardBackground: Phaser.GameObjects.Image , coinIcon: Phaser.GameObjects.Image , text: Phaser.GameObjects.Text, isSelected: boolean}[] = [];
 
-        const globalDataManager = this.scene.game.scene.getScene("GlobalDataManager") as GlobalDataManager;
-
-
+        //const globalDataManager = this.scene.game.scene.getScene("GlobalDataManager") as GlobalDataManager;
+        const inventary = this.eventCenter.emitWithResponse(this.eventCenter.possibleEvents.GET_INVENTARY, null);
+        
         //Modals containers
         const modalContainerWithElements = this.scene.add.container(-2000,0);
         const topContainer = this.scene.add.container(0, -170);
@@ -41,6 +43,15 @@ export class ModalBox extends Phaser.GameObjects.Container {
         const modalBackground = this.scene.add.image(0, 0, "modalBackground").setOrigin(0.5);
 
         //modalContainerWithElements.setAngle(35);
+
+        //LEFT BUTTON
+        this.agreeButton = this.scene.add.image(0, 0, "btn").setOrigin(0.5).setInteractive();
+
+        const leftTextButton = this.scene.add.text(0, 0, "ACEPTAR", {
+            fontFamily: "MontserratSemiBold", 
+            fontSize: '16px',
+            color: '#ffffff',
+        }).setOrigin(0.5);
 
         const chain = this.scene.tweens.chain({
             targets: modalContainerWithElements,
@@ -140,6 +151,15 @@ export class ModalBox extends Phaser.GameObjects.Container {
             //this.setVisible(!this.visible)
         }
 
+        if(modalConfig.products && modalConfig.products.length > 0) {
+            selectStates.forEach((state, index) => {
+                if (modalConfig.products && inventary.some((product: ProductToBuy) => product.title === modalConfig.products![index].title)) {
+                    selectStates[index] = true;
+
+                } else selectStates[index] = false;
+            });
+        }
+
         switch (modalConfig.type) {
             case modalType.QUEST:
                 //TOP CONTAINER
@@ -211,11 +231,20 @@ export class ModalBox extends Phaser.GameObjects.Container {
 
                 //row 3
                 //@ts-ignore
-                const text_q = this.scene.add.text(-170, -40, modalConfig.text, {
-                    fontFamily: "MontserratSemiBold", 
-                    fontSize: '14px',
-                    color: '#ffffff',
-                });
+                const requirePicture = this.scene.add.image(-170, -40, modalConfig.requirePicture).setScale(1);
+
+                //Check si tiene el objeto
+                const haveObject = this.eventCenter.emitWithResponse(this.eventCenter.possibleEvents.GET_OBJECTINVENTARY, modalConfig.requires);
+                console.log("haveObject", haveObject);
+                if(haveObject != undefined) {
+                    requirePicture.setTint(0x00ff00);
+                    this.agreeButton.setAlpha(1);
+                    leftTextButton.setAlpha(1);
+                }else {
+                    requirePicture.setTint(0xff0000);
+                    this.agreeButton.setAlpha(0.5);
+                    leftTextButton.setAlpha(0.5);
+                }
 
                 //row 4
                 const morningIcon_q = this.scene.add.image(-150, 10, "iconSunrise").setScale(1.2);
@@ -253,7 +282,7 @@ export class ModalBox extends Phaser.GameObjects.Container {
                     timeIcon_q,
                     subTitleBackground_1_q,
                     subTitle_1_q,
-                    text_q,
+                    requirePicture,
                     morningIcon_q,
                     afternoonIcon_q,
                     eveningIcon_q,
@@ -275,12 +304,20 @@ export class ModalBox extends Phaser.GameObjects.Container {
                     rightContainer,
                 ]);
 
+                this.agreeButton.on('pointerup', () => {
+
+                    if(haveObject != undefined) {
+                        console.log("AGREE");
+                        modalConfig.agreeFunction();
+                        handleClose();
+                    }
+                });
+
                 break;
             case modalType.PC:
                 
                 
-                globalDataManager.addInventary("");
-                console.log("GlobalDataManager", globalDataManager.getState());
+                console.log("Inventary modal:", inventary);
                 //TOP CONTAINER
                 const btnExit_p = this.scene.add.image(255, 0, "btnExit").setInteractive();
 
@@ -330,18 +367,19 @@ export class ModalBox extends Phaser.GameObjects.Container {
                     .setAlpha(0.5)
                     .setInteractive();
 
-                    if (globalDataManager.getState().inventary.includes(product.title.toLowerCase())) {
+
+                    if(selectStates[index]) {
                         productImage.setTexture(product.pictureOn);
-                        selectStates[index] = true;
-                    } else {
+                        console.log("ACA DAVID MODAL TRUE", product.title);
+                    }else {
                         if(product.reward > 0){
-                            if(globalDataManager.getState().playerMoney >= product.reward){
+                           // if(inventary.playerMoney >= product.reward){
                                 productImage.on('pointerup', () => {
                                     isSelected = !isSelected;
                                     productImage.setTexture(isSelected ? product.pictureOn : product.picture);
                                     selectStates[index] = isSelected;
                                 });
-                            }
+                            //}
                             productImage.on("pointerover", () => {
                                 if (!isSelected) {
                                     productImage.setTexture(product.picture);
@@ -356,6 +394,9 @@ export class ModalBox extends Phaser.GameObjects.Container {
                             });
                         }
                     }
+
+                        
+                    
 
                     
                     const rewardBackground = this.scene.add.image(x - 40, 10, "barraTitle")
@@ -386,6 +427,41 @@ export class ModalBox extends Phaser.GameObjects.Container {
    
                 ]);
 
+                //Agree button config
+                this.agreeButton.on('pointerup', () => {
+
+                    const updatedProductsBought = modalConfig.products?.map((product, index) => ({
+                        ...product,
+                        isSelected: selectStates[index],
+                    }));
+        
+                    console.log("selectedStates", selectStates);
+                    const filteredProducts = updatedProductsBought?.filter(product => product.isSelected === true);
+        
+                    const boughtProductsOrProduct = filteredProducts?.length === 1 
+                        ? filteredProducts[0] 
+                        : filteredProducts;
+        
+                    if(filteredProducts && filteredProducts?.length === 1) {
+                        console.log("filteredProducts ", filteredProducts);
+                        let cost = filteredProducts[0].reward;
+                        const playerState = this.eventCenter.emitWithResponse(this.eventCenter.possibleEvents.GET_STATE, null);
+                        if(playerState.playerMoney >= cost) {
+                            leftTextNotMoney.setVisible(false);
+                            modalConfig.agreeFunction(boughtProductsOrProduct);
+                            handleClose();
+                        }else if (!filteredProducts.find(product => product.title == inventary.find((inventaryProduct: ProductToBuy) => inventaryProduct.title == product.title)?.title)) {
+                            leftTextNotMoney.setVisible(true);
+                            this.agreeButton.setAlpha(0.5);
+                            leftTextButton.setAlpha(0.5);
+                        }else {
+                            handleClose();
+                        }
+                    }else {
+                        handleClose();
+                    }
+                });
+
                 console.log("ENTRO PC");
                 this.add([
                     topContainer,
@@ -405,24 +481,19 @@ export class ModalBox extends Phaser.GameObjects.Container {
         const rightButtonContainer = this.scene.add.container(100, 0);
 
         //LEFT BUTTON
-        this.agreeButton = this.scene.add.image(0, 0, "btn").setOrigin(0.5).setInteractive();
+        //this.agreeButton = this.scene.add.image(0, 0, "btn").setOrigin(0.5).setInteractive();
 
-        const leftTextButton = this.scene.add.text(0, 0, "ACEPTAR", {
+
+
+        //not enough money text
+        const leftTextNotMoney = this.scene.add.text(0, -30, "NO TIENES SUFICIENTE DINERO", {
             fontFamily: "MontserratSemiBold", 
-            fontSize: '16px',
-            color: '#ffffff',
-        }).setOrigin(0.5);
+            fontSize: '14px',
+            color: '#ff0011',
+        }).setOrigin(0.5).setVisible(false);
 
-        this.agreeButton.on('pointerup', () => {
 
-            const updatedProductsBought = modalConfig.products?.map((product, index) => ({
-                ...product,
-                isSelected: selectStates[index],
-            }));
 
-            modalConfig.agreeFunction(updatedProductsBought);
-            handleClose();
-        });
 
         this.agreeButton.on("pointerover", () => {
             console.log("hover");
@@ -443,7 +514,8 @@ export class ModalBox extends Phaser.GameObjects.Container {
 
         leftButtonContainer.add([
             this.agreeButton,
-            leftTextButton
+            leftTextButton,
+            leftTextNotMoney
         ]);
 
         //RIGHT BUTTON
@@ -456,6 +528,9 @@ export class ModalBox extends Phaser.GameObjects.Container {
         }).setOrigin(0.5);
 
         this.cancelButton.on('pointerup', () => {
+            leftTextNotMoney.setVisible(false);
+            leftTextButton.setAlpha(1);
+            this.agreeButton.setAlpha(1);
             handleClose()
         });
 

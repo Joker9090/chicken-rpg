@@ -34,6 +34,9 @@ class EventsCenterManager extends Phaser.Events.EventEmitter {
                 TOGGLE_BTN_MUSIC: "toggleBtnMusic",
                 FINAL_TILE_TOGGLE: "finalTileToggle",
                 BUY_ITEM: "buyItem",
+                GET_INVENTARY: "getInventary",
+                GET_STATE: "getState",
+                GET_OBJECTINVENTARY: "getObjectInventary",
             }
 
         }
@@ -63,6 +66,16 @@ class EventsCenterManager extends Phaser.Events.EventEmitter {
 
     emitEvent (event: string, data: any) {
         this.emit(event, data);
+    }
+
+    emitWithResponse(event: string, data: any): any {
+        const listeners = this.listeners(event);
+        if (listeners.length === 0) return undefined;
+        if (listeners.length > 1) {
+            console.warn(`Event "${event}" has multiple listeners; only the first response will be used.`);
+        }
+    
+        return listeners[0](data);
     }
 
     turnOffAllEventsByScene (sceneKey: string)  {

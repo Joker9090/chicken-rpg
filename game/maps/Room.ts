@@ -1,4 +1,4 @@
-import { ModalConfig, ModalContainer } from "../Assets/ModalContainer";
+import { ModalConfig, ModalContainer, ProductToBuy } from "../Assets/ModalContainer";
 import { RpgIsoSpriteBox } from "../Assets/rpgIsoSpriteBox";
 import { changeSceneTo } from "../helpers/helpers";
 import EventsCenter from "../services/EventsCenter";
@@ -107,28 +107,24 @@ export default class Room {
     if (this.scene.player) {
       // @ts-ignore
       this.scene.cameras.main.stopFollow().centerOn(this.scene.player.x + 400, this.scene.player.y - 250);
+      this.scene.player.self.setScale(1.4);
     }
-    const handleAgreeModalRoom = (bought: any[]) => {
+
+    const handleAgreeModalRoom = (bought: ProductToBuy) => {
       console.log("bought", bought);
       const eventCenter = EventsCenter.getInstance();
-      eventCenter.emitEvent(eventCenter.possibleEvents.BUY_ITEM, "camera");
-      /*console.log("primer estado", globalDataManager.getState());
-      const selectedItem = bought.find(item => item.isSelected === true);
-      if (selectedItem && !globalDataManager.getState().inventary.includes(selectedItem.title.toLowerCase())) {
-        globalDataManager.addInventary(selectedItem.title.toLowerCase());
-        globalDataManager.changeMoney(-selectedItem.reward);
-        console.log("ultimo estado", globalDataManager.getState());
-      }*/
+      eventCenter.emitEvent(eventCenter.possibleEvents.BUY_ITEM, bought);
     }
+
     const roomModal: ModalConfig = {
       type: modalType.PC,
       title: "MERCADO DE PULGAS ONLINE",
       picture: "desafioTest2",
       text: "CAMARA",
-      reward: "100",
+      reward: 100,
       products: [
         {
-          title: "CAMARA",
+          title: "camera",
           picture: "camaraShop",
           pictureOn: "camaraShopOn",
           text: "CAMARA",

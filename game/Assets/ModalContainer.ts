@@ -7,15 +7,18 @@ export type ProductToBuy = {
     pictureOn: string,
     text: string,
     reward: number,
+    isSelected?: boolean,
 }
 
 export type ModalConfig = {
     type: modalType;
+    requires?: string;
+    requirePicture?: string;
     title?: string;
     time?: string;
     picture?: string;
     text?: string;
-    reward?: string;
+    reward?: number;
     agreedButtom?: any;
     closeButtom?: any;
     background?: Phaser.GameObjects.Image;
