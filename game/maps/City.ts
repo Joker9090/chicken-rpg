@@ -5,10 +5,12 @@ import { ModalConfig, ModalContainer } from "../Assets/ModalContainer";
 import { RpgIsoSpriteBox } from "../Assets/rpgIsoSpriteBox";
 import { changeSceneTo } from "../helpers/helpers";
 import RPG, { modalType } from "../rpg";
+import EventsCenter from "../services/EventsCenter";
 
 export default class City {
   scene: RPG;
   map: any[];
+  eventCenter = EventsCenter.getInstance();
   constructor(scene: RPG) {
     this.scene = scene;
     const randomYPin = [11, 16, 26, 31]
@@ -154,7 +156,9 @@ export default class City {
   }
 
   addMapFunctionalities() {
-    const handleAgreeModal = () => {
+    const handleAgreeModal = (amount: number, timePass: number) => {
+      this.eventCenter.emitEvent(this.eventCenter.possibleEvents.TIME_CHANGE, timePass);
+      this.eventCenter.emitEvent(this.eventCenter.possibleEvents.CHANGE_MONEY, amount);
       // globalDataManager.passTime(1)
     }
     const cityModal: ModalConfig = {
@@ -163,7 +167,7 @@ export default class City {
       requirePicture: "camaraWhite",
       title: "FOTOS EMBLEMATICAS",
       picture: "fotoCamara",
-      time: "6",
+      time: 2,
       text: "Sal a tomar fotos al parque.",
       reward: 15,
       agreeFunction: handleAgreeModal,

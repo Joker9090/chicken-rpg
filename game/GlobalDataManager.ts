@@ -26,15 +26,21 @@ export default class GlobalDataManager extends Phaser.Scene {
     //Events  -->
 
     this.eventCenter.turnEventOn("GlobalDataManager", this.eventCenter.possibleEvents.BUY_ITEM, (payload: ProductToBuy) => {
-      console.log("nano pre paco: ", this.state.inventary);
-      console.log("Nano destructor",payload);
       this.addInventary(payload);
       this.changeMoney(-payload.reward);
-      console.log("nano deja el paco: ", this.state.inventary);
+    },this);
+
+    this.eventCenter.turnEventOn("GlobalDataManager", this.eventCenter.possibleEvents.BUY_ITEMS, (payload: ProductToBuy[]) => {
+      let moneyLess = 0;
+      payload.forEach((item) => {
+        this.addInventary(item);
+        moneyLess += item.reward;
+        
+      });
+      this.changeMoney(-moneyLess);
     },this);
 
     this.eventCenter.turnEventOn("GlobalDataManager", this.eventCenter.possibleEvents.GET_INVENTARY, () => {
-      console.log("Inventary global: ", this.state.inventary);
       return this.getInventary();
     },this);
 
@@ -46,11 +52,19 @@ export default class GlobalDataManager extends Phaser.Scene {
       return this.getObjectInventary(payload);
     },this);
 
+    this.eventCenter.turnEventOn("GlobalDataManager", this.eventCenter.possibleEvents.CHANGE_MONEY, (payload: number) => {
+      this.changeMoney(payload);
+    },this);
+
+    this.eventCenter.turnEventOn("GlobalDataManager", this.eventCenter.possibleEvents.TIME_CHANGE, (payload: number) => {
+      this.passTime(payload);
+    },this);
+
     // <--- Events
     // axios
 
     this.state = {
-      playerMoney: 30,
+      playerMoney: 300,
       timeOfDay: 0,
       newNews: false,
       inventary: [],
@@ -89,10 +103,8 @@ export default class GlobalDataManager extends Phaser.Scene {
   addInventary(item: ProductToBuy) {
     console.log("Item a agregar: ", item);
     if(this.state.inventary.some(product => product.title === item.title)) {
-      console.log("1");
       return;
     }else {
-      console.log("2");
       this.state.inventary.push(item);
     }
   }

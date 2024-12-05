@@ -146,7 +146,6 @@ export class ModalBox extends Phaser.GameObjects.Container {
         }
 
         const handleClose = () => {
-            console.log("data?:", modalConfig);
             tweenClose();
             //this.setVisible(!this.visible)
         }
@@ -168,16 +167,13 @@ export class ModalBox extends Phaser.GameObjects.Container {
 
                 btnExit.on('pointerup', () => {
                     handleClose();
-                    console.log("btnExit");
                 });
                 btnExit.on("pointerover", () => {
-                    console.log("hover");
                     //btnExit.setAlpha(0.5);
                     if(this.activeTween)this.activeTween.stop();
                     tweenButtonOver(btnExit);
                 });
                 btnExit.on("pointerout", () => {
-                    console.log("hover out");
                     //btnExit.setAlpha(1);
                     if(this.activeTween)this.activeTween.stop();
                     tweenButtonOut(btnExit);
@@ -214,7 +210,7 @@ export class ModalBox extends Phaser.GameObjects.Container {
                 
                 //row 1
                 //@ts-ignore
-                const timeNumber_q = this.scene.add.text(-175, -100, modalConfig.time, {
+                const timeNumber_q = this.scene.add.text(-175, -100, `${modalConfig.time}`, {
                     fontFamily: "MontserratSemiBold", 
                     fontSize: '24px',
                     color: '#ffffff',
@@ -231,11 +227,10 @@ export class ModalBox extends Phaser.GameObjects.Container {
 
                 //row 3
                 //@ts-ignore
-                const requirePicture = this.scene.add.image(-170, -40, modalConfig.requirePicture).setScale(1);
+                const requirePicture = this.scene.add.image(-160, -30, modalConfig.requirePicture).setScale(1);
 
                 //Check si tiene el objeto
                 const haveObject = this.eventCenter.emitWithResponse(this.eventCenter.possibleEvents.GET_OBJECTINVENTARY, modalConfig.requires);
-                console.log("haveObject", haveObject);
                 if(haveObject != undefined) {
                     requirePicture.setTint(0x00ff00);
                     this.agreeButton.setAlpha(1);
@@ -268,7 +263,7 @@ export class ModalBox extends Phaser.GameObjects.Container {
                 });
 
                 //@ts-ignore
-                const reward_q = this.scene.add.text(-170, 105, modalConfig.reward, {
+                const reward_q = this.scene.add.text(-170, 105, `${modalConfig.reward}`, {
                     fontFamily: "MontserratSemiBold", 
                     fontSize: '24px',
                     color: '#ffffff',
@@ -297,7 +292,6 @@ export class ModalBox extends Phaser.GameObjects.Container {
                     coinIcon
                 ]);
 
-                console.log("ENTRO QUEST");
                 this.add([
                     topContainer,
                     leftContainer,
@@ -307,8 +301,7 @@ export class ModalBox extends Phaser.GameObjects.Container {
                 this.agreeButton.on('pointerup', () => {
 
                     if(haveObject != undefined) {
-                        console.log("AGREE");
-                        modalConfig.agreeFunction();
+                        modalConfig.agreeFunction(modalConfig.reward, modalConfig.time);
                         handleClose();
                     }
                 });
@@ -323,16 +316,13 @@ export class ModalBox extends Phaser.GameObjects.Container {
 
                 btnExit_p.on('pointerup', () => {
                     handleClose();
-                    console.log("btnExit");
                 });
                 btnExit_p.on("pointerover", () => {
-                    console.log("hover");
                     //btnExit_p.setAlpha(0.5);
                     if(this.activeTween)this.activeTween.stop();
                     tweenButtonOver(btnExit_p);
                 });
                 btnExit_p.on("pointerout", () => {
-                    console.log("hover out");
                     //btnExit_p.setAlpha(1);
                     if(this.activeTween)this.activeTween.stop();
                     tweenButtonOut(btnExit_p);
@@ -370,7 +360,6 @@ export class ModalBox extends Phaser.GameObjects.Container {
 
                     if(selectStates[index]) {
                         productImage.setTexture(product.pictureOn);
-                        console.log("ACA DAVID MODAL TRUE", product.title);
                     }else {
                         if(product.reward > 0){
                            // if(inventary.playerMoney >= product.reward){
@@ -435,7 +424,6 @@ export class ModalBox extends Phaser.GameObjects.Container {
                         isSelected: selectStates[index],
                     }));
         
-                    console.log("selectedStates", selectStates);
                     const filteredProducts = updatedProductsBought?.filter(product => product.isSelected === true);
         
                     const boughtProductsOrProduct = filteredProducts?.length === 1 
@@ -443,7 +431,6 @@ export class ModalBox extends Phaser.GameObjects.Container {
                         : filteredProducts;
         
                     if(filteredProducts && filteredProducts?.length === 1) {
-                        console.log("filteredProducts ", filteredProducts);
                         let cost = filteredProducts[0].reward;
                         const playerState = this.eventCenter.emitWithResponse(this.eventCenter.possibleEvents.GET_STATE, null);
                         if(playerState.playerMoney >= cost) {
@@ -457,12 +444,26 @@ export class ModalBox extends Phaser.GameObjects.Container {
                         }else {
                             handleClose();
                         }
+                    }else if (filteredProducts && filteredProducts?.length > 1) {
+                        let cost = filteredProducts.reduce((acc, product) => acc + product.reward, 0);
+                        const playerState = this.eventCenter.emitWithResponse(this.eventCenter.possibleEvents.GET_STATE, null);
+                        if(playerState.playerMoney >= cost) {
+                            leftTextNotMoney.setVisible(false);
+                            modalConfig.agreeFunction(boughtProductsOrProduct);
+                            handleClose();
+                        }else if (!filteredProducts.find(product => product.title == inventary.find((inventaryProduct: ProductToBuy) => inventaryProduct.title == product.title)?.title)) {
+                            leftTextNotMoney.setVisible(true);
+                            this.agreeButton.setAlpha(0.5);
+                            leftTextButton.setAlpha(0.5);
+                        }else {
+                            handleClose();
+                        }
+
                     }else {
                         handleClose();
                     }
                 });
 
-                console.log("ENTRO PC");
                 this.add([
                     topContainer,
                     leftContainer,
@@ -496,14 +497,12 @@ export class ModalBox extends Phaser.GameObjects.Container {
 
 
         this.agreeButton.on("pointerover", () => {
-            console.log("hover");
             //this.agreeButton.setAlpha(0.5);
             //leftTextButton.setAlpha(0.5);
             if(this.activeTween)this.activeTween.stop();
             tweenButtonOver(leftButtonContainer);
         });
         this.agreeButton.on("pointerout", () => {
-            console.log("hover out");
             //this.agreeButton.setAlpha(1);
             //leftTextButton.setAlpha(1);
             if(this.activeTween)this.activeTween.stop();
@@ -535,14 +534,12 @@ export class ModalBox extends Phaser.GameObjects.Container {
         });
 
         this.cancelButton.on("pointerover", () => {
-            console.log("hover");
             //this.cancelButton.setAlpha(0.5);
             //rightTextButton.setAlpha(0.5);
             if(this.activeTween)this.activeTween.stop();
             tweenButtonOver(rightButtonContainer);
         });
         this.cancelButton.on("pointerout", () => {
-            console.log("hover out");
             //this.cancelButton.setAlpha(1);
             //rightTextButton.setAlpha(1);
             if(this.activeTween)this.activeTween.stop();

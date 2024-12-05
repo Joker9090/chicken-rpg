@@ -15,7 +15,7 @@ export type ModalConfig = {
     requires?: string;
     requirePicture?: string;
     title?: string;
-    time?: string;
+    time?: number;
     picture?: string;
     text?: string;
     reward?: number;

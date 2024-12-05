@@ -11,6 +11,7 @@ export default class Room {
   rectInteractive?: Phaser.GameObjects.Rectangle;
   rectInteractive2?: Phaser.GameObjects.Rectangle;
   rectInteractive3?: Phaser.GameObjects.Rectangle;
+  eventCenter = EventsCenter.getInstance();
   
   constructor(scene: RPG) {
     this.scene = scene;
@@ -110,10 +111,14 @@ export default class Room {
       this.scene.player.self.setScale(1.4);
     }
 
-    const handleAgreeModalRoom = (bought: ProductToBuy) => {
+    const handleAgreeModalRoom = (bought: ProductToBuy | ProductToBuy[]) => {
       console.log("bought", bought);
-      const eventCenter = EventsCenter.getInstance();
-      eventCenter.emitEvent(eventCenter.possibleEvents.BUY_ITEM, bought);
+      if(bought instanceof Array) {
+        this.eventCenter.emitEvent(this.eventCenter.possibleEvents.BUY_ITEMS, bought);
+      } else {
+        this.eventCenter.emitEvent(this.eventCenter.possibleEvents.BUY_ITEM, bought);
+      }
+     
     }
 
     const roomModal: ModalConfig = {
@@ -130,11 +135,11 @@ export default class Room {
           text: "CAMARA",
           reward: 100,
         },{
-          title: "CAMARA2",
+          title: "otro",
           picture: "camaraShop",
-          pictureOn: "camaraShop",
-          text: "CAMARA",
-          reward: 0,
+          pictureOn: "camaraShopOn",
+          text: "otro",
+          reward: 100,
         },{
           title: "CAMARA3",
           picture: "camaraShop",

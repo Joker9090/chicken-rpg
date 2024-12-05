@@ -34,9 +34,12 @@ class EventsCenterManager extends Phaser.Events.EventEmitter {
                 TOGGLE_BTN_MUSIC: "toggleBtnMusic",
                 FINAL_TILE_TOGGLE: "finalTileToggle",
                 BUY_ITEM: "buyItem",
+                BUY_ITEMS: "buyItems",
                 GET_INVENTARY: "getInventary",
                 GET_STATE: "getState",
                 GET_OBJECTINVENTARY: "getObjectInventary",
+                CHANGE_MONEY: "changeMoney",
+                TIME_CHANGE: "timeChange",
             }
 
         }
