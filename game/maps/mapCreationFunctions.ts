@@ -35,7 +35,6 @@ export const createBase = (n: number, playerPos: number[] = [0, 0]): string => {
     base: number[][],
     withParser: boolean = true
   ): string | number[][] => {
-    console.log("createBullets", base);
     return !withParser ? base : base.map((row) => row.join(" ")).join("\n");
   };
   
@@ -53,7 +52,6 @@ export const createBase = (n: number, playerPos: number[] = [0, 0]): string => {
         const street = new Array(1)
           .fill(0)
           .map((_, i) => x + i);
-        console.log("STR", street);
         return street;
       })
       .flat();
@@ -63,7 +61,6 @@ export const createBase = (n: number, playerPos: number[] = [0, 0]): string => {
         const street = new Array(1)
           .fill(0)
           .map((_, i) => y + i);
-        console.log("STRETY", street);
         return street;
       })
       .flat();
@@ -72,15 +69,12 @@ export const createBase = (n: number, playerPos: number[] = [0, 0]): string => {
     newYPos = newYPos.filter((item, index) => newYPos.indexOf(item) === index);
   
     const builded = base.map((row, i) => {
-      console.log("ENTRO ACA")
       //go through sideWalkConfig and if i is equal to any xPos return all 3
       if (newXPos.includes(i)) {
-        console.log("ENTRO ACA123123123")
         return row.map((_, j) => 133);
       } else {
         // map row and if j is equal to any yPos return 10
         return row.map((_, j) => {
-          console.log("ENTRO ACA123123123")
           if (newYPos.includes(j)) {
             return 133;
           }

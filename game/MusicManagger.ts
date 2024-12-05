@@ -30,20 +30,16 @@ export default class MusicManager extends Phaser.Scene {
     }
     this.music = this.sound.add(name).setVolume(!this.musicStatus ? 0.05 : 0);
     this.music.play();
-    console.log(name, this.music, 'playMusic')
   }
 
   onToggleSound(data: any) {
     const {on, gameScene} = data
     EventsCenter.emit("toggleBtnSound", on);
-    // const gameScene = this.game.scene.getScene("IsoExperimentalMap")
-    console.log(gameScene, 'qsyche')
     this.soundStatus = !on
     const volume = on ? 0.3 : 0
     //@ts-ignore
     const sounds = [gameScene.spawnSound, gameScene.loseSound, gameScene.winSound];
     sounds.forEach((s: any) => s && s.setVolume(volume))
-    console.log()
     //@ts-ignore
     if (gameScene.isoGroup) {
       //@ts-ignore
@@ -64,7 +60,6 @@ export default class MusicManager extends Phaser.Scene {
   }
 
   handleToggleMusic(status: boolean) {
-    console.log('juampi66666', status)
     this.musicStatus = status
     if (!status) {
       this.music?.setVolume(0.05);
@@ -74,9 +69,7 @@ export default class MusicManager extends Phaser.Scene {
   }
 
   musicVolumeChanged(volume: number) {
-    console.log(this.music, volume, 'keykey')
     if (this.music) {
-      console.log(this.music.volume, volume, 'volume')
       this.music.setVolume(0.5*volume);
     }
   }

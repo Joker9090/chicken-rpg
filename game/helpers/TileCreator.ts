@@ -51,7 +51,6 @@ export default class TileCreator {
         //if height is 75 tint tile
 
         // tileObj.self.on("pointerover", tweenTile(tileObj));
-        // console.log(tileObj);
         // log the position of tile every 10 tiles
     }
 
@@ -91,7 +90,6 @@ export default class TileCreator {
         //if height is 75 tint tile
 
         // tileObj.self.on("pointerover", tweenTile(tileObj));
-        // console.log(tileObj);
         // log the position of tile every 10 tiles
     }
 
@@ -173,7 +171,6 @@ export default class TileCreator {
         //if height is 75 tint tile
 
         // tileObj.self.on("pointerover", tweenTile(tileObj));
-        // console.log(tileObj);
         // log the position of tile every 10 tiles
     }
 
@@ -405,7 +402,6 @@ export default class TileCreator {
         tileObj.self.on("pointerout", this.noHighlightTile(tileObj));
         tileObj.self.on("pointerdown", this.destroyTile(tileObj));
 
-        // console.log(tileObj);
         // log the position of tile every 10 tiles
     }
 
@@ -448,7 +444,6 @@ export default class TileCreator {
         tileObj.self.on("pointerout", this.noHighlightTile(tileObj));
         tileObj.self.on("pointerdown", this.destroyTile(tileObj));
 
-        // console.log(tileObj);
         // log the position of tile every 10 tiles
     }
 
@@ -485,7 +480,6 @@ export default class TileCreator {
 
         tileObj.type = "GRASS";
         // tileObj.self.setTint(0x0000ff);
-        // tileObj.self.on("pointerdown", () => console.log('pointer en grass',tileObj));
     }
 
     createStreetTile(
@@ -522,7 +516,6 @@ export default class TileCreator {
 
         tileObj.type = "GRASS";
         // tileObj.self.setTint(0x222222);
-        // tileObj.self.on("pointerdown", () => console.log('pointer en grass',tileObj));
     }
 
 }

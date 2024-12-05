@@ -101,7 +101,6 @@ export default class GlobalDataManager extends Phaser.Scene {
   }
 
   addInventary(item: ProductToBuy) {
-    console.log("Item a agregar: ", item);
     if(this.state.inventary.some(product => product.title === item.title)) {
       return;
     }else {

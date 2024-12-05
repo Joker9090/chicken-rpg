@@ -46,7 +46,6 @@ export default class City {
     for (let i = 0; i < 200; i++) {
       if (i === 0) {
         const randomNumber = Math.floor(Math.random() * randomYPin.length)
-        console.log("RANDOM NUMBEr", randomNumber)
         objects.push(
           {
             x: 5,

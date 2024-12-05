@@ -100,7 +100,7 @@ export default class Room {
     const firstPos = this.scene.isoGroup?.children.entries[0] as unknown as RpgIsoSpriteBox;
     const backgroundContainer = this.scene.add.container(firstPos.self.x, firstPos.self.y).setDepth(999999)
     const backgroundContainer2 = this.scene.add.container(firstPos.self.x, firstPos.self.y)
-    const background = this.scene.add.image(-300, 300, "backgroundMenu").setScale(1).setScale(2.5).setScrollFactor(1);
+    const background = this.scene.add.image(-300, 300, "backgroundMenu").setScale(1).setScale(2.5).setScrollFactor(1).setAlpha(0)
     let backgroundRoom = this.scene.add.image(-75, 35, "HabitacionFinalMai").setOrigin(0.5);
     let pcGlow = this.scene.add.image(-75, 35, "pcGlow").setOrigin(0.5).setVisible(false);
     let puertaGlow = this.scene.add.image(-75, 35, "puertaGlow").setOrigin(0.5).setVisible(false);
@@ -112,7 +112,6 @@ export default class Room {
     }
 
     const handleAgreeModalRoom = (bought: ProductToBuy | ProductToBuy[]) => {
-      console.log("bought", bought);
       if(bought instanceof Array) {
         this.eventCenter.emitEvent(this.eventCenter.possibleEvents.BUY_ITEMS, bought);
       } else {

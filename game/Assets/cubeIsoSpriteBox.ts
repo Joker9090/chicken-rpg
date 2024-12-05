@@ -31,10 +31,8 @@ export class CubeIsoSpriteBox extends RpgIsoSpriteBox {
   }
 
   moveCube(player: RpgIsoPlayerPrincipal) {
-    console.log("moveCube")
     if(this.matrixPosition){
       const distance =  player.checkCubeAround(this.matrixPosition);
-      console.log("distance: ", distance);
       if(distance && Math.abs(distance.x) + Math.abs(distance.y) /*+ Math.abs(distance.h) */ == 1) {
         let newDirection = player?.facingDirection;
         if (distance.x > 0) {
@@ -49,7 +47,6 @@ export class CubeIsoSpriteBox extends RpgIsoSpriteBox {
         
         const newMatrixPos = {x:this.matrixPosition.x + (distance.x), y: this.matrixPosition.y + (distance.y), h: 0};
         const nextTileToCube = player?.getObjectAt(newMatrixPos);
-        console.log("nextTileToCube: ",nextTileToCube);
 
         if(nextTileToCube) {
           this.scene.tweens.add({

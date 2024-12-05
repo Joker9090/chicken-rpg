@@ -63,6 +63,7 @@ export default class BetweenScenes extends Phaser.Scene {
                     const scene = this.getSceneByName(this.sceneToStop);
                     if (scene) {
                         this.stopScene(scene, () => {
+                            
                             this.removeScene(scene, () => {
                                 if (this.newSceneName) {
                                     if (this.newSceneName == "MenuScene") {
