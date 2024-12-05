@@ -37,7 +37,6 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
       w: 80,
       h: 80,
     };
-    console.log(x, y, z, "xyz")
     // @ts-ignore
     super(scene, x, y, z + 20, texture, frame, group, matrixPosition, interactivityBox);
     this.direction = direction;
@@ -159,7 +158,6 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
         tile.self.setTint(0x00ff00);
 
         let tilesListener = tile.self.eventNames();
-        //console.log("tiles listener: ", tilesListener);
         if(!tilesListener.includes("pointerdown")) {
           tile.self.on("pointerdown", () => this.possibleMovementMouseDown(tile));
         }
@@ -317,7 +315,6 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
     //return
 
     const nextPos = path.shift();
-    console.log("move path next mov: ",nextPos);
     if(nextPos && this.matrixPosition) {
       const {x, y} = this.matrixPosition;
       let newDirection = this.facingDirection;
@@ -354,7 +351,6 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
       //h + this.distanceBetweenFloors 
       let testPos: PositionMatrix = {...originalPath[i] , h: originalPath[i].h + this.distanceBetweenFloors };
       let _tile = this.getObjectAt(testPos);
-      console.log("checkpath _tile: ", _tile);
       if(!_tile?.type){
         newPath.push(originalPath[i]);
       }
@@ -368,7 +364,6 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
   possibleMovementMouseDown(tile: RpgIsoSpriteBox) {
     // this.clearPossibleMovements();
     this.isMoving = true;
-    console.log("tilePosition(pos player , pos tile)", this.matrixPosition, tile.matrixPosition)
 
     // swithc funcion to change direction on depends matrix position dif
     let newDirection = this.facingDirection
@@ -376,14 +371,12 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
       // const { x, y } = tile.matrixPosition;
       // const { x: xp, y: yp } = this.matrixPosition;
       let  path = this.calculatePath(this.matrixPosition,tile.matrixPosition);
-      console.log("steps !!!!!: ", path);
 
       this.movePath(path);
     }
   }
 
   possibleMovementMouseOver(tile: RpgIsoSpriteBox) {
-    //console.log(tile,"barto")
     if(tile){
       // @ts-ignore
       if(!tile.baseZ) tile.baseZ = tile.isoZ;
@@ -399,7 +392,6 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
   }
 
   possibleMovementMouseOut(tile: RpgIsoSpriteBox) {
-    //console.log(tile,"barto")
     if(tile){
       this.scene.tweens.add({
         targets: tile,
@@ -414,13 +406,11 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
 
   getObjectAt(matrixPosition: { x: number; y: number; h: number }) {
     const tiles = this.group?.children.entries as unknown as RpgIsoSpriteBox[];
-    console.log("matrixPosition get objectAt: ", matrixPosition);
     if (this.matrixPosition) {
       let _tile: RpgIsoSpriteBox | undefined;
       tiles.forEach((tile) => {
         if (tile.matrixPosition) {
           const { x, y, h } = tile.matrixPosition;
-          //console.log("tile", x, y, h, tile.type);
           if (
             x == matrixPosition.x &&
             y == matrixPosition.y &&
@@ -430,7 +420,6 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
           }
         }
       });
-      //console.log("tile", _tile);
       return _tile;
     }
   }
@@ -467,7 +456,6 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
           }
         }
       });
-      // console.log("tile", _tile);
       return [_tile,_object];
     } else {
       return [
@@ -492,7 +480,6 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
           this.matrixPosition = { ...tile };
           this.isMoving = false;
           this.self.play("idle-" + direction);
-          console.log("direction: ", direction);
           onCallback();
         },
       });
@@ -513,7 +500,6 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
           this.matrixPosition = { ...tile.matrixPosition };
         this.isMoving = false;
         this.self.play("idle-" + direction);
-        // console.log("direction: ", direction);
       },
     });
   }
@@ -526,22 +512,16 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
     if (this.matrixPosition) {
       const { x, y, h } = this.matrixPosition;
       const withObject = true;
-      // console.log("config tile: ",x - newX,y - newY,h);
       const [tile, object] = this.getTileAt(
         { x: x - newX, y: y - newY, h: h },
         withObject
       );
-      // console.log("move player after move box : ",tile, newX,newY);
       // tile?.self.setTint(0x00ff00);
       if (tile && !object) {
-        console.log("tile 1",tile)
         this.isMoving = true;
         this.tweenTileBox(tile, direction);
       } else  if (tile && object) {
-        console.log("tile 2",tile)
-        if(object.type == "CUBE") {
-          console.log("object",object);
-          
+        if(object.type == "CUBE") {          
           (object as CubeIsoSpriteBox).moveCube(this);
         }
       }

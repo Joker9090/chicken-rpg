@@ -135,7 +135,6 @@ export class ModalBox extends Phaser.GameObjects.Container {
         }
 
         const handleClose = () => {
-            console.log("data?:", modalConfig);
             tweenClose();
             //this.setVisible(!this.visible)
         }
@@ -148,16 +147,13 @@ export class ModalBox extends Phaser.GameObjects.Container {
 
                 btnExit.on('pointerup', () => {
                     handleClose();
-                    console.log("btnExit");
                 });
                 btnExit.on("pointerover", () => {
-                    console.log("hover");
                     //btnExit.setAlpha(0.5);
                     if(this.activeTween)this.activeTween.stop();
                     tweenButtonOver(btnExit);
                 });
                 btnExit.on("pointerout", () => {
-                    console.log("hover out");
                     //btnExit.setAlpha(1);
                     if(this.activeTween)this.activeTween.stop();
                     tweenButtonOut(btnExit);
@@ -268,7 +264,6 @@ export class ModalBox extends Phaser.GameObjects.Container {
                     coinIcon
                 ]);
 
-                console.log("ENTRO QUEST");
                 this.add([
                     topContainer,
                     leftContainer,
@@ -280,22 +275,18 @@ export class ModalBox extends Phaser.GameObjects.Container {
                 
                 
                 globalDataManager.addInventary("");
-                console.log("GlobalDataManager", globalDataManager.getState());
                 //TOP CONTAINER
                 const btnExit_p = this.scene.add.image(255, 0, "btnExit").setInteractive();
 
                 btnExit_p.on('pointerup', () => {
                     handleClose();
-                    console.log("btnExit");
                 });
                 btnExit_p.on("pointerover", () => {
-                    console.log("hover");
                     //btnExit_p.setAlpha(0.5);
                     if(this.activeTween)this.activeTween.stop();
                     tweenButtonOver(btnExit_p);
                 });
                 btnExit_p.on("pointerout", () => {
-                    console.log("hover out");
                     //btnExit_p.setAlpha(1);
                     if(this.activeTween)this.activeTween.stop();
                     tweenButtonOut(btnExit_p);
@@ -386,7 +377,6 @@ export class ModalBox extends Phaser.GameObjects.Container {
    
                 ]);
 
-                console.log("ENTRO PC");
                 this.add([
                     topContainer,
                     leftContainer,
@@ -425,14 +415,12 @@ export class ModalBox extends Phaser.GameObjects.Container {
         });
 
         this.agreeButton.on("pointerover", () => {
-            console.log("hover");
             //this.agreeButton.setAlpha(0.5);
             //leftTextButton.setAlpha(0.5);
             if(this.activeTween)this.activeTween.stop();
             tweenButtonOver(leftButtonContainer);
         });
         this.agreeButton.on("pointerout", () => {
-            console.log("hover out");
             //this.agreeButton.setAlpha(1);
             //leftTextButton.setAlpha(1);
             if(this.activeTween)this.activeTween.stop();
@@ -460,14 +448,12 @@ export class ModalBox extends Phaser.GameObjects.Container {
         });
 
         this.cancelButton.on("pointerover", () => {
-            console.log("hover");
             //this.cancelButton.setAlpha(0.5);
             //rightTextButton.setAlpha(0.5);
             if(this.activeTween)this.activeTween.stop();
             tweenButtonOver(rightButtonContainer);
         });
         this.cancelButton.on("pointerout", () => {
-            console.log("hover out");
             //this.cancelButton.setAlpha(1);
             //rightTextButton.setAlpha(1);
             if(this.activeTween)this.activeTween.stop();

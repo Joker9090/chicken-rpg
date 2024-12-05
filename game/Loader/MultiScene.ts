@@ -20,7 +20,6 @@ export default class MultiScene extends Phaser.Scene {
   preload(data: any) {
     this.game.plugins.removeScenePlugin("IsoPlugin");
     this.game.plugins.removeScenePlugin("IsoPhysics");
-    console.log("ARIEL 2DO ROUND", this.scenekey, this.sceneToStop, this.sceneData)
     this.assetLoaderClass = new AssetsLoader(this, ["BaseLoad"]);
     this.assetLoaderClass.runPreload(() => {
       if (this.scenekey) {

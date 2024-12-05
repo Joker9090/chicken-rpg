@@ -72,7 +72,6 @@ class GlobalData {
   stopTimer() {
     if (this.timerInterval) {
       clearInterval(this.timerInterval);
-      console.log(this.timerInterval, "time interval")
       this.timerInterval = undefined;
     }
   }

@@ -22,10 +22,7 @@ export default class GlobalDataManager extends Phaser.Scene {
   constructor() {
     super({ key: "GlobalDataManager", active: true });
     this.eventCenter.turnEventOn("GlobalDataManager", this.eventCenter.possibleEvents.BUY_ITEM, (payload: string) => {
-      console.log("nano pre paco: ", this.state.inventary);
-      console.log("Nano destructor",payload);
       this.addInventary(payload);
-      console.log("nano deja el paco: ", this.state.inventary);
     },this);
     // axios
 
@@ -67,12 +64,9 @@ export default class GlobalDataManager extends Phaser.Scene {
   }
 
   addInventary(item: string) {
-    console.log("Item a agregar: ", item);
     if(this.state.inventary.includes(item)) {
-      console.log("1");
       return;
     }else {
-      console.log("2");
       this.state.inventary.push(item);
     }
   }

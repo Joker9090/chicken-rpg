@@ -96,129 +96,6 @@ export default class RPG extends Scene {
   }
 
   preload() {
-    // // ASSETS UI ->
-    // this.load.image("background", "/assets/chickenUIAssets/background.png");
-    // this.load.image("settingsIcon", "/assets/chickenUIAssets/settingsIcon.png");
-    // this.load.image("helpIcon", "/assets/chickenUIAssets/helpIcon.png");
-
-    // this.load.image("exit", "/assets/chickenUIAssets/cerrar.png");
-    // this.load.image("exitClick", "/assets/chickenUIAssets/cerrarClick.png");
-    // this.load.image("exitHover", "/assets/chickenUIAssets/cerrarHover.png");
-
-    // this.load.image("save", "/assets/chickenUIAssets/save.png");
-    // this.load.image("saveClick", "/assets/chickenUIAssets/saveClick.png");
-    // this.load.image("saveHover", "/assets/chickenUIAssets/saveHover.png");
-
-    // this.load.image("cancel", "/assets/chickenUIAssets/cancel.png");
-    // this.load.image("cancelClick", "/assets/chickenUIAssets/cancelClick.png");
-    // this.load.image("cancelHover", "/assets/chickenUIAssets/cancelHover.png");
-
-    // this.load.image("on", "/assets/chickenUIAssets/on.png");
-    // this.load.image("off", "/assets/chickenUIAssets/off.png");
-
-    // this.load.image("varFull", "/assets/chickenUIAssets/varFull.png");
-    // this.load.image("varEmpty", "/assets/chickenUIAssets/varEmpty.png");
-    // this.load.image("varSelector", "/assets/chickenUIAssets/varSelector.png");
-
-    // this.load.image("reloj", "/assets/UI/UILevel/reloj.png");
-
-    // this.load.image("coinUi", "/assets/UI/UiChiken/coinUi.png");
-    // this.load.image("barEmpty", "/assets/UI/UiChiken/barEmpty.png");
-    // this.load.image("varStar", "/assets/UI/UiChiken/varStar.png");
-    // this.load.image("varFullLila", "/assets/UI/UiChiken/varFullLila.png");
-    // this.load.image("varFullYellow", "/assets/UI/UiChiken/varFullYellow.png");
-    // this.load.image("varSmile", "/assets/UI/UiChiken/varSmile.png");
-    // this.load.image("iconNewsOff", "/assets/UI/UiChiken/iconNewsOff.png");
-    // this.load.image("iconNewsOn", "/assets/UI/UiChiken/iconNews.png");
-
-
-    // <- ASSETS UI
-
-    //Modal assets
-    // this.load.image("modalBackground", "/assets/modalAssets/modal.png");
-    // this.load.image("desafioTest1", "/assets/modalAssets/maskImg2.png");
-    // this.load.image("desafioTest2", "/assets/modalAssets/maskImg3.png");
-    // this.load.image("barraTitle", "/assets/modalAssets/barraTittle.png");
-    // this.load.image("btnExit", "/assets/modalAssets/btnExit.png");
-    // this.load.image("barritaOff", "/assets/modalAssets/barritaOff.png");
-    // this.load.image("barritaOn", "/assets/modalAssets/barritaOn.png");
-    // this.load.image("btn", "/assets/modalAssets/btn.png");
-    // this.load.image("iconClock", "/assets/modalAssets/iconClock.png");
-    // this.load.image("iconMoon", "/assets/modalAssets/iconMoon.png");
-    // this.load.image("iconSun", "/assets/modalAssets/iconSun.png");
-    // this.load.image("iconSunrise", "/assets/modalAssets/iconSunrise.png");
-    // this.load.image("iconSunset", "/assets/modalAssets/iconSunset.png");
-    // this.load.image("coin", "/assets/modalAssets/coin.png");
-    // this.load.image("camaraGrey", "/assets/modalAssets/masUi/camaraGrey.png");
-    // this.load.image("camaraWhite", "/assets/modalAssets/masUi/camaraWhite.png");
-    // this.load.image("camaraGreen", "/assets/modalAssets/masUi/camaraGreen.png");
-    // this.load.image("camaraShop", "/assets/modalAssets/camaraShop.png");
-    // this.load.image("camaraShopOn", "/assets/modalAssets/camaraShopOn.png");
-
-    // //Room assets
-    // this.load.image("room1", "/assets/room/room1.png");
-    // this.load.image("room2", "/assets/room/room2.png");
-    // this.load.image("HabitacionFinalMai", "/assets/room/HabitacionFinalMai.png");
-    // this.load.image("pcGlow", "/assets/room/CompuGlow.png");
-    // this.load.image("cama", "/assets/room/cama.png");
-    // this.load.image("puertaGlow", "/assets/room/PuertaGlow.png");
-
-
-    // otros assets
-    // this.load.image("tile", "/images/bloque.png");
-    // this.load.image("pin", "/images/pin.png");
-    // this.load.image("street-a", "/images/street-a.png");
-    // this.load.image("street-b", "/images/street-b.png");
-    // this.load.image("street-c", "/images/street-c.png");
-    // this.load.image("cube1", "/images/cube1.png");
-    // this.load.image("traffic-light-a", "/images/traffic-light-a.png");
-    // this.load.image("traffic-light-b", "/images/traffic-light-b.png");
-    // this.load.image("grassTEST", "/images/bloque1TEST.png");
-    // this.load.image("buildingTEST", "/images/building1TEST.png");
-    // this.load.image("blockBuilding", "/images/bloque3TEST.png");
-    // this.load.image("blockBuilding-b", "/images/bloque4TEST.png");
-    // this.load.image("blockBuildingBase", "/images/bloque2TEST.png");
-    // this.load.image("blockBuildingEmpty", "/images/bloque5TEST.png");
-
-    // this.load.spritesheet("chicken", "/images/chicken/spritesheetChicken.png", {
-    //   frameWidth: 552 / 4,
-    //   frameHeight: 1152 / 12,
-    //   startFrame: 0,
-    // });
-
-    // this.load.spritesheet("player", "/images/chicken/spritesheetPlayer.png", {
-    //   frameWidth: 200,
-    //   frameHeight: 250,
-    //   startFrame: 0,
-    // });
-
-
-
-    // this.load.image("tree", "/images/chicken/tree.png");
-
-    // for (let index = 0; index < 6; index++) {
-    //   this.load.spritesheet(
-    //     `bloque-${index}`,
-    //     "/images/chicken/piedraAbajo.png",
-    //     {
-    //       frameWidth: 100,
-    //       frameHeight: 100,
-    //       startFrame: index,
-    //     }
-    //   );
-    // }
-
-    // for (let index = 0; index < 6; index++) {
-    //   this.load.spritesheet(
-    //     `semibloque-${index}`,
-    //     "/images/chicken/piedraAbajo.png",
-    //     {
-    //       frameWidth: 100,
-    //       frameHeight: 100,
-    //       startFrame: index + 6,
-    //     }
-    //   );
-    // }
     
     let AmbientBackScene = this.game.scene.getScene("AmbientBackgroundScene")
     if (!AmbientBackScene) {
@@ -250,9 +127,6 @@ export default class RPG extends Scene {
     });
   }
 
-
-
-
   create() {
     this.isoGroup = this.add.group();
 
@@ -261,11 +135,7 @@ export default class RPG extends Scene {
     this.isoPhysics.world.gravity.setTo(0); // permitime dudas
     const ee = this.events;
     this.eventEmitter = ee;
-
-    // resize the game
     this.scale.resize(window.innerWidth, window.innerHeight);
-
-    // agregamos controles de teclado
     this.cursors = this.input.keyboard.createCursorKeys();
 
     
@@ -313,15 +183,13 @@ export default class RPG extends Scene {
     this.cameras.main.setViewport(0, 0, window.innerWidth, window.innerHeight);
 
 
+
     // let playerInfo = globalDataManager.getState()
 
     // const ui = new UI(this)
 
     // ui.hidrate(playerInfo)
     // turnEventOn(this.scene.key, possibleEvents.INFO_UPDATE, ui.hidrate, this)
-
-
-
     // WORKKSHOP NANEX
     this.UIContainer = new UIContainer(this, 0, 0, this.mapType);
     this.UICamera = this.cameras.add(
@@ -332,19 +200,13 @@ export default class RPG extends Scene {
     );
     this.UICamera.ignore(this.isoGroup);
     const forestContainers = this.forest.map((arbolito) => arbolito.container);
-
-    // skyCam.ignore(this.isoGroup);
-    // this.UICamera.ignore([this.sky1, this.sky2, this.sky3, this.sky4])
     this.UICamera.ignore(forestContainers);
-    // skyCam.ignore(forestContainers);
-    // skyCam.ignore(this.UIContainer);
+
+
+
 
 
     const globalDataManager = this.game.scene.getScene("GlobalDataManager") as GlobalDataManager
-    // skies[globalDataManager.getState().timeOfDay].setAlpha(1)
-
-    //Room events ---->
-
 
     this.map?.addMapFunctionalities();
 
@@ -446,7 +308,6 @@ export default class RPG extends Scene {
       });
     });
   }
-
 
   spawnObjects() {
     if (this.mapBlueprint) {
@@ -905,13 +766,11 @@ export default class RPG extends Scene {
     }
   }
 
-
   update() {
     const self = this;
     if (self.player && self.cursors) {
       self.player.updateAnim(self.cursors);
       makeOpacityNearPlayer(this);
-      //console.log(this.player?.isoX, this.player?.isoY, "ARIEL")
       if (
         this.player?.isoX === 660 &&
         this.player?.isoY === 55 &&

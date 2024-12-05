@@ -109,7 +109,6 @@ export default class Room {
       this.scene.cameras.main.stopFollow().centerOn(this.scene.player.x + 400, this.scene.player.y - 250);
     }
     const handleAgreeModalRoom = (bought: any[]) => {
-      console.log("bought", bought);
       const eventCenter = EventsCenter.getInstance();
       eventCenter.emitEvent(eventCenter.possibleEvents.BUY_ITEM, "camera");
       /*console.log("primer estado", globalDataManager.getState());

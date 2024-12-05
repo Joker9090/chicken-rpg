@@ -23,6 +23,7 @@ export default class MenuScene extends Phaser.Scene {
   }
 
   create(data: {maps: string[]}) {
+    
     let AmbientScene = this.game.scene.getScene("AmbientBackgroundScene")
     if (!AmbientScene) {
       AmbientScene = new AmbientBackgroundScene("MenuScene")
@@ -34,7 +35,6 @@ export default class MenuScene extends Phaser.Scene {
     // const AmbientScene = new AmbientBackgroundScene("MenuScene")
     // this.ambientScenes.push(AmbientScene);
     // this.scene.add("AmbientBackgroundScene", AmbientScene, true);
-    // console.log("ARIELITO DIME TU", AmbientScene.scene)
     // AmbientScene.scene.sendToBack("AmbientBackgroundScene");
     
     const eventsCenter = EventsCenterManager.getInstance();

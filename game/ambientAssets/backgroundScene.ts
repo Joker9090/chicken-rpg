@@ -25,7 +25,6 @@ export default class AmbientBackgroundScene extends Phaser.Scene{
     }
 
     create(data: { sceneKey: string }) {
-        console.log("ARIELITO DIME TU data", data)
         if (Object.keys(data).length !== 0) this.sceneKey = data.sceneKey;
         switch(this.sceneKey){
             case "MenuScene":
@@ -36,7 +35,6 @@ export default class AmbientBackgroundScene extends Phaser.Scene{
                 break;
         }
         
-        console.log("ARIELITO DIME TU")
         
     // SKY
     // const skyCam = this.cameras.add(0, 0, window.innerWidth, window.innerHeight);
