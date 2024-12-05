@@ -437,6 +437,7 @@ export class ModalBox extends Phaser.GameObjects.Container {
                             leftTextNotMoney.setVisible(false);
                             modalConfig.agreeFunction(boughtProductsOrProduct);
                             handleClose();
+                            //TODO- MEJORAR ESTO
                         }else if (!filteredProducts.find(product => product.title == inventary.find((inventaryProduct: ProductToBuy) => inventaryProduct.title == product.title)?.title)) {
                             leftTextNotMoney.setVisible(true);
                             this.agreeButton.setAlpha(0.5);
@@ -451,6 +452,7 @@ export class ModalBox extends Phaser.GameObjects.Container {
                             leftTextNotMoney.setVisible(false);
                             modalConfig.agreeFunction(boughtProductsOrProduct);
                             handleClose();
+                            //TODO- MEJORAR ESTO
                         }else if (!filteredProducts.find(product => product.title == inventary.find((inventaryProduct: ProductToBuy) => inventaryProduct.title == product.title)?.title)) {
                             leftTextNotMoney.setVisible(true);
                             this.agreeButton.setAlpha(0.5);
