@@ -6,6 +6,7 @@ import { RpgIsoSpriteBox } from "./rpgIsoSpriteBox";
 import { Player } from "./Player";
 import { RpgIsoPlayerPrincipal } from "./rpgIsoPlayerPrincipal";
 import RPG from "../rpg";
+import City from "../maps/City";
 
 export class PinIsoSpriteBox extends RpgIsoSpriteBox {
  
@@ -32,7 +33,7 @@ export class PinIsoSpriteBox extends RpgIsoSpriteBox {
     this.self.setInteractive();
     this.self.on("pointerdown", () => {
       const RPGScene = this.scene as RPG
-      // RPGScene.openModal()
+      (RPGScene.map as City).createModal(()=>{this.self.destroy()});
     })
    this.scene.add.tween({
     targets: this.self,

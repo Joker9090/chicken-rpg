@@ -154,10 +154,11 @@ export default class City {
     ];
   }
 
-  addMapFunctionalities() {
+  createModal (callBack: Function) {
     const handleAgreeModal = (amount: number, timePass: number) => {
-      this.eventCenter.emitEvent(this.eventCenter.possibleEvents.TIME_CHANGE, timePass);
+      // this.eventCenter.emitEvent(this.eventCenter.possibleEvents.TIME_CHANGE, timePass);
       this.eventCenter.emitEvent(this.eventCenter.possibleEvents.CHANGE_MONEY, amount);
+      callBack()
       // globalDataManager.passTime(1)
     }
     const cityModal: ModalConfig = {
@@ -172,6 +173,9 @@ export default class City {
       agreeFunction: handleAgreeModal,
     }
     const cityModalTest = new ModalContainer(this.scene, 0, 0, cityModal);
+  }
+
+  addMapFunctionalities() {
     if(this.scene.player){
       this.scene.player.self.setScale(0.7);
     }

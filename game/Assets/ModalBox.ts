@@ -1,5 +1,5 @@
 import { Events } from "matter";
-import GlobalDataManager from "../GlobalDataManager";
+import GlobalDataManager, { globalState } from "../GlobalDataManager";
 import RPG, { modalType } from "../rpg";
 import { ModalConfig, ProductToBuy } from "./ModalContainer";
 import EventsCenterManager from "../services/EventsCenter";
@@ -11,6 +11,7 @@ export class ModalBox extends Phaser.GameObjects.Container {
     agreeButton: Phaser.GameObjects.Image;
     cancelButton: Phaser.GameObjects.Image;
     activeTween: Phaser.Tweens.Tween | null = null;
+
     eventCenter = EventsCenterManager.getInstance();
     constructor(
         scene: RPG,
@@ -20,6 +21,7 @@ export class ModalBox extends Phaser.GameObjects.Container {
     ) {
         super(scene, x, y);
         this.scene = scene;
+
 
         const backgroundLess = scene.add.rectangle(0, 0,  window.innerWidth, window.innerHeight, 0x000000, 0.5);
         backgroundLess.setInteractive();
@@ -95,7 +97,7 @@ export class ModalBox extends Phaser.GameObjects.Container {
                     {
                         x: -2000,
                         ease: 'power3',
-                        duration: 750
+                        duration: 750,
                     },
                     /*{
                         angle: 0,
@@ -117,7 +119,7 @@ export class ModalBox extends Phaser.GameObjects.Container {
                     },*/
                 ],
                 onComplete: () => {
-                    this.setVisible(!this.visible)
+                    this.destroy(); //CHEQUEAR
                 }
             });
         }
@@ -147,6 +149,7 @@ export class ModalBox extends Phaser.GameObjects.Container {
 
         const handleClose = () => {
             tweenClose();
+
             //this.setVisible(!this.visible)
         }
 

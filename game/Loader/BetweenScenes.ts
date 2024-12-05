@@ -3,8 +3,10 @@ import PreLoadScene from "./PreLoadScene";
 import RPG from "../rpg";
 // import map from "../maps/room";
 import map from "../maps/City";
+import EventsCenterManager from "../services/EventsCenter";
 
 import MenuScene from "../MenuScene";
+import { Events } from "matter";
 
 export enum BetweenScenesStatus {
     IDLE,
@@ -19,6 +21,7 @@ export default class BetweenScenes extends Phaser.Scene {
     newSceneWith?: any;
     firstRender: boolean = true
     startTime: number = 0
+    eventCenter = EventsCenterManager.getInstance();
 
     constructor() {
         super({ key: "BetweenScenes" });
@@ -60,10 +63,10 @@ export default class BetweenScenes extends Phaser.Scene {
             this.status = BetweenScenesStatus.WAITING;
             if (this.newSceneName) {
                 if (this.sceneToStop) {
+                    this.eventCenter.turnOffAllEventsByScene(this.sceneToStop)
                     const scene = this.getSceneByName(this.sceneToStop);
                     if (scene) {
                         this.stopScene(scene, () => {
-                            
                             this.removeScene(scene, () => {
                                 if (this.newSceneName) {
                                     if (this.newSceneName == "MenuScene") {

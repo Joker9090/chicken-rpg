@@ -26,8 +26,8 @@ export default class MultiScene extends Phaser.Scene {
         this.makeTransition(this.scenekey, this.sceneToStop ?? undefined, this.sceneData ?? undefined);
       } else {
         // this.makeTransition("MenuScene", undefined);
-        this.makeTransition("RPG", undefined, "ROOM");
-        // this.makeTransition("RPG", undefined, "CITY");
+        // this.makeTransition("RPG", undefined, "ROOM");
+        this.makeTransition("RPG", undefined, "CITY");
    
       }
     });

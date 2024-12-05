@@ -3,21 +3,16 @@ import RPG from "./rpg";
 import { Events } from "matter";
 import EventsCenterManager from "./services/EventsCenter";
 import { ProductToBuy } from "./Assets/ModalContainer";
-/*import {
-  turnEventOn,
-  possibleEvents,
-  turnEventOff,
-  emitEvent,
-} from "./services/EventsCenter"; */
-// import missions from "./missions";
+
+export type globalState = {
+  playerMoney: number;
+  timeOfDay: 0 | 1 | 2 | 3;
+  newNews: boolean;
+  inventary: ProductToBuy[];
+}
 
 export default class GlobalDataManager extends Phaser.Scene {
-  private state: {
-    playerMoney: number;
-    timeOfDay: 0 | 1 | 2 | 3;
-    newNews: boolean;
-    inventary: ProductToBuy[];
-  };
+  private state: globalState;
   dayState: "IDLE" | "RUNNING" = "IDLE";
   eventCenter = EventsCenterManager.getInstance();
   constructor() {
@@ -25,40 +20,46 @@ export default class GlobalDataManager extends Phaser.Scene {
 
     //Events  -->
 
+
     this.eventCenter.turnEventOn("GlobalDataManager", this.eventCenter.possibleEvents.BUY_ITEM, (payload: ProductToBuy) => {
       this.addInventary(payload);
       this.changeMoney(-payload.reward);
-    },this);
+    }, this);
 
     this.eventCenter.turnEventOn("GlobalDataManager", this.eventCenter.possibleEvents.BUY_ITEMS, (payload: ProductToBuy[]) => {
       let moneyLess = 0;
       payload.forEach((item) => {
         this.addInventary(item);
         moneyLess += item.reward;
-        
       });
       this.changeMoney(-moneyLess);
-    },this);
+    }, this);
+
+    // this.eventCenter.turnEventOn("GlobalDataManager", this.eventCenter.possibleEvents.UPDATE, ()=>this.eventCenter.emit(this.eventCenter.possibleEvents.UPDATE_STATE) ,this);
 
     this.eventCenter.turnEventOn("GlobalDataManager", this.eventCenter.possibleEvents.GET_INVENTARY, () => {
       return this.getInventary();
-    },this);
+    }, this);
+
+    this.eventCenter.turnEventOn("GlobalDataManager", this.eventCenter.possibleEvents.UPDATE_STATE, () => {
+      return this.getState();
+    }, this);
 
     this.eventCenter.turnEventOn("GlobalDataManager", this.eventCenter.possibleEvents.GET_STATE, () => {
       return this.getState();
-    },this);
+    }, this);
 
     this.eventCenter.turnEventOn("GlobalDataManager", this.eventCenter.possibleEvents.GET_OBJECTINVENTARY, (payload: string) => {
       return this.getObjectInventary(payload);
-    },this);
+    }, this);
 
     this.eventCenter.turnEventOn("GlobalDataManager", this.eventCenter.possibleEvents.CHANGE_MONEY, (payload: number) => {
       this.changeMoney(payload);
-    },this);
+    }, this);
 
     this.eventCenter.turnEventOn("GlobalDataManager", this.eventCenter.possibleEvents.TIME_CHANGE, (payload: number) => {
       this.passTime(payload);
-    },this);
+    }, this);
 
     // <--- Events
     // axios
@@ -73,7 +74,7 @@ export default class GlobalDataManager extends Phaser.Scene {
       // news: any[{}]
     };
   }
-  
+
   // getRandomMissions(){
   //   missions.random()
   // }
@@ -82,8 +83,15 @@ export default class GlobalDataManager extends Phaser.Scene {
     this.state.newNews = state;
   }
 
+
+  changeState(key: string, value: string | number | boolean) {
+    this.state = { ...this.state, [key]: value }
+    this.eventCenter.emit(this.eventCenter.possibleEvents.UPDATE_STATE);
+  }
+
   changeMoney(amount: number) {
-    this.state.playerMoney += amount;
+    this.changeState("playerMoney", this.state.playerMoney + amount);
+    // this.state.playerMoney += amount;
   }
 
   passTime(amount: number) {
@@ -101,9 +109,9 @@ export default class GlobalDataManager extends Phaser.Scene {
   }
 
   addInventary(item: ProductToBuy) {
-    if(this.state.inventary.some(product => product.title === item.title)) {
+    if (this.state.inventary.some(product => product.title === item.title)) {
       return;
-    }else {
+    } else {
       this.state.inventary.push(item);
     }
   }
@@ -124,7 +132,7 @@ export default class GlobalDataManager extends Phaser.Scene {
     const eventCenter = EventsCenterManager.getInstance();
 
     const timer0 = this.time.addEvent({
-      delay: 10000, // ms
+      delay: 1000, // ms
       callback: () => {
         eventCenter.emitEvent(eventCenter.possibleEvents.READY, null);
         this.newNews(true);
@@ -134,5 +142,5 @@ export default class GlobalDataManager extends Phaser.Scene {
     });
   }
 
-  update() {}
+  update() { }
 }

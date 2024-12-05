@@ -40,6 +40,8 @@ class EventsCenterManager extends Phaser.Events.EventEmitter {
                 GET_OBJECTINVENTARY: "getObjectInventary",
                 CHANGE_MONEY: "changeMoney",
                 TIME_CHANGE: "timeChange",
+                UPDATE_STATE: "updateState",
+                UPDATE: "update",
             }
 
         }
