@@ -507,7 +507,7 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
 
   move(direction: string, newX: number, newY: number) {
     this.clearPossibleMovements()
-    //this.self.play("idle-" + this.direction);
+    this.self.play("idle-" + this.direction);
     this.self.play("walk-" + direction);
     this.facingDirection = direction;
     if (this.matrixPosition) {

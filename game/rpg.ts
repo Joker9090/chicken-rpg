@@ -155,7 +155,7 @@ export default class RPG extends Scene {
       if (index >= 0 && index <= 3) {
         this.anims.create({
           key: posiblePositions[index],
-          frames: this.anims.generateFrameNumbers("player", {
+          frames: this.anims.generateFrameNumbers("playerIdle", {
             start: index === 0 ? 14 : index === 1 ? 34 : index === 2 ? 55 : 65,
             end: index === 0 ? 14 : index === 1 ? 34 : index === 2 ? 55 : 65,
           }),
