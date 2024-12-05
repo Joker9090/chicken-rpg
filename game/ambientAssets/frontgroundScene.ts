@@ -4,7 +4,7 @@ export default class AmbientFrontgroundScene extends Phaser.Scene{
     snowFlake?: Phaser.GameObjects.Image;
 
     constructor() {
-        super({ key: "ambientFrontgroundScene" });
+        super({ key: "AmbientFrontgroundScene" });
     }
 
     create(){

@@ -1,3 +1,4 @@
+import { start } from "repl";
 import MultiScene from "./MultiScene";
 import PreLoadScene from "./PreLoadScene";
 
@@ -10,25 +11,57 @@ const loadAssets = {
 
   BaseLoad: {
     assets: [
+      // player
+      ["spritesheet", "player", "/images/chicken/spritesheetPlayer.png", { frameWidth: 200, frameHeight: 250, startFrame: 0 }],
+
+      // between scenes
       ["image", "block", "/50x50.png"],
+
+      // menu
       ["image", "backgroundCity", "/images/menuScene/backgroundCity.png"],
+
+      // room
+      ["image", "room1", "/assets/room/room1.png"],
+      ["image", "room2", "/assets/room/room2.png"],
+      ["image", "HabitacionFinalMai", "/assets/room/HabitacionFinalMai.png"],
+      ["image", "pcGlow", "/assets/room/CompuGlow.png"],
+      ["image", "cama", "/assets/room/cama.png"],
+      ["image", "puertaGlow", "/assets/room/PuertaGlow.png"],
+
+      // backgroundScenes ambient
       ["image", "statsBar", "/images/UIChicken/statsBar.png"],
       ["image", "clockDay", "/images/UIChicken/clockDay.png"],
+      ["image", "backgroundSky", "/images/menuScene/skyBack.png"],
+      ["image", "backgroundMenu", "/images/menuScene/backgroundMenu.png"],
+      ["image", "day", "/ambient/day.png"],
+      ["image", "night", "/ambient/night.png"],
+      ["image", "stars", "/ambient/stars.png"],
+      ["image", "snowFlake", "/ambient/snowFlake.png"],
+
+      // UI
       ["image", "clockPointer", "/images/UIChicken/clockPointer.png"],
       ["image", "lvlMarker", "/images/UIChicken/lvlMarker.png"],
       ["image", "goBack", "/images/UIChicken/goBack.png"],
       ["image", "goRoom", "/images/UIChicken/goRoom.png"],
-      ["image", "backgroundSky", "/images/menuScene/skyBack.png"],
       ["image", "playButton", "/images/menuScene/playButton.png"],
-      ["image", "backgroundMenu", "/images/menuScene/backgroundMenu.png"],
       ["image", "leftMenuItem", "/images/menuScene/leftMenuItem.png"],
       ["image", "rightMenuItem", "/images/menuScene/rightMenuItem.png"],
       ["image", "reloj", "/assets/UI/UILevel/reloj.png"],
+      ["image", "coinUi", "/assets/UI/UiChiken/coinUi.png"],
+      ["image", "barEmpty", "/assets/UI/UiChiken/barEmpty.png"],
+      ["image", "varStar", "/assets/UI/UiChiken/varStar.png"],
+      ["image", "varFullLila", "/assets/UI/UiChiken/varFullLila.png"],
+      ["image", "varFullYellow", "/assets/UI/UiChiken/varFullYellow.png"],
+      ["image", "varSmile", "/assets/UI/UiChiken/varSmile.png"],
+      ["image", "iconNewsOff", "/assets/UI/UiChiken/iconNewsOff.png"],
+      ["image", "iconNewsOn", "/assets/UI/UiChiken/iconNews.png"],
+      ["image", "varFull", "/assets/chickenUIAssets/varFull.png"],
+      ["image", "varEmpty", "/assets/chickenUIAssets/varEmpty.png"],
+      ["image", "varSelector", "/assets/chickenUIAssets/varSelector.png"],
+
+
+      // tiles  
       ["image", "tile", "/images/bloque.png"],
-      ["image", "imageModalPhoto", "/assets/modalAssets/imageModalPhoto.png"],
-      ["image", "modalNews", "/assets/modalAssets/modalNews.png"],
-      ["image", "fotoCamara", "/assets/modalAssets/fotoCamara.png"],
-      ["image", "pin", "/images/pin.png"],
       ["image", "cube1", "/images/cube1.png"],
       ["image", "street-a", "/images/street-a.png"],
       ["image", "street-b", "/images/street-b.png"],
@@ -40,16 +73,61 @@ const loadAssets = {
       ["image", "blockBuilding-b", "/images/bloque4TEST.png"],
       ["image", "blockBuildingBase", "/images/bloque2TEST.png"],
       ["image", "blockBuildingEmpty", "/images/bloque5TEST.png"],
-      ["image", "tree", "/images/chicken/tree.png"],
+
+      // items
       ["image", "traffic-light-a", "/images/traffic-light-a.png"],
       ["image", "traffic-light-b", "/images/traffic-light-b.png"],
-      ["image", "smilyFace", "/assets/UI/UiChiken/smileFace.png"],
-      // ["svg", "chicken", "/images/chicken/spritesheetChicken.svg",
-      //   {
-      //     frameWidth: 138,
-      //     frameHeight: 96,
-      //     startFrame: 0,
-      //   }],
+      ["image", "tree", "/images/chicken/tree.png"],
+      ["image", "pin", "/images/pin.png"],
+
+      // modal
+      ["image", "imageModalPhoto", "/assets/modalAssets/imageModalPhoto.png"],
+      ["image", "modalNews", "/assets/modalAssets/modalNews.png"],
+      ["image", "fotoCamara", "/assets/modalAssets/fotoCamara.png"],
+      ["image", "modalBackground", "/assets/modalAssets/modal.png"],
+      ["image", "desafioTest1", "/assets/modalAssets/maskImg2.png"],
+      ["image", "desafioTest2", "/assets/modalAssets/maskImg3.png"],
+      ["image", "barraTitle", "/assets/modalAssets/barraTittle.png"],
+      ["image", "btnExit", "/assets/modalAssets/btnExit.png"],
+      ["image", "barritaOff", "/assets/modalAssets/barritaOff.png"],
+      ["image", "barritaOn", "/assets/modalAssets/barritaOn.png"],
+      ["image", "btn", "/assets/modalAssets/btn.png"],
+      ["image", "iconClock", "/assets/modalAssets/iconClock.png"],
+      ["image", "iconMoon", "/assets/modalAssets/iconMoon.png"],
+      ["image", "iconSun", "/assets/modalAssets/iconSun.png"],
+      ["image", "iconSunrise", "/assets/modalAssets/iconSunrise.png"],
+      ["image", "iconSunset", "/assets/modalAssets/iconSunset.png"],
+      ["image", "coin", "/assets/modalAssets/coin.png"],
+      ["image", "camaraGrey", "/assets/modalAssets/masUi/camaraGrey.png"],
+      ["image", "camaraWhite", "/assets/modalAssets/masUi/camaraWhite.png"],
+      ["image", "camaraGreen", "/assets/modalAssets/masUi/camaraGreen.png"],
+      ["image", "camaraShop", "/assets/modalAssets/camaraShop.png"],
+      ["image", "camaraShopOn", "/assets/modalAssets/camaraShopOn.png"],
+
+      //Buildings
+      ["image", "test1", "/images/buildingTest/test1.png"],
+      ["image", "test2", "/images/buildingTest/test2.png"],
+      ["image", "test3", "/images/buildingTest/test3.png"],
+      ["image", "test4", "/images/buildingTest/test4.png"],
+      ["image", "test5", "/images/buildingTest/test5.png"],
+      ["image", "test1B", "/images/buildingTest/probando1.png"],
+      ["image", "test2B", "/images/buildingTest/probando2.png"],
+      ["image", "test3B", "/images/buildingTest/probando3.png"],
+      ["image", "test4B", "/images/buildingTest/probando4.png"],
+      ["image", "test5B", "/images/buildingTest/probando5.png"],
+      ["image", "buildingDoorLeftCorner", "/images/buildingTest/buildingDoorLeftCorner.png"],
+      ["image", "buildingDoorRightCorner", "/images/buildingTest/buildingDoorRightCorner.png"],
+      ["image", "doorLeftSide", "/images/buildingTest/doorLeftSide.png"],
+      ["image", "doorRightSide", "/images/buildingTest/doorRightSide.png"],
+      ["image", "solidBlock", "/images/buildingTest/solidBlock.png"],
+      ["image", "window1", "/images/buildingTest/window1.png"],
+      ["image", "window2", "/images/buildingTest/window2.png"],
+      ["image", "window3", "/images/buildingTest/window3.png"],
+      ["image", "windowB1", "/images/buildingTest/windowB1.png"],
+      ["image", "windowB2", "/images/buildingTest/windowB2.png"],
+      ["image", "windowB3", "/images/buildingTest/windowB3.png"],
+
+      // deprecated? 
       ["assetWithCallback", (scene: Phaser.Scene) => {
         for (let index = 0; index < 6; index++) {
           scene.load.spritesheet(
@@ -89,33 +167,7 @@ const loadAssets = {
           );
         }
       }],
-      ["image", "test1", "/images/buildingTest/test1.png"],
-      ["image", "test2", "/images/buildingTest/test2.png"],
-      ["image", "test3", "/images/buildingTest/test3.png"],
-      ["image", "test4", "/images/buildingTest/test4.png"],
-      ["image", "test5", "/images/buildingTest/test5.png"],
-      ["image", "test1B", "/images/buildingTest/probando1.png"],
-      ["image", "test2B", "/images/buildingTest/probando2.png"],
-      ["image", "test3B", "/images/buildingTest/probando3.png"],
-      ["image", "test4B", "/images/buildingTest/probando4.png"],
-      ["image", "test5B", "/images/buildingTest/probando5.png"],
-      ["image", "buildingDoorLeftCorner", "/images/buildingTest/buildingDoorLeftCorner.png"],
-      ["image", "buildingDoorRightCorner", "/images/buildingTest/buildingDoorRightCorner.png"],
-      ["image", "doorLeftSide", "/images/buildingTest/doorLeftSide.png"],
-      ["image", "doorRightSide", "/images/buildingTest/doorRightSide.png"],
-      ["image", "solidBlock", "/images/buildingTest/solidBlock.png"],
-      ["image", "window1", "/images/buildingTest/window1.png"],
-      ["image", "window2", "/images/buildingTest/window2.png"],
-      ["image", "window3", "/images/buildingTest/window3.png"],
-      ["image", "windowB1", "/images/buildingTest/windowB1.png"],
-      ["image", "windowB2", "/images/buildingTest/windowB2.png"],
-      ["image", "windowB3", "/images/buildingTest/windowB3.png"],
 
-      // ambient
-      ["image", "day", "/ambient/day.png"],
-      ["image", "night", "/ambient/night.png"],
-      ["image", "stars", "/ambient/stars.png"],
-      ["image", "snowFlake", "/ambient/snowFlake.png"],
     ]
   },
 };
@@ -203,18 +255,18 @@ class AssetsLoader {
         loadAssets[scenesTitles[i]].assets.map((sceneAssetConfig) => {
           const type = sceneAssetConfig[0] as LoadTypes;
           if (type !== "assetWithCallback") {
-          const name = sceneAssetConfig[1] as string;
-          const src = sceneAssetConfig[2] as string;
-          const config = sceneAssetConfig[3] as any;
-          if (config) {
-            this.scene.load[type](name, src, config);
+            const name = sceneAssetConfig[1] as string;
+            const src = sceneAssetConfig[2] as string;
+            const config = sceneAssetConfig[3] as any;
+            if (config) {
+              this.scene.load[type](name, src, config);
+            } else {
+              this.scene.load[type](name, src);
+            }
           } else {
-            this.scene.load[type](name, src);
+            const callback = sceneAssetConfig[1] as Function;
+            callback(this.scene);
           }
-        } else {
-          const callback = sceneAssetConfig[1] as Function;
-          callback(this.scene);
-        }
         });
       }
       const ArcadeFont = this.scene.add.text(0, 0, " .", {

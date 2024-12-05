@@ -9,6 +9,11 @@ export default class AmbientBackgroundScene extends Phaser.Scene{
         y: number
     } 
     sceneKey: string;
+    
+  // sky1?: Phaser.GameObjects.Rectangle;
+  // sky2?: Phaser.GameObjects.Rectangle;
+  // sky3?: Phaser.GameObjects.Rectangle;
+  // sky4?: Phaser.GameObjects.Rectangle;
     constructor(sceneKey: string) {
         super({ key: "AmbientBackgroundScene" });
         this.middlePoint = {
@@ -32,5 +37,67 @@ export default class AmbientBackgroundScene extends Phaser.Scene{
         }
         
         console.log("ARIELITO DIME TU")
+        
+    // SKY
+    // const skyCam = this.cameras.add(0, 0, window.innerWidth, window.innerHeight);
+    // this.cameras.cameras = [skyCam, this.cameras.main];
+
+    // this.sky4 = this.add.rectangle(0, 0, window.innerWidth, window.innerHeight, 0x1f3558).setAlpha(0).setOrigin(0)
+    // this.sky1 = this.add.rectangle(0, 0, window.innerWidth, window.innerHeight, 0xaefbff).setAlpha(0).setOrigin(0)
+    // this.sky2 = this.add.rectangle(0, 0, window.innerWidth, window.innerHeight, 0x4ddbff).setAlpha(0).setOrigin(0)
+    // this.sky3 = this.add.rectangle(0, 0, window.innerWidth, window.innerHeight, 0xffd194).setAlpha(0).setOrigin(0)
+    // const skies = [this.sky1, this.sky2, this.sky3, this.sky4]
+
+    // this.cameras.main.ignore([this.sky1, this.sky2, this.sky3, this.sky4])
+
+
+
+    // makeDayCycle(0, makeDayCycle)
+    // SKY 
     }
+
+    
+  // makeDayCycle = (index: number, callback: Function) => {
+  //   if (this.sky1 && this.sky2 && this.sky3 && this.sky4) {
+  //     const DayDuration = 2000
+  //     const skies = [this.sky1, this.sky2, this.sky3, this.sky4]
+  //     if (index === 3) {
+  //       this.tweens.add({
+  //         targets: skies[index],
+  //         alpha: 0,
+  //         duration: DayDuration / 4,
+  //         onComplete: () => {
+  //           skies[index].setAlpha(0)
+  //         }
+  //       })
+  //       this.tweens.add({
+  //         targets: skies[0],
+  //         alpha: 1,
+  //         duration: DayDuration / 4,
+  //         onComplete: () => {
+  //           skies[0].setAlpha(1)
+  //           callback(0, callback)
+  //         }
+  //       })
+  //     } else {
+  //       this.tweens.add({
+  //         targets: skies[index],
+  //         alpha: 0,
+  //         duration: DayDuration / 4,
+  //         onComplete: () => {
+  //           skies[index].setAlpha(0)
+  //         }
+  //       })
+  //       this.tweens.add({
+  //         targets: skies[index + 1],
+  //         alpha: 1,
+  //         duration: DayDuration / 4,
+  //         onComplete: () => {
+  //           skies[index + 1].setAlpha(1)
+  //           callback(index + 1, callback)
+  //         }
+  //       })
+  //     }
+  //   }
+  // }
 }

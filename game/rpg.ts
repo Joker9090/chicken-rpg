@@ -68,11 +68,6 @@ export default class RPG extends Scene {
 
   ambientScenes: Phaser.Scene[] = [];
 
-  // sky1?: Phaser.GameObjects.Rectangle;
-  // sky2?: Phaser.GameObjects.Rectangle;
-  // sky3?: Phaser.GameObjects.Rectangle;
-  // sky4?: Phaser.GameObjects.Rectangle;
-
   constructor(mapType: 'ROOM' | 'CITY') {
     const sceneConfig = {
       key: "RPG",
@@ -96,143 +91,134 @@ export default class RPG extends Scene {
         this.mapBlueprint = this.map.map.map((m) => (typeof m === "string" ? m : JSON.stringify(m)));
         break;
     }
+
     this.tileCreator = new TileCreator(this)
   }
 
   preload() {
-    // ASSETS UI ->
-    this.load.image("background", "/assets/chickenUIAssets/background.png");
-    this.load.image("settingsIcon", "/assets/chickenUIAssets/settingsIcon.png");
-    this.load.image("helpIcon", "/assets/chickenUIAssets/helpIcon.png");
+    // // ASSETS UI ->
+    // this.load.image("background", "/assets/chickenUIAssets/background.png");
+    // this.load.image("settingsIcon", "/assets/chickenUIAssets/settingsIcon.png");
+    // this.load.image("helpIcon", "/assets/chickenUIAssets/helpIcon.png");
 
-    this.load.image("exit", "/assets/chickenUIAssets/cerrar.png");
-    this.load.image("exitClick", "/assets/chickenUIAssets/cerrarClick.png");
-    this.load.image("exitHover", "/assets/chickenUIAssets/cerrarHover.png");
+    // this.load.image("exit", "/assets/chickenUIAssets/cerrar.png");
+    // this.load.image("exitClick", "/assets/chickenUIAssets/cerrarClick.png");
+    // this.load.image("exitHover", "/assets/chickenUIAssets/cerrarHover.png");
 
-    this.load.image("save", "/assets/chickenUIAssets/save.png");
-    this.load.image("saveClick", "/assets/chickenUIAssets/saveClick.png");
-    this.load.image("saveHover", "/assets/chickenUIAssets/saveHover.png");
+    // this.load.image("save", "/assets/chickenUIAssets/save.png");
+    // this.load.image("saveClick", "/assets/chickenUIAssets/saveClick.png");
+    // this.load.image("saveHover", "/assets/chickenUIAssets/saveHover.png");
 
-    this.load.image("cancel", "/assets/chickenUIAssets/cancel.png");
-    this.load.image("cancelClick", "/assets/chickenUIAssets/cancelClick.png");
-    this.load.image("cancelHover", "/assets/chickenUIAssets/cancelHover.png");
+    // this.load.image("cancel", "/assets/chickenUIAssets/cancel.png");
+    // this.load.image("cancelClick", "/assets/chickenUIAssets/cancelClick.png");
+    // this.load.image("cancelHover", "/assets/chickenUIAssets/cancelHover.png");
 
-    this.load.image("on", "/assets/chickenUIAssets/on.png");
-    this.load.image("off", "/assets/chickenUIAssets/off.png");
+    // this.load.image("on", "/assets/chickenUIAssets/on.png");
+    // this.load.image("off", "/assets/chickenUIAssets/off.png");
 
-    this.load.image("varFull", "/assets/chickenUIAssets/varFull.png");
-    this.load.image("varEmpty", "/assets/chickenUIAssets/varEmpty.png");
-    this.load.image("varSelector", "/assets/chickenUIAssets/varSelector.png");
+    // this.load.image("varFull", "/assets/chickenUIAssets/varFull.png");
+    // this.load.image("varEmpty", "/assets/chickenUIAssets/varEmpty.png");
+    // this.load.image("varSelector", "/assets/chickenUIAssets/varSelector.png");
 
-    this.load.image("reloj", "/assets/UI/UILevel/reloj.png");
+    // this.load.image("reloj", "/assets/UI/UILevel/reloj.png");
 
-    this.load.image("coinUi", "/assets/UI/UiChiken/coinUi.png");
-    this.load.image("barEmpty", "/assets/UI/UiChiken/barEmpty.png");
-    this.load.image("varStar", "/assets/UI/UiChiken/varStar.png");
-    this.load.image("varFullLila", "/assets/UI/UiChiken/varFullLila.png");
-    this.load.image("varFullYellow", "/assets/UI/UiChiken/varFullYellow.png");
-    this.load.image("varSmile", "/assets/UI/UiChiken/varSmile.png");
-    this.load.image("iconNewsOff", "/assets/UI/UiChiken/iconNewsOff.png");
-    this.load.image("iconNewsOn", "/assets/UI/UiChiken/iconNews.png");
+    // this.load.image("coinUi", "/assets/UI/UiChiken/coinUi.png");
+    // this.load.image("barEmpty", "/assets/UI/UiChiken/barEmpty.png");
+    // this.load.image("varStar", "/assets/UI/UiChiken/varStar.png");
+    // this.load.image("varFullLila", "/assets/UI/UiChiken/varFullLila.png");
+    // this.load.image("varFullYellow", "/assets/UI/UiChiken/varFullYellow.png");
+    // this.load.image("varSmile", "/assets/UI/UiChiken/varSmile.png");
+    // this.load.image("iconNewsOff", "/assets/UI/UiChiken/iconNewsOff.png");
+    // this.load.image("iconNewsOn", "/assets/UI/UiChiken/iconNews.png");
 
 
     // <- ASSETS UI
 
     //Modal assets
-    this.load.image("modalBackground", "/assets/modalAssets/modal.png");
-    this.load.image("desafioTest1", "/assets/modalAssets/maskImg2.png");
-    this.load.image("desafioTest2", "/assets/modalAssets/maskImg3.png");
-    this.load.image("barraTitle", "/assets/modalAssets/barraTittle.png");
-    this.load.image("btnExit", "/assets/modalAssets/btnExit.png");
-    this.load.image("barritaOff", "/assets/modalAssets/barritaOff.png");
-    this.load.image("barritaOn", "/assets/modalAssets/barritaOn.png");
-    this.load.image("btn", "/assets/modalAssets/btn.png");
-    this.load.image("iconClock", "/assets/modalAssets/iconClock.png");
-    this.load.image("iconMoon", "/assets/modalAssets/iconMoon.png");
-    this.load.image("iconSun", "/assets/modalAssets/iconSun.png");
-    this.load.image("iconSunrise", "/assets/modalAssets/iconSunrise.png");
-    this.load.image("iconSunset", "/assets/modalAssets/iconSunset.png");
-    this.load.image("coin", "/assets/modalAssets/coin.png");
-    this.load.image("camaraGrey", "/assets/modalAssets/masUi/camaraGrey.png");
-    this.load.image("camaraWhite", "/assets/modalAssets/masUi/camaraWhite.png");
-    this.load.image("camaraGreen", "/assets/modalAssets/masUi/camaraGreen.png");
-    this.load.image("camaraShop", "/assets/modalAssets/camaraShop.png");
-    this.load.image("camaraShopOn", "/assets/modalAssets/camaraShopOn.png");
+    // this.load.image("modalBackground", "/assets/modalAssets/modal.png");
+    // this.load.image("desafioTest1", "/assets/modalAssets/maskImg2.png");
+    // this.load.image("desafioTest2", "/assets/modalAssets/maskImg3.png");
+    // this.load.image("barraTitle", "/assets/modalAssets/barraTittle.png");
+    // this.load.image("btnExit", "/assets/modalAssets/btnExit.png");
+    // this.load.image("barritaOff", "/assets/modalAssets/barritaOff.png");
+    // this.load.image("barritaOn", "/assets/modalAssets/barritaOn.png");
+    // this.load.image("btn", "/assets/modalAssets/btn.png");
+    // this.load.image("iconClock", "/assets/modalAssets/iconClock.png");
+    // this.load.image("iconMoon", "/assets/modalAssets/iconMoon.png");
+    // this.load.image("iconSun", "/assets/modalAssets/iconSun.png");
+    // this.load.image("iconSunrise", "/assets/modalAssets/iconSunrise.png");
+    // this.load.image("iconSunset", "/assets/modalAssets/iconSunset.png");
+    // this.load.image("coin", "/assets/modalAssets/coin.png");
+    // this.load.image("camaraGrey", "/assets/modalAssets/masUi/camaraGrey.png");
+    // this.load.image("camaraWhite", "/assets/modalAssets/masUi/camaraWhite.png");
+    // this.load.image("camaraGreen", "/assets/modalAssets/masUi/camaraGreen.png");
+    // this.load.image("camaraShop", "/assets/modalAssets/camaraShop.png");
+    // this.load.image("camaraShopOn", "/assets/modalAssets/camaraShopOn.png");
 
-    //Room assets
-    this.load.image("room1", "/assets/room/room1.png");
-    this.load.image("room2", "/assets/room/room2.png");
-    this.load.image("HabitacionFinalMai", "/assets/room/HabitacionFinalMai.png");
-    this.load.image("pcGlow", "/assets/room/CompuGlow.png");
-    this.load.image("cama", "/assets/room/cama.png");
-    this.load.image("puertaGlow", "/assets/room/PuertaGlow.png");
+    // //Room assets
+    // this.load.image("room1", "/assets/room/room1.png");
+    // this.load.image("room2", "/assets/room/room2.png");
+    // this.load.image("HabitacionFinalMai", "/assets/room/HabitacionFinalMai.png");
+    // this.load.image("pcGlow", "/assets/room/CompuGlow.png");
+    // this.load.image("cama", "/assets/room/cama.png");
+    // this.load.image("puertaGlow", "/assets/room/PuertaGlow.png");
 
 
     // otros assets
-    this.load.image("tile", "/images/bloque.png");
-    this.load.image("pin", "/images/pin.png");
-    this.load.image("street-a", "/images/street-a.png");
-    this.load.image("street-b", "/images/street-b.png");
-    this.load.image("street-c", "/images/street-c.png");
-    this.load.image("cube1", "/images/cube1.png");
-    this.load.image("traffic-light-a", "/images/traffic-light-a.png");
-    this.load.image("traffic-light-b", "/images/traffic-light-b.png");
-    this.load.image("grassTEST", "/images/bloque1TEST.png");
-    this.load.image("buildingTEST", "/images/building1TEST.png");
-    this.load.image("blockBuilding", "/images/bloque3TEST.png");
-    this.load.image("blockBuilding-b", "/images/bloque4TEST.png");
-    this.load.image("blockBuildingBase", "/images/bloque2TEST.png");
-    this.load.image("blockBuildingEmpty", "/images/bloque5TEST.png");
+    // this.load.image("tile", "/images/bloque.png");
+    // this.load.image("pin", "/images/pin.png");
+    // this.load.image("street-a", "/images/street-a.png");
+    // this.load.image("street-b", "/images/street-b.png");
+    // this.load.image("street-c", "/images/street-c.png");
+    // this.load.image("cube1", "/images/cube1.png");
+    // this.load.image("traffic-light-a", "/images/traffic-light-a.png");
+    // this.load.image("traffic-light-b", "/images/traffic-light-b.png");
+    // this.load.image("grassTEST", "/images/bloque1TEST.png");
+    // this.load.image("buildingTEST", "/images/building1TEST.png");
+    // this.load.image("blockBuilding", "/images/bloque3TEST.png");
+    // this.load.image("blockBuilding-b", "/images/bloque4TEST.png");
+    // this.load.image("blockBuildingBase", "/images/bloque2TEST.png");
+    // this.load.image("blockBuildingEmpty", "/images/bloque5TEST.png");
+
+    // this.load.spritesheet("chicken", "/images/chicken/spritesheetChicken.png", {
+    //   frameWidth: 552 / 4,
+    //   frameHeight: 1152 / 12,
+    //   startFrame: 0,
+    // });
+
+    // this.load.spritesheet("player", "/images/chicken/spritesheetPlayer.png", {
+    //   frameWidth: 200,
+    //   frameHeight: 250,
+    //   startFrame: 0,
+    // });
 
 
 
-    this.load.spritesheet("chicken", "/images/chicken/spritesheetChicken.png", {
-      frameWidth: 552 / 4,
-      frameHeight: 1152 / 12,
-      startFrame: 0,
-    });
+    // this.load.image("tree", "/images/chicken/tree.png");
 
-    this.load.spritesheet("player", "/images/chicken/spritesheetPlayer.png", {
-      frameWidth: 200,
-      frameHeight: 250,
-      startFrame: 0,
-    });
+    // for (let index = 0; index < 6; index++) {
+    //   this.load.spritesheet(
+    //     `bloque-${index}`,
+    //     "/images/chicken/piedraAbajo.png",
+    //     {
+    //       frameWidth: 100,
+    //       frameHeight: 100,
+    //       startFrame: index,
+    //     }
+    //   );
+    // }
 
-
-
-    this.load.image("tree", "/images/chicken/tree.png");
-
-    for (let index = 0; index < 6; index++) {
-      this.load.spritesheet(
-        `bloque-${index}`,
-        "/images/chicken/piedraAbajo.png",
-        {
-          frameWidth: 100,
-          frameHeight: 100,
-          startFrame: index,
-        }
-      );
-    }
-
-    for (let index = 0; index < 6; index++) {
-      this.load.spritesheet(
-        `semibloque-${index}`,
-        "/images/chicken/piedraAbajo.png",
-        {
-          frameWidth: 100,
-          frameHeight: 100,
-          startFrame: index + 6,
-        }
-      );
-    }
-
-    // manejo de ambient
-
-    // const AmbientScene = new AmbientBackgroundScene("DayAndNight");
-    // this.ambientScenes.push(AmbientScene);
-    // this.scene.add("AmbientBackgroundScene", AmbientScene, true);
-    // console.log("ARIELITO DIME TU", AmbientScene.scene)
-    // AmbientScene.scene.sendToBack("AmbientBackgroundScene");
+    // for (let index = 0; index < 6; index++) {
+    //   this.load.spritesheet(
+    //     `semibloque-${index}`,
+    //     "/images/chicken/piedraAbajo.png",
+    //     {
+    //       frameWidth: 100,
+    //       frameHeight: 100,
+    //       startFrame: index + 6,
+    //     }
+    //   );
+    // }
     
     let AmbientBackScene = this.game.scene.getScene("AmbientBackgroundScene")
     if (!AmbientBackScene) {
@@ -265,96 +251,10 @@ export default class RPG extends Scene {
   }
 
 
-  // openModal() {
-  //   const globalDataManager = this.game.scene.getScene("GlobalDataManager") as GlobalDataManager
-  //   const handleAgreeModal = () => {
-  //     globalDataManager.passTime(1)
-  //     this.isoGroup?.getChildren().forEach((child) => {
-  //       if (child.type === "PIN") {
-  //         const pin = child as unknown as PinIsoSpriteBox;
-  //         pin.self.destroy();
-  //       }
-  //     });
-  //   }
-  //   const cityModal: ModalConfig = {
-  //     type: modalType.QUEST,
-  //     title: "FOTOS EMBLEMATICAS",
-  //     picture: "fotoCamara",
-  //     time: "6",
-  //     text: "Sal a tomar fotos al parque.",
-  //     reward: "15",
-  //     agreeFunction: handleAgreeModal,
-  //   }
-  //   const ModalTest = new ModalContainer(this, 0, 0, cityModal);
-  // }
 
-
-  // makeDayCycle = (index: number, callback: Function) => {
-  //   if (this.sky1 && this.sky2 && this.sky3 && this.sky4) {
-  //     const DayDuration = 2000
-  //     const skies = [this.sky1, this.sky2, this.sky3, this.sky4]
-  //     if (index === 3) {
-  //       this.tweens.add({
-  //         targets: skies[index],
-  //         alpha: 0,
-  //         duration: DayDuration / 4,
-  //         onComplete: () => {
-  //           skies[index].setAlpha(0)
-  //         }
-  //       })
-  //       this.tweens.add({
-  //         targets: skies[0],
-  //         alpha: 1,
-  //         duration: DayDuration / 4,
-  //         onComplete: () => {
-  //           skies[0].setAlpha(1)
-  //           callback(0, callback)
-  //         }
-  //       })
-  //     } else {
-  //       this.tweens.add({
-  //         targets: skies[index],
-  //         alpha: 0,
-  //         duration: DayDuration / 4,
-  //         onComplete: () => {
-  //           skies[index].setAlpha(0)
-  //         }
-  //       })
-  //       this.tweens.add({
-  //         targets: skies[index + 1],
-  //         alpha: 1,
-  //         duration: DayDuration / 4,
-  //         onComplete: () => {
-  //           skies[index + 1].setAlpha(1)
-  //           callback(index + 1, callback)
-  //         }
-  //       })
-  //     }
-  //   }
-  // }
 
   create() {
-
-
     this.isoGroup = this.add.group();
-
-    // SKY
-    // const skyCam = this.cameras.add(0, 0, window.innerWidth, window.innerHeight);
-    // this.cameras.cameras = [skyCam, this.cameras.main];
-
-    // this.sky4 = this.add.rectangle(0, 0, window.innerWidth, window.innerHeight, 0x1f3558).setAlpha(0).setOrigin(0)
-    // this.sky1 = this.add.rectangle(0, 0, window.innerWidth, window.innerHeight, 0xaefbff).setAlpha(0).setOrigin(0)
-    // this.sky2 = this.add.rectangle(0, 0, window.innerWidth, window.innerHeight, 0x4ddbff).setAlpha(0).setOrigin(0)
-    // this.sky3 = this.add.rectangle(0, 0, window.innerWidth, window.innerHeight, 0xffd194).setAlpha(0).setOrigin(0)
-    // const skies = [this.sky1, this.sky2, this.sky3, this.sky4]
-
-    // this.cameras.main.ignore([this.sky1, this.sky2, this.sky3, this.sky4])
-
-
-
-    // makeDayCycle(0, makeDayCycle)
-    // SKY 
-
 
     this.isoPhysics.world.setBounds(-1024, -1024, 1024 * 2, 1024 * 4);
     this.isoPhysics.projector.origin.setTo(0.5, 0.3); // permitime dudas
@@ -368,8 +268,8 @@ export default class RPG extends Scene {
     // agregamos controles de teclado
     this.cursors = this.input.keyboard.createCursorKeys();
 
-    // una creacion de un group para guardar todos los tiles
-
+    
+    // esto va al player file
     const posiblePositions = [
       "idle-w",
       "idle-s",
@@ -404,6 +304,7 @@ export default class RPG extends Scene {
         });
       }
     }
+
 
     // crea lo tiles
     this.spawnTiles();
