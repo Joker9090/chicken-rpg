@@ -8,7 +8,7 @@ export default class AmbientFrontgroundScene extends Phaser.Scene{
     }
 
     create(){
-        this.snowFlake = this.add.image(window.innerWidth/2, -200, "snowFlake").setScale(0.1);
+        // this.snowFlake = this.add.image(window.innerWidth/2, -200, "snowFlake").setScale(0.1);
 
         // this.add.particles(0, 100, 'snowFlake', {
         //     x: { start: window.innerWidth/2, end: 640, steps: 16, yoyo: true },
@@ -18,24 +18,24 @@ export default class AmbientFrontgroundScene extends Phaser.Scene{
         //     scale: 0.15
         // });
 
-        this.tweens.add({
-            targets:[this.snowFlake],
-            y: window.innerHeight + 200,
-            duration: 4000,
-            repeat: -1,
-            hold: 500,
-            onComplete: () => {
-                this.snowFlake?.setPosition(Math.random() * window.innerWidth, -200);
-            },
-            ease: 'ease'
-        })
-        this.tweens.add({
-            targets:[this.snowFlake],
-            x: '+=25',
-            duration: 4000,
-            repeat: -1,
-            hold: 500,
-            ease: 'ease'
-        })
+        // this.tweens.add({
+        //     targets:[this.snowFlake],
+        //     y: window.innerHeight + 200,
+        //     duration: 4000,
+        //     repeat: -1,
+        //     hold: 500,
+        //     onComplete: () => {
+        //         this.snowFlake?.setPosition(Math.random() * window.innerWidth, -200);
+        //     },
+        //     ease: 'ease'
+        // })
+        // this.tweens.add({
+        //     targets:[this.snowFlake],
+        //     x: '+=25',
+        //     duration: 4000,
+        //     repeat: -1,
+        //     hold: 500,
+        //     ease: 'ease'
+        // })
     }
 }
