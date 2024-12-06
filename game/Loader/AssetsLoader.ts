@@ -13,7 +13,7 @@ const loadAssets = {
     assets: [
       // player
       ["spritesheet", "player", "/images/chicken/spritesheetPlayer2.png", { frameWidth: 200, frameHeight: 250, startFrame: 0 }],
-
+      ["spritesheet", "playerIdle", "/images/chicken/playerIdle.png", { frameWidth: 200, frameHeight: 250, startFrame: 0 }],
       // between scenes
       ["image", "block", "/50x50.png"],
 
