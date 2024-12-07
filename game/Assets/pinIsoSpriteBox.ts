@@ -7,9 +7,11 @@ import { Player } from "./Player";
 import { RpgIsoPlayerPrincipal } from "./rpgIsoPlayerPrincipal";
 import RPG from "../rpg";
 import City from "../maps/City";
+import EventsCenter from "../services/EventsCenter";
+import { modalType } from "./Modals/ModalTypes";
 
 export class PinIsoSpriteBox extends RpgIsoSpriteBox {
- 
+  eventCenter = EventsCenter.getInstance();
   type: string = "PIN";
 
   constructor(
@@ -32,8 +34,7 @@ export class PinIsoSpriteBox extends RpgIsoSpriteBox {
   updatePin(group: Phaser.GameObjects.Group) {
     this.self.setInteractive();
     this.self.on("pointerdown", () => {
-      const RPGScene = this.scene as RPG
-      (RPGScene.map as City).createModal(()=>{this.self.destroy()});
+      this.eventCenter.emitEvent(this.eventCenter.possibleEvents.OPEN_MODAL, { modalType: modalType.QUEST });
     })
    this.scene.add.tween({
     targets: this.self,

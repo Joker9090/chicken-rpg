@@ -12,28 +12,29 @@ export default class UIContainer extends Phaser.GameObjects.Container {
 
     scene: RPG;
     clock: Clock;
-    paper: Phaser.GameObjects.Image;
     walletBar: Phaser.GameObjects.Image;
     coinsCount: Phaser.GameObjects.Text;
     lvlMarker: Phaser.GameObjects.Image;
-    bar1: Phaser.GameObjects.Image;
-    bar2: Phaser.GameObjects.Image;
     nivel: 'ROOM' | 'CITY';
-    eventCenter = EventsCenterManager.getInstance();
+    // eventCenter = EventsCenterManager.getInstance();
     stateGlobal: globalState;
     constructor(
         scene: RPG,
         x: number,
         y: number,
         nivel: 'ROOM' | 'CITY',
+        data: globalState
     ) {
         super(scene, x, y);
         this.scene = scene;
         this.nivel = nivel
-
-        this.stateGlobal = this.eventCenter.emitWithResponse(this.eventCenter.possibleEvents.UPDATE_STATE, null);
+        this.stateGlobal = data
         
+        // -> CLOCK
         this.clock = new Clock(this.scene, window.innerWidth - 120, 180)
+        // -> CLOCK
+
+        // -> WALLET
         this.walletBar = this.scene.add.image(-170, 250, "coinUi").setOrigin(0.5);
         this.walletBar.setPosition(window.innerWidth - 50 - this.walletBar.width / 2, 75);
         this.coinsCount = this.scene.add.text(-160, 250, this.stateGlobal.playerMoney.toString(), {
@@ -42,41 +43,13 @@ export default class UIContainer extends Phaser.GameObjects.Container {
             color: '#ffffff',
         }).setOrigin(0.5);
         this.coinsCount.setPosition(window.innerWidth - 40 - this.walletBar.width / 2, 75);
-        console.log(this.coinsCount, "COINS COUNT in constructor")
+        // <- WALLET
 
-        this.paper = this.scene.add.image(window.innerWidth - 50, window.innerHeight - 50, "iconNewsOff").setOrigin(0, 1).setInteractive();
-        this.paper.setPosition(window.innerWidth - 50 - this.paper.width, window.innerHeight - 50)
-        this.paper.on('pointerdown', () => {
-            rectangleNews.setVisible(true)
-            this.scene.tweens.add({
-                targets: paperNews,
-                scale: 1,
-                duration: 500,
-                ease: 'Power2',
-            })
-        })
+       // -> LVL MARKER
         this.lvlMarker = this.scene.add.image(50, 50, "lvlMarker").setOrigin(0);
-        this.bar1 = this.scene.add.image(50, 140, "varStar").setOrigin(0);
-        this.bar2 = this.scene.add.image(50, 190, "varSmile").setOrigin(0);
+       // <- LVL MARKER
 
-        // const timer1 = this.scene.time.addEvent({
-        //     delay: 5000, // ms
-        //     callback: () => {
-        //         globalDataManager.changeMoney(10)
-        //     },
-        //     //args: [],
-        //     callbackScope: this,
-        //     loop: true,
-        // });
-
-        this.eventCenter.turnEventOn("RPG", this.eventCenter.possibleEvents.UPDATE_STATE, () => {
-            this.stateGlobal = this.eventCenter.emitWithResponse(this.eventCenter.possibleEvents.GET_STATE, null);
-            console.log(this.coinsCount, "COINS COUNT in event")
-            this.coinsCount.setText(this.stateGlobal.playerMoney.toString())
-          },this);
-
-
-
+        // -> BUTTON CHANGE SCENE
         const buttonChangeScene = this.scene.add.image(50, window.innerHeight - 50, nivel === "ROOM" ? "goBack" : "goRoom").setOrigin(0, 1).setInteractive();
         buttonChangeScene.on('pointerdown', () => {
             if (nivel === "ROOM") {
@@ -85,26 +58,26 @@ export default class UIContainer extends Phaser.GameObjects.Container {
                 changeSceneTo(this.scene, "RPG", "RPG", "ROOM")
             }
         })
-
-        const rectangleNews = this.scene.add.rectangle(0, 0, window.innerWidth, window.innerHeight, 0x000000, 0.5).setOrigin(0, 0).setInteractive().setVisible(false);
-        const paperNews = this.scene.add.image(window.innerWidth / 2, window.innerHeight / 2, "modalNews").setOrigin(0.5).setScale(0.8).setInteractive().setScale(0);
+        // <- BUTTON CHANGE SCENE
 
         this.add([
-            this.bar1,
-            this.bar2,
             this.lvlMarker,
             this.clock,
-            this.paper,
             this.walletBar,
             this.coinsCount,
             buttonChangeScene,
-            rectangleNews,
-            paperNews
         ])
-
         this.scene.add.existing(this)
         this.scene.cameras.main.ignore(this)
+    }
 
+    updateData(data: globalState){
+        this.coinsCount.setText(data.playerMoney.toString())
+        // nbivel del pj
+        // barra de stamina
+        // barra de respeto
+        // info del celu
+        // tiempo del dia
     }
 
     changeMoney(amount: number) {

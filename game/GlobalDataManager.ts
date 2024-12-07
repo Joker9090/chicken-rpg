@@ -2,13 +2,22 @@ import Phaser from "phaser";
 import RPG from "./rpg";
 import { Events } from "matter";
 import EventsCenterManager from "./services/EventsCenter";
-import { ProductToBuy } from "./Assets/ModalContainer";
+import { ProductToBuy } from "./Assets/Modals/ModalTypes";
+
+export type newsType = {
+  title: string;
+  description: string;
+  reward: number;
+  time: number;
+  rquiremenets: string[];
+}
 
 export type globalState = {
   playerMoney: number;
   timeOfDay: 0 | 1 | 2 | 3;
   newNews: boolean;
   inventary: ProductToBuy[];
+  news: newsType[];
 }
 
 export default class GlobalDataManager extends Phaser.Scene {
@@ -19,8 +28,6 @@ export default class GlobalDataManager extends Phaser.Scene {
     super({ key: "GlobalDataManager", active: true });
 
     //Events  -->
-
-
     this.eventCenter.turnEventOn("GlobalDataManager", this.eventCenter.possibleEvents.BUY_ITEM, (payload: ProductToBuy) => {
       this.addInventary(payload);
       this.changeMoney(-payload.reward);
@@ -68,7 +75,45 @@ export default class GlobalDataManager extends Phaser.Scene {
       playerMoney: 300,
       timeOfDay: 0,
       newNews: false,
-      inventary: [],
+      inventary: [
+        {
+          title: "Bicicle",
+          picture: "cama",
+          pictureOn: "cama",
+          text: "Cama",
+          reward: 0,
+          isSelected: false,
+          roomInformation: {
+            assetInRoom: "bicicle",
+            frontContainer: true,
+          },
+        },
+        {
+          title: "Cama",
+          picture: "cama",
+          pictureOn: "cama",
+          text: "Cama",
+          reward: 0,
+          isSelected: false,
+          roomInformation: {
+            assetInRoom: "camera",
+            frontContainer: false,
+          },
+        },
+        {
+          title: "Cama",
+          picture: "cama",
+          pictureOn: "cama",
+          text: "Cama",
+          reward: 0,
+          isSelected: false,
+          roomInformation: {
+            assetInRoom: "degree",
+            frontContainer: false,
+          },
+        },
+      ],
+      news: []
       // missionsActive: any[]
       // items: any[]
       // news: any[{}]

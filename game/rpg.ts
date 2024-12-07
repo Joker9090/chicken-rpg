@@ -8,14 +8,16 @@ import { RpgIsoPlayerPrincipal } from "./Assets/rpgIsoPlayerPrincipal";
 import { RpgIsoPlayerSecundarioTalker } from "./Assets/rpgIsoPlayerSecundarioTalker";
 import UIContainer from "./Assets/UIAssetsChicken/UIContainer";
 import { PinIsoSpriteBox } from "./Assets/pinIsoSpriteBox";
-import { ModalConfig, ModalContainer } from "./Assets/ModalContainer";
-import GlobalDataManager from "./GlobalDataManager";
-import { changeSceneTo, getObjectByType, makeOpacityNearPlayer } from "./helpers/helpers";
+import { globalState } from "./GlobalDataManager";
+import { getObjectByType, makeOpacityNearPlayer } from "./helpers/helpers";
 import Room from "./maps/Room";
 import TileCreator from "./helpers/TileCreator";
 import City from "./maps/City";
 import AmbientBackgroundScene from "./ambientAssets/backgroundScene";
 import AmbientFrontgroundScene from "./ambientAssets/frontgroundScene";
+import EventsCenterManager from "./services/EventsCenter";
+import { ModalManager } from "./Assets/Modals/ModalManager";
+import { modalType } from "./Assets/Modals/ModalTypes";
 
 // import UIScene from "./UIScene";
 
@@ -32,17 +34,13 @@ export enum statusEnum {
   IDLE,
   WINNING,
 }
-
-export enum modalType {
-  QUEST,
-  PC,
-}
-
 export default class RPG extends Scene {
 
   tileCreator: TileCreator;
+  modalManager: ModalManager;
+
   mapType: 'ROOM' | 'CITY' = 'ROOM';
-  map?: Room;
+  map?: Room | City;
   mapBlueprint?: any[];
   UIContainer?: UIContainer;
 
@@ -64,6 +62,8 @@ export default class RPG extends Scene {
   distanceBetweenFloors: number = 50;
   eventEmitter?: Phaser.Events.EventEmitter;
 
+  eventCenter = EventsCenterManager.getInstance();
+  stateGlobal: globalState;
   input: any;
 
   ambientScenes: Phaser.Scene[] = [];
@@ -77,6 +77,8 @@ export default class RPG extends Scene {
     this.mapType = mapType;
     this.sceneKey = sceneConfig.key;
     this.withPlayer = true;
+    this.stateGlobal = this.eventCenter.emitWithResponse(this.eventCenter.possibleEvents.UPDATE_STATE, null);
+
     switch (this.mapType) {
       case 'ROOM':
         this.map = new Room(this)
@@ -93,17 +95,37 @@ export default class RPG extends Scene {
     }
 
     this.tileCreator = new TileCreator(this)
+    this.modalManager = new ModalManager(this);
+
+    // -> CREATE EVENTS
+    // -> UPDATER EVENT
+    this.eventCenter.turnEventOn("RPG", this.eventCenter.possibleEvents.UPDATE_STATE, () => {
+      this.stateGlobal = this.eventCenter.emitWithResponse(this.eventCenter.possibleEvents.GET_STATE, null);
+      this.UIContainer?.updateData(this.stateGlobal);
+      this.map?.addMapFunctionalities(this.stateGlobal);
+    }, this);
+    // <- UPDATER EVENT
+    // -> MODAL EVENTS
+    EventsCenterManager.turnEventOn("RPG", EventsCenterManager.possibleEvents.OPEN_MODAL, (data: {modalType: modalType}) => {
+      this.modalManager.createModal(data.modalType);
+    }, this);
+    EventsCenterManager.turnEventOn("RPG", EventsCenterManager.possibleEvents.CLOSE_MODAL, () => {
+      this.modalManager.destroyModal();
+    }, this);
+    // <- MODAL
+    // <- CREATE EVENTS
+
   }
 
   preload() {
-    
+
     let AmbientBackScene = this.game.scene.getScene("AmbientBackgroundScene")
     if (!AmbientBackScene) {
       AmbientBackScene = new AmbientBackgroundScene("DayAndNight")
       this.scene.add("AmbientBackgroundScene", AmbientBackScene, true);
       AmbientBackScene.scene.sendToBack("AmbientBackgroundScene");
     } else {
-      AmbientBackScene.scene.restart({sceneKey: "DayAndNight"})
+      AmbientBackScene.scene.restart({ sceneKey: "DayAndNight" })
     }
     let AmbientFrontScene = this.game.scene.getScene("AmbientFrontgroundScene")
     if (!AmbientFrontScene) {
@@ -111,7 +133,7 @@ export default class RPG extends Scene {
       this.scene.add("AmbientFrontgroundScene", AmbientFrontScene, true);
       AmbientFrontScene.scene.bringToTop("AmbientFrontgroundScene");
     } else {
-      AmbientFrontScene.scene.restart({sceneKey: "DayAndNight"})
+      AmbientFrontScene.scene.restart({ sceneKey: "DayAndNight" })
     }
 
     this.load.scenePlugin({
@@ -129,7 +151,6 @@ export default class RPG extends Scene {
 
   create() {
     this.isoGroup = this.add.group();
-
     this.isoPhysics.world.setBounds(-1024, -1024, 1024 * 2, 1024 * 4);
     this.isoPhysics.projector.origin.setTo(0.5, 0.3); // permitime dudas
     this.isoPhysics.world.gravity.setTo(0); // permitime dudas
@@ -138,8 +159,8 @@ export default class RPG extends Scene {
     this.scale.resize(window.innerWidth, window.innerHeight);
     this.cursors = this.input.keyboard.createCursorKeys();
 
-    
-    // esto va al player file
+
+    // -> ESTO HAY QUE MOVERLO AL FILE DE PLAYER
     const posiblePositions = [
       "idle-w",
       "idle-s",
@@ -155,9 +176,9 @@ export default class RPG extends Scene {
       if (index >= 0 && index <= 3) {
         this.anims.create({
           key: posiblePositions[index],
-          frames: this.anims.generateFrameNumbers("playerIdle", {
-            start: index === 0 ? 0 : index === 1 ? 20 : index === 2 ? 40 : 60,
-            end: index === 0 ? 19 : index === 1 ? 39 : index === 2 ? 59 : 79,
+          frames: this.anims.generateFrameNumbers("player", {
+            start: index === 0 ? 14 : index === 1 ? 34 : index === 2 ? 55 : 65,
+            end: index === 0 ? 14 : index === 1 ? 34 : index === 2 ? 55 : 65,
           }),
           frameRate: 20,
           repeat: -1,
@@ -174,24 +195,19 @@ export default class RPG extends Scene {
         });
       }
     }
+    // <- ESTO HAY QUE MOVERLO AL FILE DE PLAYER
 
-
-    // crea lo tiles
+    // -> SPAWN TILES 
     this.spawnTiles();
     this.spawnObjects();
     this.cameras.main.setZoom(0.6);
     this.cameras.main.setViewport(0, 0, window.innerWidth, window.innerHeight);
+    // <- SPAWN TILES 
 
 
-
-    // let playerInfo = globalDataManager.getState()
-
-    // const ui = new UI(this)
-
-    // ui.hidrate(playerInfo)
-    // turnEventOn(this.scene.key, possibleEvents.INFO_UPDATE, ui.hidrate, this)
-    // WORKKSHOP NANEX
-    this.UIContainer = new UIContainer(this, 0, 0, this.mapType);
+    // -> UI
+    console.log("this.stateGlobal", this.stateGlobal);
+    this.UIContainer = new UIContainer(this, 0, 0, this.mapType, this.stateGlobal);
     this.UICamera = this.cameras.add(
       0,
       0,
@@ -201,14 +217,15 @@ export default class RPG extends Scene {
     this.UICamera.ignore(this.isoGroup);
     const forestContainers = this.forest.map((arbolito) => arbolito.container);
     this.UICamera.ignore(forestContainers);
+    this.UIContainer.updateData(this.stateGlobal);
+    // <- UI
+
+    // EVENTS
 
 
-
-
-
-    const globalDataManager = this.game.scene.getScene("GlobalDataManager") as GlobalDataManager
-
-    this.map?.addMapFunctionalities();
+    // -> MAP FUNCTIONS AFTER SPAWN TILES (POST UI CREATION)
+    this.map?.addMapFunctionalities(this.stateGlobal);
+    // <- MAP FUNCTIONS AFTER SPAWN TILES (POST UI CREATION)
 
     if (!this.withPlayer) {
       this.input.on("pointermove", (pointer: Phaser.Input.Pointer) => {
@@ -218,6 +235,7 @@ export default class RPG extends Scene {
         }
       });
     }
+
 
     this.input.on(
       "wheel",

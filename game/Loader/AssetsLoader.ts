@@ -27,6 +27,9 @@ const loadAssets = {
       ["image", "pcGlow", "/assets/room/CompuGlow.png"],
       ["image", "cama", "/assets/room/cama.png"],
       ["image", "puertaGlow", "/assets/room/PuertaGlow.png"],
+      ["image", "camera", "/assets/room/camera.png"],
+      ["image", "bicicle", "/assets/room/bicicle.png"],
+      ["image", "degree", "/assets/room/degree.png"],
 
       // backgroundScenes ambient
       ["image", "statsBar", "/images/UIChicken/statsBar.png"],

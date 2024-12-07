@@ -1,10 +1,9 @@
 import { buidling1, buidling3, buidling4 } from "./buildings";
 import { generateBuildings, createBase, createSideWalk, createStreets, createGrass, addItems } from "./mapCreationFunctions";
 import { ObjetsConfig } from "./mapTypes";
-import { ModalConfig, ModalContainer } from "../Assets/ModalContainer";
 import { RpgIsoSpriteBox } from "../Assets/rpgIsoSpriteBox";
 import { changeSceneTo } from "../helpers/helpers";
-import RPG, { modalType } from "../rpg";
+import RPG from "../rpg";
 import EventsCenter from "../services/EventsCenter";
 
 export default class City {
@@ -152,27 +151,6 @@ export default class City {
         }
       }),
     ];
-  }
-
-  createModal (callBack: Function) {
-    const handleAgreeModal = (amount: number, timePass: number) => {
-      // this.eventCenter.emitEvent(this.eventCenter.possibleEvents.TIME_CHANGE, timePass);
-      this.eventCenter.emitEvent(this.eventCenter.possibleEvents.CHANGE_MONEY, amount);
-      callBack()
-      // globalDataManager.passTime(1)
-    }
-    const cityModal: ModalConfig = {
-      type: modalType.QUEST,
-      requires: "camera",
-      requirePicture: "camaraWhite",
-      title: "FOTOS EMBLEMATICAS",
-      picture: "fotoCamara",
-      time: 2,
-      text: "Sal a tomar fotos al parque.",
-      reward: 15,
-      agreeFunction: handleAgreeModal,
-    }
-    const cityModalTest = new ModalContainer(this.scene, 0, 0, cityModal);
   }
 
   addMapFunctionalities() {

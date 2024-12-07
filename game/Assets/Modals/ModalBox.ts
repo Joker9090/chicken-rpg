@@ -1,8 +1,6 @@
-import { Events } from "matter";
-import GlobalDataManager, { globalState } from "../GlobalDataManager";
-import RPG, { modalType } from "../rpg";
-import { ModalConfig, ProductToBuy } from "./ModalContainer";
-import EventsCenterManager from "../services/EventsCenter";
+import RPG from "@/game/rpg";
+import { ModalConfig, ProductToBuy, modalType } from "./ModalTypes";
+import EventsCenterManager from "../../services/EventsCenter";
 
 
 

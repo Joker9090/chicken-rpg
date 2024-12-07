@@ -1,21 +1,24 @@
-import { ModalConfig, ModalContainer, ProductToBuy } from "../Assets/ModalContainer";
 import { RpgIsoSpriteBox } from "../Assets/rpgIsoSpriteBox";
 import { changeSceneTo } from "../helpers/helpers";
 import EventsCenter from "../services/EventsCenter";
-import RPG, { modalType } from "../rpg";
+import RPG from "../rpg";
+import { globalState } from "../GlobalDataManager";
+import { ModalConfig, modalType, ProductToBuy } from "../Assets/Modals/ModalTypes";
 
 export default class Room {
 
   scene: RPG;
   map: any[];
-  rectInteractive?: Phaser.GameObjects.Rectangle;
-  rectInteractive2?: Phaser.GameObjects.Rectangle;
-  rectInteractive3?: Phaser.GameObjects.Rectangle;
+  interactiveComputer?: Phaser.GameObjects.Rectangle;
+  interactiveDoor?: Phaser.GameObjects.Rectangle;
+  interactiveBed?: Phaser.GameObjects.Rectangle;
   eventCenter = EventsCenter.getInstance();
-  
+  imagesPositions: { x: number; y: number } = { x: -75, y: 35 };
+  backgroundContainer?: Phaser.GameObjects.Container;
+  frontContainer?: Phaser.GameObjects.Container;
+
   constructor(scene: RPG) {
     this.scene = scene;
-
 
     this.map = [
       {
@@ -77,127 +80,103 @@ export default class Room {
       "23 23 23 23 23 23 23 23 23 23",
 
       // ONE
-      "1 0 0 0 0 0 0 0 0 0\n" +
-      "1 1 0 0 0 0 0 0 0 0\n" +
-      "1 1 0 0 0 0 0 0 0 0\n" +
-      "1 1 0 0 0 0 0 0 0 0\n" +
-      "0 1 0 0 0 0 0 0 0 0\n" +
-      "0 1 0 0 0 0 0 0 0 0\n" +
-      "1 1 0 0 0 0 0 0 0 0\n" +
-      "0 0 0 0 0 0 0 0 0 0\n" +
-      "0 0 0 0 0 0 0 0 0 0\n" +
-      "0 0 0 0 0 0 0 0 0 0\n" +
-      "0 0 0 0 0 0 0 0 0 0\n" +
-      "0 0 0 0 0 0 0 0 0 0\n" +
-      "0 0 0 0 0 0 0 0 0 0\n" +
-      "0 0 0 0 0 0 0 0 0 0\n" +
-      "0 0 0 0 0 0 0 0 0 0",
+      "23 0 0 0 0 0 0 0 0 23\n" +
+      "23 23 0 0 0 0 0 0 0 23\n" +
+      "23 23 0 0 0 0 0 0 0 23\n" +
+      "23 23 0 0 0 0 0 0 0 23\n" +
+      "0 23 0 0 0 0 0 0 0 23\n" +
+      "0 23 0 0 0 0 0 0 0 23\n" +
+      "23 23 0 0 0 0 0 0 0 23\n" +
+      "0 0 0 0 0 0 0 0 23 23\n" +
+      "0 0 0 0 0 0 0 0 23 23\n" +
+      "0 0 0 0 0 0 0 0 23 23\n" +
+      "0 0 0 0 0 0 0 0 23 23\n" +
+      "0 0 0 0 0 0 0 0 23 23\n" +
+      "0 0 0 0 0 0 0 0 23 23\n" +
+      "0 0 0 0 0 0 0 0 23 23\n" +
+      "0 0 0 0 0 0 0 0 23 23",
 
     ];
   }
 
-  addMapFunctionalities() {
-    const firstPos = this.scene.isoGroup?.children.entries[0] as unknown as RpgIsoSpriteBox;
-    const backgroundContainer = this.scene.add.container(firstPos.self.x, firstPos.self.y).setDepth(999999)
-    const backgroundContainer2 = this.scene.add.container(firstPos.self.x, firstPos.self.y)
-    const background = this.scene.add.image(-300, 300, "backgroundMenu").setScale(1).setScale(2.5).setScrollFactor(1).setAlpha(0)
-    let backgroundRoom = this.scene.add.image(-75, 35, "HabitacionFinalMai").setOrigin(0.5);
-    let pcGlow = this.scene.add.image(-75, 35, "pcGlow").setOrigin(0.5).setVisible(false);
-    let puertaGlow = this.scene.add.image(-75, 35, "puertaGlow").setOrigin(0.5).setVisible(false);
-    let cama = this.scene.add.image(-75, 35, "cama").setOrigin(0.5).setVisible(false);
+  drawItems(items: ProductToBuy[]) {
+    items.forEach(item => {
+      if (!item.roomInformation) return;
+      const itemToDraw = this.scene.add.image(this.imagesPositions.x, this.imagesPositions.y, item.roomInformation.assetInRoom).setOrigin(0.5);
+      item.roomInformation.frontContainer ? this.frontContainer?.add(itemToDraw) : this.backgroundContainer?.add(itemToDraw);
+    });
+  }
+
+  addMapFunctionalities(globalState: globalState) {
     if (this.scene.player) {
       // @ts-ignore
       this.scene.cameras.main.stopFollow().centerOn(this.scene.player.x + 400, this.scene.player.y - 250);
       this.scene.player.self.setScale(1.4);
     }
 
-    const handleAgreeModalRoom = (bought: ProductToBuy | ProductToBuy[]) => {
-      if(bought instanceof Array) {
-        this.eventCenter.emitEvent(this.eventCenter.possibleEvents.BUY_ITEMS, bought);
-      } else {
-        this.eventCenter.emitEvent(this.eventCenter.possibleEvents.BUY_ITEM, bought);
-      }
-     
-    }
+    const firstPos = this.scene.isoGroup?.children.entries[0] as unknown as RpgIsoSpriteBox;
+    this.frontContainer = this.scene.add.container(firstPos.self.x, firstPos.self.y).setDepth(999999)
+    this.backgroundContainer = this.scene.add.container(firstPos.self.x, firstPos.self.y)
 
-    const roomModal: ModalConfig = {
-      type: modalType.PC,
-      title: "MERCADO DE PULGAS ONLINE",
-      picture: "desafioTest2",
-      text: "CAMARA",
-      reward: 100,
-      products: [
-        {
-          title: "camera",
-          picture: "camaraShop",
-          pictureOn: "camaraShopOn",
-          text: "CAMARA",
-          reward: 100,
-        },{
-          title: "otro",
-          picture: "camaraShop",
-          pictureOn: "camaraShopOn",
-          text: "otro",
-          reward: 100,
-        },{
-          title: "CAMARA3",
-          picture: "camaraShop",
-          pictureOn: "camaraShop",
-          text: "CAMARA",
-          reward: 0,
-        }
-      ],
-      agreeFunction: handleAgreeModalRoom,
-    }
-    this.rectInteractive = this.scene.add.rectangle(350, -20, 100, 100, 0x6666ff, 0).setInteractive();
-    this.rectInteractive.on('pointerdown', () => {
-      const roomModalTest = new ModalContainer(this.scene, 0, 0, roomModal);
+    // -> BASIC ITEMS
+    let backgroundRoom = this.scene.add.image(this.imagesPositions.x, this.imagesPositions.y, "HabitacionFinalMai").setOrigin(0.5);
+
+    let pcGlow = this.scene.add.image(this.imagesPositions.x, this.imagesPositions.y, "pcGlow").setOrigin(0.5).setVisible(false);
+    this.interactiveComputer = this.scene.add.rectangle(350, -20, 100, 100, 0x6666ff, 0.3).setInteractive();
+    this.interactiveComputer.on('pointerdown', () => {
+      // const roomModalTest = new ModalContainer(this.scene, 0, 0, roomModal);
+      this.eventCenter.emitEvent(this.eventCenter.possibleEvents.OPEN_MODAL, { modalType: modalType.PC });
     });
-    this.rectInteractive.on("pointerover", () => {
+    this.interactiveComputer.on("pointerover", () => {
       pcGlow.setVisible(true);
     });
-    this.rectInteractive.on("pointerout", () => {
+    this.interactiveComputer.on("pointerout", () => {
       pcGlow.setVisible(false);
     });
 
-    this.rectInteractive2 = this.scene.add.rectangle(-550, 65, 150, 360, 0x6666ff, 0).setInteractive();
-    this.rectInteractive2.on('pointerdown', () => {
+    let puertaGlow = this.scene.add.image(this.imagesPositions.x, this.imagesPositions.y, "puertaGlow").setOrigin(0.5).setVisible(false);
+    this.interactiveDoor = this.scene.add.rectangle(-550, 65, 150, 360, 0x6666ff, 0.3).setInteractive();
+    this.interactiveDoor.on('pointerdown', () => {
       changeSceneTo(this.scene, "RPG", "RPG", "CITY")
     });
-    this.rectInteractive2.on("pointerover", () => {
+    this.interactiveDoor.on("pointerover", () => {
       puertaGlow.setVisible(true);
     });
-    this.rectInteractive2.on("pointerout", () => {
+    this.interactiveDoor.on("pointerout", () => {
       puertaGlow.setVisible(false);
     });
 
-    this.rectInteractive3 = this.scene.add.rectangle(- 50, - 20, 100, 100, 0x6666ff, 0).setInteractive();
-
-    this.rectInteractive3.on('pointerdown', () => {
+    let cama = this.scene.add.image(this.imagesPositions.x, this.imagesPositions.y, "cama").setOrigin(0.5).setVisible(false);
+    this.interactiveBed = this.scene.add.rectangle(-150, 20, 130, 200, 0x6666ff, 0.3).setRotation(Math.PI / 3).setInteractive();
+    this.interactiveBed.on('pointerdown', () => {
       // globalDataManager.passTime(1)
     });
-    this.rectInteractive3.on("pointerover", () => {
+    this.interactiveBed.on("pointerover", () => {
       cama.setVisible(true);
     });
-    this.rectInteractive3.on("pointerout", () => {
+    this.interactiveBed.on("pointerout", () => {
       cama.setVisible(false);
     });
 
-    backgroundContainer2.add([
-      background,
+    this.backgroundContainer.add([
       backgroundRoom,
     ])
 
-    backgroundContainer.add([
+    this.scene.UICamera?.ignore(this.backgroundContainer);
+    this.scene.UICamera?.ignore(this.frontContainer);
+    // <- BASIC ITEMS
+
+    // -> ITEMS IN INVENTORY FROM GLOBAL STATE
+    this.drawItems(globalState.inventary);
+    // <- ITEMS IN INVENTORY FROM GLOBAL STATE
+
+    this.frontContainer.add([
       pcGlow,
       puertaGlow,
       cama,
-      this.rectInteractive,
-      this.rectInteractive2,
-      this.rectInteractive3,
+      this.interactiveComputer,
+      this.interactiveDoor,
+      this.interactiveBed,
     ]);
-    this.scene.UICamera?.ignore(backgroundContainer);
-    this.scene.UICamera?.ignore(backgroundContainer2);
-
   }
 }
