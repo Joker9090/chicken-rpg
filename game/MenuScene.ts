@@ -1,8 +1,10 @@
 import Phaser from "phaser";
 import MultiScene from "./Loader/MultiScene";
-import roomMap from "./maps/room";
-import cityMap from "./maps/city";
-import { possibleEvents, turnEventOn } from "./EventsCenter";
+import roomMap from "./maps/Room";
+import cityMap from "./maps/City";
+import EventsCenterManager from "./services/EventsCenter";
+import AmbientBackgroundScene from "./ambientAssets/backgroundScene";
+
 
 
 export default class MenuScene extends Phaser.Scene {
@@ -21,8 +23,23 @@ export default class MenuScene extends Phaser.Scene {
   }
 
   create(data: {maps: string[]}) {
+    
+    let AmbientScene = this.game.scene.getScene("AmbientBackgroundScene")
+    if (!AmbientScene) {
+      AmbientScene = new AmbientBackgroundScene("MenuScene")
+      this.scene.add("AmbientBackgroundScene", AmbientScene, true);
+      AmbientScene.scene.sendToBack("AmbientBackgroundScene");
+    } else {
+      AmbientScene.scene.restart({sceneKey: "MenuScene"})
+    }
+    // const AmbientScene = new AmbientBackgroundScene("MenuScene")
+    // this.ambientScenes.push(AmbientScene);
+    // this.scene.add("AmbientBackgroundScene", AmbientScene, true);
+    // AmbientScene.scene.sendToBack("AmbientBackgroundScene");
+    
+    const eventsCenter = EventsCenterManager.getInstance();
 
-    turnEventOn(this.scene.key, possibleEvents.READY, this.addPlayBtn, this)
+    eventsCenter.turnEventOn(this.scene.key, eventsCenter.possibleEvents.READY, this.addPlayBtn, this)
 
 
     const middlePoint = {
@@ -31,7 +48,7 @@ export default class MenuScene extends Phaser.Scene {
     }
     this.container = this.add.container(middlePoint.x, middlePoint.y)
     // create a simple menu
-    this.backgroundSky = this.add.image(0, 0, "backgroundMenu").setScale(1)
+    this.backgroundSky = this.add.image(0, 0, "backgroundMenu").setScale(1).setAlpha(0)
     this.backgroundCity = this.add.image(-50, 100, "backgroundCity").setScale(0.8)
     this.tweens.add({
       targets: this.backgroundCity,
@@ -80,7 +97,7 @@ export default class MenuScene extends Phaser.Scene {
       .setScale(0)
       .setInteractive()
         .on('pointerdown', () => {
-          const multiScene = new MultiScene("RPG", "MenuScene", { maps: roomMap.map((m) => (typeof m === "string" ? m : JSON.stringify(m))) });
+          const multiScene = new MultiScene("RPG", "MenuScene", "ROOM");
           this.scene.add("MultiScene", multiScene, true); 
         });
   

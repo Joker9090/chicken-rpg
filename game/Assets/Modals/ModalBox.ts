@@ -1,6 +1,6 @@
-import RPG, { modalType } from "../rpg";
-import { ModalConfig } from "./ModalContainer";
-
+import RPG from "@/game/rpg";
+import { ModalConfig, ProductToBuy, modalType } from "./ModalTypes";
+import EventsCenterManager from "../../services/EventsCenter";
 
 
 
@@ -9,6 +9,8 @@ export class ModalBox extends Phaser.GameObjects.Container {
     agreeButton: Phaser.GameObjects.Image;
     cancelButton: Phaser.GameObjects.Image;
     activeTween: Phaser.Tweens.Tween | null = null;
+
+    eventCenter = EventsCenterManager.getInstance();
     constructor(
         scene: RPG,
         x: number,
@@ -18,11 +20,17 @@ export class ModalBox extends Phaser.GameObjects.Container {
         super(scene, x, y);
         this.scene = scene;
 
+
         const backgroundLess = scene.add.rectangle(0, 0,  window.innerWidth, window.innerHeight, 0x000000, 0.5);
         backgroundLess.setInteractive();
+        
 
+        const selectStates: boolean[] = (modalConfig.products ?? []).map(() => false);
+        const createdProducts: {image: Phaser.GameObjects.Image, rewardBackground: Phaser.GameObjects.Image , coinIcon: Phaser.GameObjects.Image , text: Phaser.GameObjects.Text, isSelected: boolean}[] = [];
 
-
+        //const globalDataManager = this.scene.game.scene.getScene("GlobalDataManager") as GlobalDataManager;
+        const inventary = this.eventCenter.emitWithResponse(this.eventCenter.possibleEvents.GET_INVENTARY, null);
+        
         //Modals containers
         const modalContainerWithElements = this.scene.add.container(-2000,0);
         const topContainer = this.scene.add.container(0, -170);
@@ -35,6 +43,15 @@ export class ModalBox extends Phaser.GameObjects.Container {
         const modalBackground = this.scene.add.image(0, 0, "modalBackground").setOrigin(0.5);
 
         //modalContainerWithElements.setAngle(35);
+
+        //LEFT BUTTON
+        this.agreeButton = this.scene.add.image(0, 0, "btn").setOrigin(0.5).setInteractive();
+
+        const leftTextButton = this.scene.add.text(0, 0, "ACEPTAR", {
+            fontFamily: "MontserratSemiBold", 
+            fontSize: '16px',
+            color: '#ffffff',
+        }).setOrigin(0.5);
 
         const chain = this.scene.tweens.chain({
             targets: modalContainerWithElements,
@@ -78,7 +95,7 @@ export class ModalBox extends Phaser.GameObjects.Container {
                     {
                         x: -2000,
                         ease: 'power3',
-                        duration: 750
+                        duration: 750,
                     },
                     /*{
                         angle: 0,
@@ -100,7 +117,7 @@ export class ModalBox extends Phaser.GameObjects.Container {
                     },*/
                 ],
                 onComplete: () => {
-                    this.setVisible(!this.visible)
+                    this.destroy(); //CHEQUEAR
                 }
             });
         }
@@ -129,9 +146,18 @@ export class ModalBox extends Phaser.GameObjects.Container {
         }
 
         const handleClose = () => {
-            console.log("data?:", modalConfig);
             tweenClose();
+
             //this.setVisible(!this.visible)
+        }
+
+        if(modalConfig.products && modalConfig.products.length > 0) {
+            selectStates.forEach((state, index) => {
+                if (modalConfig.products && inventary.some((product: ProductToBuy) => product.title === modalConfig.products![index].title)) {
+                    selectStates[index] = true;
+
+                } else selectStates[index] = false;
+            });
         }
 
         switch (modalConfig.type) {
@@ -142,16 +168,13 @@ export class ModalBox extends Phaser.GameObjects.Container {
 
                 btnExit.on('pointerup', () => {
                     handleClose();
-                    console.log("btnExit");
                 });
                 btnExit.on("pointerover", () => {
-                    console.log("hover");
                     //btnExit.setAlpha(0.5);
                     if(this.activeTween)this.activeTween.stop();
                     tweenButtonOver(btnExit);
                 });
                 btnExit.on("pointerout", () => {
-                    console.log("hover out");
                     //btnExit.setAlpha(1);
                     if(this.activeTween)this.activeTween.stop();
                     tweenButtonOut(btnExit);
@@ -188,7 +211,7 @@ export class ModalBox extends Phaser.GameObjects.Container {
                 
                 //row 1
                 //@ts-ignore
-                const timeNumber_q = this.scene.add.text(-175, -100, modalConfig.time, {
+                const timeNumber_q = this.scene.add.text(-175, -100, `${modalConfig.time}`, {
                     fontFamily: "MontserratSemiBold", 
                     fontSize: '24px',
                     color: '#ffffff',
@@ -205,11 +228,19 @@ export class ModalBox extends Phaser.GameObjects.Container {
 
                 //row 3
                 //@ts-ignore
-                const text_q = this.scene.add.text(-170, -40, modalConfig.text, {
-                    fontFamily: "MontserratSemiBold", 
-                    fontSize: '14px',
-                    color: '#ffffff',
-                });
+                const requirePicture = this.scene.add.image(-160, -30, modalConfig.requirePicture).setScale(1);
+
+                //Check si tiene el objeto
+                const haveObject = this.eventCenter.emitWithResponse(this.eventCenter.possibleEvents.GET_OBJECTINVENTARY, modalConfig.requires);
+                if(haveObject != undefined) {
+                    requirePicture.setTint(0x00ff00);
+                    this.agreeButton.setAlpha(1);
+                    leftTextButton.setAlpha(1);
+                }else {
+                    requirePicture.setTint(0xff0000);
+                    this.agreeButton.setAlpha(0.5);
+                    leftTextButton.setAlpha(0.5);
+                }
 
                 //row 4
                 const morningIcon_q = this.scene.add.image(-150, 10, "iconSunrise").setScale(1.2);
@@ -233,7 +264,7 @@ export class ModalBox extends Phaser.GameObjects.Container {
                 });
 
                 //@ts-ignore
-                const reward_q = this.scene.add.text(-170, 105, modalConfig.reward, {
+                const reward_q = this.scene.add.text(-170, 105, `${modalConfig.reward}`, {
                     fontFamily: "MontserratSemiBold", 
                     fontSize: '24px',
                     color: '#ffffff',
@@ -247,7 +278,7 @@ export class ModalBox extends Phaser.GameObjects.Container {
                     timeIcon_q,
                     subTitleBackground_1_q,
                     subTitle_1_q,
-                    text_q,
+                    requirePicture,
                     morningIcon_q,
                     afternoonIcon_q,
                     eveningIcon_q,
@@ -262,31 +293,37 @@ export class ModalBox extends Phaser.GameObjects.Container {
                     coinIcon
                 ]);
 
-                console.log("ENTRO QUEST");
                 this.add([
                     topContainer,
                     leftContainer,
                     rightContainer,
                 ]);
 
+                this.agreeButton.on('pointerup', () => {
+
+                    if(haveObject != undefined) {
+                        modalConfig.agreeFunction(modalConfig.reward, modalConfig.time);
+                        handleClose();
+                    }
+                });
+
                 break;
             case modalType.PC:
                 
+                
+                console.log("Inventary modal:", inventary);
                 //TOP CONTAINER
                 const btnExit_p = this.scene.add.image(255, 0, "btnExit").setInteractive();
 
                 btnExit_p.on('pointerup', () => {
                     handleClose();
-                    console.log("btnExit");
                 });
                 btnExit_p.on("pointerover", () => {
-                    console.log("hover");
                     //btnExit_p.setAlpha(0.5);
                     if(this.activeTween)this.activeTween.stop();
                     tweenButtonOver(btnExit_p);
                 });
                 btnExit_p.on("pointerout", () => {
-                    console.log("hover out");
                     //btnExit_p.setAlpha(1);
                     if(this.activeTween)this.activeTween.stop();
                     tweenButtonOut(btnExit_p);
@@ -304,89 +341,74 @@ export class ModalBox extends Phaser.GameObjects.Container {
                     title_p,
                     btnExit_p,
                 ]);
+
+                const baseX = -40;
+                const baseY = -40;
+                const offsetX = 190;
                 
                 //LEFT CONTAINER
+                modalConfig.products?.forEach((product, index) => {
+                    const x = baseX + index * offsetX;
+                    const y = baseY;
 
-                //First element
-                let select = false;
-                //@ts-ignore
-                const photo_1_p = this.scene.add.image(-40,-40, "camaraShop").setScale(1).setAlpha(0.5).setInteractive();
-                
-                
-                photo_1_p.on('pointerup', () => {
-                    photo_1_p.setTexture("camaraShopOn");
-                    select = !select;
-                });
-                photo_1_p.on("pointerover", () => {
-                    console.log("hover");
-                    if(!select) {
-                        photo_1_p.setTexture("camaraShop");
-                        photo_1_p.setAlpha(1);
+                    let isSelected = selectStates[index];
+
+                    const productImage = this.scene.add.image(x, y, product.picture)
+                    .setScale(1)
+                    .setAlpha(0.5)
+                    .setInteractive();
+
+
+                    if(selectStates[index]) {
+                        productImage.setTexture(product.pictureOn);
+                    }else {
+                        if(product.reward > 0){
+                           // if(inventary.playerMoney >= product.reward){
+                                productImage.on('pointerup', () => {
+                                    isSelected = !isSelected;
+                                    productImage.setTexture(isSelected ? product.pictureOn : product.picture);
+                                    selectStates[index] = isSelected;
+                                });
+                            //}
+                            productImage.on("pointerover", () => {
+                                if (!isSelected) {
+                                    productImage.setTexture(product.picture);
+                                    productImage.setAlpha(1);
+                                }
+                            });
+                            productImage.on("pointerout", () => {
+                                if (!isSelected) {
+                                    productImage.setTexture(product.picture);
+                                    productImage.setAlpha(0.5);
+                                }
+                            });
+                        }
                     }
+
+                        
+                    
+
+                    
+                    const rewardBackground = this.scene.add.image(x - 40, 10, "barraTitle")
+                        .setOrigin(0, -0.1)
+                        .setScale(0.28, 1.3);
+
+                    
+                    const rewardText = this.scene.add.text(x - 15, 30, `${product.reward}`, {
+                        fontFamily: "MontserratSemiBold",
+                        fontSize: '24px',
+                        color: '#ffffff',
+                    }).setOrigin(0.5);
+
+                    
+                    const coinIcon = this.scene.add.image(x + 20, 30, "coin");
+
+                    createdProducts.push({ image: productImage,rewardBackground: rewardBackground, coinIcon: coinIcon, text: rewardText, isSelected: isSelected});
                 });
-                photo_1_p.on("pointerout", () => {
-                    console.log("hover out");
-                    if(!select) {
-                        photo_1_p.setTexture("camaraShop");
-                        photo_1_p.setAlpha(0.5);
-                    }
-                });
-
-                const rewardBackground_1_p = this.scene.add.image(-80, 10,"barraTitle").setOrigin(0,-0.1).setScale(0.28,1.3);
-
-                //@ts-ignore
-                const reward_1_p = this.scene.add.text(-55, 30, modalConfig.reward, {
-                    fontFamily: "MontserratSemiBold", 
-                    fontSize: '24px',
-                    color: '#ffffff',
-                }).setOrigin(0.5);
-                
-                const coinIcon_1_p = this.scene.add.image(-20 , 30, "coin");
-
-                //Second element
-
-                //@ts-ignore
-                const photo_2_p = this.scene.add.image(150,-40, "camaraShop").setScale(1).setAlpha(0.5).setInteractive();
-
-                const rewardBackground_2_p = this.scene.add.image(110, 10,"barraTitle").setOrigin(0,-0.1).setScale(0.28,1.3);
-
-                //@ts-ignore
-                const reward_2_p = this.scene.add.text(125, 30, "-", {
-                    fontFamily: "MontserratSemiBold", 
-                    fontSize: '24px',
-                    color: '#ffffff',
-                }).setOrigin(0.5);
-                
-                const coinIcon_2_p = this.scene.add.image(160 , 30, "coin");
-
-                //Third element
-                //@ts-ignore
-                const photo_3_p = this.scene.add.image(340,-40, "camaraShop").setScale(1).setAlpha(0.5).setInteractive();
-
-                const rewardBackground_3_p = this.scene.add.image(300, 10,"barraTitle").setOrigin(0,-0.1).setScale(0.28,1.3);
-
-                //@ts-ignore
-                const reward_3_p = this.scene.add.text(315, 30, "-", {
-                    fontFamily: "MontserratSemiBold", 
-                    fontSize: '24px',
-                    color: '#ffffff',
-                }).setOrigin(0.5);
-                
-                const coinIcon_3_p = this.scene.add.image(350 , 30, "coin");
+                   
 
                 leftContainer.add([
-                    photo_1_p,
-                    rewardBackground_1_p,
-                    reward_1_p,
-                    coinIcon_1_p,
-                    photo_2_p,
-                    rewardBackground_2_p,
-                    reward_2_p,
-                    coinIcon_2_p,
-                    photo_3_p,
-                    rewardBackground_3_p,
-                    reward_3_p,
-                    coinIcon_3_p,
+                    ...createdProducts.map(product => [product.image, product.rewardBackground, product.coinIcon, product.text]).flat(),
                 ]);
 
                 //RIGHT CONTAINER
@@ -395,7 +417,56 @@ export class ModalBox extends Phaser.GameObjects.Container {
    
                 ]);
 
-                console.log("ENTRO PC");
+                //Agree button config
+                this.agreeButton.on('pointerup', () => {
+
+                    const updatedProductsBought = modalConfig.products?.map((product, index) => ({
+                        ...product,
+                        isSelected: selectStates[index],
+                    }));
+        
+                    const filteredProducts = updatedProductsBought?.filter(product => product.isSelected === true);
+        
+                    const boughtProductsOrProduct = filteredProducts?.length === 1 
+                        ? filteredProducts[0] 
+                        : filteredProducts;
+        
+                    if(filteredProducts && filteredProducts?.length === 1) {
+                        let cost = filteredProducts[0].reward;
+                        const playerState = this.eventCenter.emitWithResponse(this.eventCenter.possibleEvents.GET_STATE, null);
+                        if(playerState.playerMoney >= cost) {
+                            leftTextNotMoney.setVisible(false);
+                            modalConfig.agreeFunction(boughtProductsOrProduct);
+                            handleClose();
+                            //TODO- MEJORAR ESTO
+                        }else if (!filteredProducts.find(product => product.title == inventary.find((inventaryProduct: ProductToBuy) => inventaryProduct.title == product.title)?.title)) {
+                            leftTextNotMoney.setVisible(true);
+                            this.agreeButton.setAlpha(0.5);
+                            leftTextButton.setAlpha(0.5);
+                        }else {
+                            handleClose();
+                        }
+                    }else if (filteredProducts && filteredProducts?.length > 1) {
+                        let cost = filteredProducts.reduce((acc, product) => acc + product.reward, 0);
+                        const playerState = this.eventCenter.emitWithResponse(this.eventCenter.possibleEvents.GET_STATE, null);
+                        if(playerState.playerMoney >= cost) {
+                            leftTextNotMoney.setVisible(false);
+                            modalConfig.agreeFunction(boughtProductsOrProduct);
+                            handleClose();
+                            //TODO- MEJORAR ESTO
+                        }else if (!filteredProducts.find(product => product.title == inventary.find((inventaryProduct: ProductToBuy) => inventaryProduct.title == product.title)?.title)) {
+                            leftTextNotMoney.setVisible(true);
+                            this.agreeButton.setAlpha(0.5);
+                            leftTextButton.setAlpha(0.5);
+                        }else {
+                            handleClose();
+                        }
+
+                    }else {
+                        handleClose();
+                    }
+                });
+
                 this.add([
                     topContainer,
                     leftContainer,
@@ -414,28 +485,27 @@ export class ModalBox extends Phaser.GameObjects.Container {
         const rightButtonContainer = this.scene.add.container(100, 0);
 
         //LEFT BUTTON
-        this.agreeButton = this.scene.add.image(0, 0, "btn").setOrigin(0.5).setInteractive();
+        //this.agreeButton = this.scene.add.image(0, 0, "btn").setOrigin(0.5).setInteractive();
 
-        const leftTextButton = this.scene.add.text(0, 0, "ACEPTAR", {
+
+
+        //not enough money text
+        const leftTextNotMoney = this.scene.add.text(0, -30, "NO TIENES SUFICIENTE DINERO", {
             fontFamily: "MontserratSemiBold", 
-            fontSize: '16px',
-            color: '#ffffff',
-        }).setOrigin(0.5);
+            fontSize: '14px',
+            color: '#ff0011',
+        }).setOrigin(0.5).setVisible(false);
 
-        this.agreeButton.on('pointerup', () => {
-            modalConfig.agreeFunction();
-            handleClose();
-        });
+
+
 
         this.agreeButton.on("pointerover", () => {
-            console.log("hover");
             //this.agreeButton.setAlpha(0.5);
             //leftTextButton.setAlpha(0.5);
             if(this.activeTween)this.activeTween.stop();
             tweenButtonOver(leftButtonContainer);
         });
         this.agreeButton.on("pointerout", () => {
-            console.log("hover out");
             //this.agreeButton.setAlpha(1);
             //leftTextButton.setAlpha(1);
             if(this.activeTween)this.activeTween.stop();
@@ -446,7 +516,8 @@ export class ModalBox extends Phaser.GameObjects.Container {
 
         leftButtonContainer.add([
             this.agreeButton,
-            leftTextButton
+            leftTextButton,
+            leftTextNotMoney
         ]);
 
         //RIGHT BUTTON
@@ -459,18 +530,19 @@ export class ModalBox extends Phaser.GameObjects.Container {
         }).setOrigin(0.5);
 
         this.cancelButton.on('pointerup', () => {
+            leftTextNotMoney.setVisible(false);
+            leftTextButton.setAlpha(1);
+            this.agreeButton.setAlpha(1);
             handleClose()
         });
 
         this.cancelButton.on("pointerover", () => {
-            console.log("hover");
             //this.cancelButton.setAlpha(0.5);
             //rightTextButton.setAlpha(0.5);
             if(this.activeTween)this.activeTween.stop();
             tweenButtonOver(rightButtonContainer);
         });
         this.cancelButton.on("pointerout", () => {
-            console.log("hover out");
             //this.cancelButton.setAlpha(1);
             //rightTextButton.setAlpha(1);
             if(this.activeTween)this.activeTween.stop();

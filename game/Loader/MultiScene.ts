@@ -1,9 +1,8 @@
 import Phaser from "phaser";
 import BetweenScenes, { BetweenScenesStatus } from "./BetweenScenes";
 import AssetsLoader, { SceneKeys } from "./AssetsLoader";
-import map from "../maps/city";
-import map2 from "../maps/room";
 import RPG from "../rpg";
+import AmbientBackgroundScene from "../ambientAssets/backgroundScene";
 import TestScene from "../TestScene";
 
 export default class MultiScene extends Phaser.Scene {
@@ -18,22 +17,22 @@ export default class MultiScene extends Phaser.Scene {
     this.scenekey = scenekey;
     this.sceneToStop = sceneToStop;
     this.sceneData = sceneData;
-
   }
 
   preload(data: any) {
     this.game.plugins.removeScenePlugin("IsoPlugin");
     this.game.plugins.removeScenePlugin("IsoPhysics");
-    console.log("ARIEL 2DO ROUND", this.scenekey, this.sceneToStop, this.sceneData)
     this.assetLoaderClass = new AssetsLoader(this, ["BaseLoad"]);
     this.assetLoaderClass.runPreload(() => {
       if (this.scenekey) {
         this.makeTransition(this.scenekey, this.sceneToStop ?? undefined, this.sceneData ?? undefined);
       } else {
         // this.makeTransition("MenuScene", undefined);
+        // this.makeTransition("RPG", undefined, "ROOM");
         this.makeTransition("TestScene", undefined);
-        // this.makeTransition("RPG", undefined, { maps: map2.map((m) => (typeof m === "string" ? m : JSON.stringify(m))) });
-        // this.makeTransition("RPG", undefined, { maps: map.map((m) => (typeof m === "string" ? m : JSON.stringify(m))) });
+
+        // this.makeTransition("RPG", undefined, "CITY");
+   
       }
     });
   }
@@ -43,7 +42,6 @@ export default class MultiScene extends Phaser.Scene {
       "BetweenScenes"
     ) as BetweenScenes;
     if (getBetweenScenesScene) {
-      console.log("ENTRO ACA BETWEEN", sceneName)
       if (getBetweenScenesScene.status != BetweenScenesStatus.IDLE)
         return false;
 
@@ -62,26 +60,11 @@ export default class MultiScene extends Phaser.Scene {
         break;
       }
     } else {
-      console.log("ENTRO ACA ELSE", sceneName)
-      switch (sceneName) {
-        case "RPG":
-            const rpg = new RPG(
-              map.map((m: any) => (typeof m === "string" ? m : JSON.stringify(m)))
-            );
-            this.scene.add("RPG", rpg, true);
-            //   this.scene.start(sceneName, data);
-            this.time.delayedCall(1000, () => {
-              this.scene.remove("MultiScene");
-            });
-          break;
-        case "TestScene":
-          this.scene.add("TestScene", new TestScene(), true);
-          this.time.delayedCall(1000, () => {
-            this.scene.remove("MultiScene");
-          });
-          break;
-      }
-     
+      const rpg = new RPG("ROOM");
+      this.scene.add("RPG", rpg, true);
+      this.time.delayedCall(1000, () => {
+        this.scene.remove("MultiScene");
+      });
     }
   }
 

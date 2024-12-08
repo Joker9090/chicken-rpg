@@ -1,6 +1,3 @@
-import RPG from "./rpg";
-//import map from "./maps/city";
-import map from "./maps/room";
 import MultiScene from "./Loader/MultiScene";
 import BetweenScenes from "./Loader/BetweenScenes";
 import GlobalDataManager from "./GlobalDataManager";
@@ -28,21 +25,10 @@ export default class Game {
   };
 
   constructor(canvas: HTMLCanvasElement, maps: string[]) {
-    // const gamelvl1 = new IsoExperimentalMap(maps);
-    // const gameLoader = new SceneLoader();
-    // const uiScene = new UIScene();
-    // const musicManager = new MusicManager();
-    // const menu = new Menu();
-    // const credits = new Credits();
     const globalData = new GlobalDataManager();
     const multiScene = new MultiScene()
     const gameBetweenScenes = new BetweenScenes();
-    
-    // const rpg = new RPG(
-    //   map.map((m) => (typeof m === "string" ? m : JSON.stringify(m)))
-    // );
     this.config.canvas = canvas;
-    // this.config.scene = [gameLoader, gamelvl1, gameBetweenScenes, uiScene, musicManager, menu, credits, levelMenu]
     this.config.scene = [multiScene, gameBetweenScenes, globalData];
   }
 

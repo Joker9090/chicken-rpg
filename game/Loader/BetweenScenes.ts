@@ -2,9 +2,11 @@ import Phaser from "phaser";
 import PreLoadScene from "./PreLoadScene";
 import RPG from "../rpg";
 // import map from "../maps/room";
-import map from "../maps/city";
+import map from "../maps/City";
+import EventsCenterManager from "../services/EventsCenter";
 
 import MenuScene from "../MenuScene";
+import { Events } from "matter";
 
 export enum BetweenScenesStatus {
     IDLE,
@@ -19,6 +21,7 @@ export default class BetweenScenes extends Phaser.Scene {
     newSceneWith?: any;
     firstRender: boolean = true
     startTime: number = 0
+    eventCenter = EventsCenterManager.getInstance();
 
     constructor() {
         super({ key: "BetweenScenes" });
@@ -60,6 +63,7 @@ export default class BetweenScenes extends Phaser.Scene {
             this.status = BetweenScenesStatus.WAITING;
             if (this.newSceneName) {
                 if (this.sceneToStop) {
+                    this.eventCenter.turnOffAllEventsByScene(this.sceneToStop)
                     const scene = this.getSceneByName(this.sceneToStop);
                     if (scene) {
                         this.stopScene(scene, () => {
@@ -71,9 +75,7 @@ export default class BetweenScenes extends Phaser.Scene {
                                         this.scene.bringToTop("BetweenScenes");
                                     } else if (this.newSceneName == "RPG") {
                                         this.time.delayedCall(50, () => {
-                                            const rpg = new RPG(
-                                                this.newSceneWith.maps
-                                            );
+                                            const rpg = new RPG(this.newSceneWith);
                                             this.scene.add("RPG", rpg, true)
                                             this.scene.bringToTop("BetweenScenes");
                                         }, undefined, this); // delay in ms
@@ -85,15 +87,12 @@ export default class BetweenScenes extends Phaser.Scene {
                     }
                 } else {
                     if (this.newSceneName) {
-                        console.log(this.newSceneName, this.newSceneWith, "NEW SCSENE NAME")
                         if (this.newSceneName == "MenuScene") {
                             const menuScene = new MenuScene()
                             this.scene.add("MenuScene", menuScene, true);
                             this.scene.bringToTop("BetweenScenes");
                         } else if (this.newSceneName == "RPG") {
-                            const rpg = new RPG(
-                                this.newSceneWith.maps
-                            );
+                            const rpg = new RPG(this.newSceneWith);
                             this.scene.add("RPG", rpg, true);
                             this.scene.bringToTop("BetweenScenes");
                         }
@@ -103,24 +102,6 @@ export default class BetweenScenes extends Phaser.Scene {
             }
         }
     }
-    // loadNewScene() {
-    //     if (this.status == BetweenScenesStatus.PROCCESSING) {
-    //         this.status = BetweenScenesStatus.WAITING;
-    //         if (this.newSceneName) {
-    //             console.log(this.newSceneName, this.newSceneWith, "NEW SCSENE NAME")
-    //             const rpg = new RPG(
-    //                 map.map((m: any) => (typeof m === "string" ? m : JSON.stringify(m)))
-    //             );
-    //             this.scene.add("RPG", rpg, true);
-    //             // const menuScene = new MenuScene()
-    //             // this.scene.add("MenuScene", menuScene, true);
-
-    //             this.scene.launch(this.newSceneName, this.newSceneWith);
-    //             this.scene.bringToTop("RPG");
-    //         }
-    //         this.turnOff();
-    //     }
-    // }
 
     finishLogic() {
         this.newSceneName = undefined;
@@ -128,8 +109,6 @@ export default class BetweenScenes extends Phaser.Scene {
         this.status = BetweenScenesStatus.IDLE;
         this.scene.remove('PreLoadScene')
         this.scene.remove('MultiScene')
-        console.log("SCEBNES", this.game.scene.getScenes(true))
-        // this.scene.stop();
     }
 
     turnOff() {
