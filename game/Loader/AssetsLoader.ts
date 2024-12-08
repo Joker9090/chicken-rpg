@@ -37,6 +37,15 @@ const loadAssets = {
           endFrame: 200
         });
       }],
+
+      ["assetWithCallback", (scene: Phaser.Scene) => {
+        scene.load.spritesheet("head-02", "/images/player/02/walkHead.png", {
+          frameWidth: 200,
+          frameHeight: 250,
+          startFrame: 0,
+          endFrame: 200
+        });
+      }],
       // player
       ["spritesheet", "player", "/images/chicken/spritesheetPlayer2.png", { frameWidth: 200, frameHeight: 250, startFrame: 0 }],
       ["spritesheet", "playerIdle", "/images/chicken/playerIdle.png", { frameWidth: 200, frameHeight: 250, startFrame: 0 }],
