@@ -102,6 +102,7 @@ export default class RPG extends Scene {
     // -> UPDATER EVENT
     this.eventCenter.turnEventOn("RPG", this.eventCenter.possibleEvents.UPDATE_STATE, () => {
       this.stateGlobal = this.eventCenter.emitWithResponse(this.eventCenter.possibleEvents.GET_STATE, null);
+      console.log("NEW STATE GLOBAL", this.stateGlobal);
       this.UIContainer?.updateData(this.stateGlobal);
       this.map?.addMapFunctionalities(this.stateGlobal);
     }, this);
@@ -136,7 +137,7 @@ export default class RPG extends Scene {
     } else {
       AmbientBackScene.scene.restart({ sceneKey: "DayAndNight" })
     }
-    
+
     let AmbientFrontScene = this.game.scene.getScene("AmbientFrontgroundScene")
     if (!AmbientFrontScene) {
       AmbientFrontScene = new AmbientFrontgroundScene(200, 200)

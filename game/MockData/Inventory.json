@@ -1,0 +1,16 @@
+{
+    "inventary": [
+        {
+          "title": "Degree",
+          "picture": "degree",
+          "pictureOn": "degree",
+          "text": "Degree in Computer Science",
+          "reward": 0,
+          "isSelected": false,
+          "roomInformation": {
+            "assetInRoom": "degree",
+            "frontContainer": true
+          }
+        }
+      ]
+}

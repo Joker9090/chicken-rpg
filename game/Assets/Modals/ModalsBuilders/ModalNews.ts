@@ -44,6 +44,8 @@ export class ModalNews extends ModalBase {
             fontSize: '20px',
             color: '#ffffff',
         }).setOrigin(0.5);
+
+    
         const description = this.scene.add.text(50, 0, newsSelected.description, {
             fontFamily: "MontserratRegular",
             fontSize: '16px',

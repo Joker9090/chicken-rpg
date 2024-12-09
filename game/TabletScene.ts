@@ -1,67 +1,101 @@
 
 export default class TabletScene extends Phaser.Scene {
 
-    snowFlake?: Phaser.GameObjects.Image;
+    worldSize = { width: 850, height: 500 };
+    tabletShown: boolean = true;
+
+
+    tabletBorder?: Phaser.GameObjects.Image;
+    mask?: Phaser.Display.Masks.GeometryMask;
+    group?: Phaser.GameObjects.Group;
 
     constructor(x: number, y: number) {
         super({ key: "TabletScene" });
     }
 
+    showOrHideTablet() {
+        this.tweens.add({
+            targets: [this.cameras.main, this.cameras.getCamera("itemsCam")],
+            y: this.tabletShown ? window.innerHeight + 200 : window.innerHeight / 2 - 500,
+            duration: 700,
+            ease: 'ease'
+        })
+        this.tabletShown = !this.tabletShown;
+    }
+
+    moveCamerasTo(coords: number[]) {
+        this.cameras.getCamera("itemsCam")?.pan(coords[0], coords[1], 1000, 'Linear', true);
+    }
+
     create() {
-        this.add.rectangle(0, 0, 300, 300, 0x000000, 0.3).setOrigin(0.5).setAlpha(0.5);
-        this.add.rectangle(300, 0, 300, 300, 0x00ff00, 0.3).setOrigin(0.5).setAlpha(0.5);
-        this.cameras.main.setViewport(window.innerHeight, window.innerWidth - 150, 300, 300)
+        this.cameras.main.setViewport(window.innerWidth / 2 - this.worldSize.width / 2, this.tabletShown ? window.innerHeight / 2 - this.worldSize.height / 2 : window.innerHeight + 200, this.worldSize.width, this.worldSize.height)
         this.cameras.main.centerOn(0, 0)
+        this.tabletBorder = this.add.image(0, 0, "fondoTablet").setOrigin(0).setScale(0.5).setScrollFactor(0)
+        console.log(this.tabletBorder.width, this.tabletBorder.height);
+        // const graphics = this.add.graphics();
+        // graphics.fillStyle(0x000000, 0.7);
+        // graphics.fillRoundedRect(-this.worldSize.width / 2 + 20, -this.worldSize.height / 2 + 33, this.worldSize.width - 46, this.worldSize.height - 60, 7);
+        // this.mask = graphics.createGeometryMask();
 
-        setTimeout(() => {
-            this.tweens.add({
-                targets: [this.cameras.main],
-                y: window.innerHeight/2 - 150,
-                hold: 3000,
-                yoyo: true,
-                zoom: 1,
-                duration: 1000,
-                ease: 'Linear'
-            })
-        }, 3000)
-        setTimeout(() => {
-            this.cameras.main.pan(300, 0, 800, 'Linear', undefined, (camera, progress) => {
-                if (progress === 1) {
-                    console.log(progress)
-                    setTimeout(()=>{
-                        this.cameras.main.pan(0, 0, 300)
-                    }, 300 )
-                }
-            })
-        }, 5000)
-        // this.snowFlake = this.add.image(window.innerWidth/2, -200, "snowFlake").setScale(0.1);
-        console.log(this, "SCENE CHIQUITA")
-        // this.add.particles(0, 100, 'snowFlake', {
-        //     x: { start: window.innerWidth/2, end: 640, steps: 16, yoyo: true },
-        //     y: { start: -200, end: window.innerHeight + 200, steps: 16, yoyo: true },
-        //     lifespan: 3000,
-        //     gravityY: 200,
-        //     scale: 0.15
-        // });
+        const middlePositions = [
+            [0, 0],
+            [0, this.worldSize.height],
+            [-this.worldSize.width, 0],
+            [this.worldSize.width, 0]
+        ]
 
-        // this.tweens.add({
-        //     targets:[this.snowFlake],
-        //     y: window.innerHeight + 200,
-        //     duration: 4000,
-        //     repeat: -1,
-        //     hold: 500,
-        //     onComplete: () => {
-        //         this.snowFlake?.setPosition(Math.random() * window.innerWidth, -200);
-        //     },
-        //     ease: 'ease'
-        // })
-        // this.tweens.add({
-        //     targets:[this.snowFlake],
-        //     x: '+=25',
-        //     duration: 4000,
-        //     repeat: -1,
-        //     hold: 500,
-        //     ease: 'ease'
-        // })
+        const tabletItemsCamera = this.cameras.add(window.innerWidth/2 - this.worldSize.width/2 + 20, window.innerHeight/2 - this.worldSize.height/2 + 20, this.worldSize.width - 60, this.worldSize.height - 65, false, "itemsCam")
+        tabletItemsCamera.centerOn(0, 0)
+        // tabletItemsCamera.setViewport(window.innerWidth / 2 - this.worldSize.width / 2, this.worldSize.width - 46, this.worldSize.height - 60)
+        tabletItemsCamera.ignore(this.tabletBorder);
+        const containerMenu = this.add.container(0,0);
+        const MenuInicial = this.add.rectangle(0, 0, this.worldSize.width, this.worldSize.height, 0x00ff00).setOrigin(0).setOrigin(0.5).setVisible(true).setInteractive().on("pointerdown", () => {
+            this.moveCamerasTo(middlePositions[1])
+        })
+
+        const containerSettings = this.add.container(0, this.worldSize.height);
+        const Settings = this.add.rectangle(0, this.worldSize.height, this.worldSize.width, this.worldSize.height, 0xffff00).setOrigin(0).setOrigin(0.5).setVisible(true).setInteractive().on("pointerdown", () => {
+            this.moveCamerasTo(middlePositions[2])
+        })
+        const Stats = this.add.rectangle(-this.worldSize.width, 0, this.worldSize.width, this.worldSize.height, 0x00ffff).setOrigin(0).setOrigin(0.5).setVisible(true).setInteractive().on("pointerdown", () => {
+            this.moveCamerasTo(middlePositions[3])
+        })
+        const MoneyMovement = this.add.rectangle(this.worldSize.width, 0, this.worldSize.width, this.worldSize.height, 0xffffff).setOrigin(0).setOrigin(0.5).setVisible(true).setInteractive().on("pointerdown", () => {
+            this.moveCamerasTo(middlePositions[0])
+        })
+
+        this.cameras.main.ignore([MenuInicial,
+            Settings,
+            Stats,
+            MoneyMovement])
+        // MenuInicial.setMask(this.mask);
+        // Settings.setMask(this.mask);
+        // Stats.setMask(this.mask);
+        // MoneyMovement.setMask(this.mask);
+
+   
+
+        // let int = 0;
+
+        // setInterval(() => {
+        //     int++;
+        //     console.log("ENTRO ACA", int)
+        //     if (int === 0) this.cameras.getCamera("itemsCam")?.pan(middlePositions[0][0], middlePositions[0][1], 1000, 'Linear', true);
+        //     if (int === 1) this.cameras.getCamera("itemsCam")?.pan(middlePositions[1][0], middlePositions[1][1], 1000, 'Linear', true);
+        //     if (int === 2) this.cameras.getCamera("itemsCam")?.pan(middlePositions[0][0], middlePositions[0][1], 1000, 'Linear', true);
+        //     if (int === 3) this.cameras.getCamera("itemsCam")?.pan(middlePositions[2][0], middlePositions[2][1], 1000, 'Linear', true);
+        //     if (int === 4) {
+        //         this.cameras.getCamera("itemsCam")?.pan(middlePositions[0][0], middlePositions[0][1], 1000, 'Linear', true);
+        //         int = 0;
+        //     }
+        // }, 1000);
+
+
+        // setTimeout(() => {
+        //     this.showOrHideTablet();
+        //     setTimeout(() => {
+        //         this.showOrHideTablet();
+        //     }, 3000);
+        // }, 3000);
     }
 }

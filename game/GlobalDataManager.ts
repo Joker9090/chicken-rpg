@@ -4,6 +4,7 @@ import { Events } from "matter";
 import EventsCenterManager from "./services/EventsCenter";
 import { ProductToBuy } from "./Assets/Modals/ModalTypes";
 import newsMockData from "./MockData/News.json";
+import inventoryMockData from "./MockData/Inventory.json";
 
 export type newsType = {
   id: number;
@@ -59,7 +60,6 @@ export default class GlobalDataManager extends Phaser.Scene {
         return news;
       });
       this.changeState("news", newNews);
-      this.changeState("news", newNews);
 
     }, this);
 
@@ -105,44 +105,7 @@ export default class GlobalDataManager extends Phaser.Scene {
       playerMoney: 300,
       timeOfDay: 0,
       newsToRead: false,
-      inventary: [
-        {
-          title: "Bicicle",
-          picture: "cama",
-          pictureOn: "cama",
-          text: "Cama",
-          reward: 0,
-          isSelected: false,
-          roomInformation: {
-            assetInRoom: "bicicle",
-            frontContainer: true,
-          },
-        },
-        {
-          title: "Cama",
-          picture: "cama",
-          pictureOn: "cama",
-          text: "Cama",
-          reward: 0,
-          isSelected: false,
-          roomInformation: {
-            assetInRoom: "camera",
-            frontContainer: false,
-          },
-        },
-        {
-          title: "Cama",
-          picture: "cama",
-          pictureOn: "cama",
-          text: "Cama",
-          reward: 0,
-          isSelected: false,
-          roomInformation: {
-            assetInRoom: "degree",
-            frontContainer: false,
-          },
-        },
-      ],
+      inventary: inventoryMockData.inventary,
       news: newsMockData.news,
       newsRequirements: newsMockData.requirements,
       // missionsActive: any[]
@@ -183,7 +146,9 @@ export default class GlobalDataManager extends Phaser.Scene {
     if (this.state.inventary.some(product => product.title === item.title)) {
       return;
     } else {
-      this.state.inventary.push(item);
+      const oldState = [...this.state.inventary];
+      oldState.push(item);
+      this.changeState("inventary", oldState);
     }
   }
 

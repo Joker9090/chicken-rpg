@@ -1,6 +1,7 @@
 import MultiScene from "./Loader/MultiScene";
 import BetweenScenes from "./Loader/BetweenScenes";
 import GlobalDataManager from "./GlobalDataManager";
+import { NONE } from "phaser";
 
 export default class Game {
   game?: Phaser.Game;

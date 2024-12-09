@@ -40,18 +40,30 @@ export class ModalPC extends ModalBase {
                     pictureOn: "camaraShopOn",
                     text: "CAMARA",
                     reward: 100,
+                    roomInformation: {
+                        "assetInRoom": "camera",
+                        "frontContainer": true
+                    }
                 }, {
                     title: "otro",
                     picture: "camaraShop",
                     pictureOn: "camaraShopOn",
                     text: "otro",
                     reward: 100,
+                    roomInformation: {
+                        "assetInRoom": "camera",
+                        "frontContainer": true
+                    }
                 }, {
                     title: "CAMARA3",
                     picture: "camaraShop",
                     pictureOn: "camaraShop",
                     text: "CAMARA",
                     reward: 0,
+                    roomInformation: {
+                        "assetInRoom": "camera",
+                        "frontContainer": true
+                    }
                 }
             ],
             agreeFunction: handleAgreeModalRoom,

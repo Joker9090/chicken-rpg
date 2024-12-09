@@ -22,8 +22,7 @@ export class ModalManager {
                 this.activeModal = new ModalQUEST(this.scene, window.innerWidth / 2, window.innerHeight / 2);
                 break;
             case modalType.PC:
-                //this.activeModal = new ModalPC(this.scene, window.innerWidth / 2, window.innerHeight / 2);
-                this.activeModal = new MultiViewModal(this.scene, window.innerWidth / 2, window.innerHeight / 2);
+                this.activeModal = new ModalPC(this.scene, window.innerWidth / 2, window.innerHeight / 2);
                 break;
             case modalType.PHONE:
                 this.activeModal = new MultiViewModal(this.scene, window.innerWidth / 2, window.innerHeight / 2);
