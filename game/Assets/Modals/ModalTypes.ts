@@ -15,6 +15,7 @@ export enum modalType {
     QUEST,
     PC,
     NEWS,
+    PHONE,
   }
 
 export type ModalConfig = {
@@ -30,6 +31,7 @@ export type ModalConfig = {
     closeButtom?: any;
     background?: Phaser.GameObjects.Image;
     products?: ProductToBuy[];
+    subModal?: ModalConfig;
     agreeFunction: Function;
 };
 
