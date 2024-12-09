@@ -18,6 +18,7 @@ import AmbientFrontgroundScene from "./ambientAssets/frontgroundScene";
 import EventsCenterManager from "./services/EventsCenter";
 import { ModalManager } from "./Assets/Modals/ModalManager";
 import { modalType } from "./Assets/Modals/ModalTypes";
+import TabletScene from "./TabletScene";
 
 // import UIScene from "./UIScene";
 
@@ -118,6 +119,14 @@ export default class RPG extends Scene {
   }
 
   preload() {
+    let tabletScene = this.game.scene.getScene("AmbientBackgroundScene")
+    if (!tabletScene) {
+      tabletScene = new TabletScene(0, 0)
+      this.scene.add("AmbientBackgroundScene", tabletScene, true);
+      tabletScene.scene.sendToBack("AmbientBackgroundScene");
+    } else {
+      tabletScene.scene.restart()
+    }
 
     let AmbientBackScene = this.game.scene.getScene("AmbientBackgroundScene")
     if (!AmbientBackScene) {
@@ -127,9 +136,10 @@ export default class RPG extends Scene {
     } else {
       AmbientBackScene.scene.restart({ sceneKey: "DayAndNight" })
     }
+    
     let AmbientFrontScene = this.game.scene.getScene("AmbientFrontgroundScene")
     if (!AmbientFrontScene) {
-      AmbientFrontScene = new AmbientFrontgroundScene()
+      AmbientFrontScene = new AmbientFrontgroundScene(200, 200)
       this.scene.add("AmbientFrontgroundScene", AmbientFrontScene, true);
       AmbientFrontScene.scene.bringToTop("AmbientFrontgroundScene");
     } else {
