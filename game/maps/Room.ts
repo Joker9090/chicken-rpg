@@ -125,7 +125,7 @@ export default class Room {
     this.interactiveComputer = this.scene.add.rectangle(350, -20, 100, 100, 0x6666ff, 0.3).setInteractive();
     this.interactiveComputer.on('pointerdown', () => {
       // const roomModalTest = new ModalContainer(this.scene, 0, 0, roomModal);
-      this.eventCenter.emitEvent(this.eventCenter.possibleEvents.OPEN_MODAL, { modalType: modalType.PC });
+      this.eventCenter.emitEvent(this.eventCenter.possibleEvents.OPEN_MODAL, { modalType: modalType.NEWS });
     });
     this.interactiveComputer.on("pointerover", () => {
       pcGlow.setVisible(true);

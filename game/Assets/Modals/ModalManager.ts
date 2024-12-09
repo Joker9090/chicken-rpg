@@ -3,11 +3,12 @@ import { modalType } from "./ModalTypes";
 import { ModalPC } from "./ModalsBuilders/ModalPC";
 import { ModalQUEST } from "./ModalsBuilders/ModalQUEST";
 import { ModalBase } from "./ModalsBuilders/ModalBase";
+import { ModalNews } from "./ModalsBuilders/ModalNews";
 
 
 export class ModalManager {
     scene: RPG;
-    activeModal: ModalPC | ModalQUEST | ModalBase | undefined = undefined;
+    activeModal: ModalPC | ModalQUEST | ModalNews | undefined = undefined;
     constructor(
         scene: RPG,
     ) {
@@ -22,6 +23,9 @@ export class ModalManager {
             case modalType.PC:
                 this.activeModal = new ModalPC(this.scene, window.innerWidth / 2, window.innerHeight / 2);
                 break;
+            case modalType.NEWS:
+                this.activeModal = new ModalNews(this.scene, window.innerWidth / 2, window.innerHeight / 2);
+                break;
         }
     }
 
@@ -30,6 +34,4 @@ export class ModalManager {
             this.activeModal = undefined;
         }
     }
-
-
 }

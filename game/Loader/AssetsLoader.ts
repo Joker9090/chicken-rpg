@@ -20,6 +20,9 @@ const loadAssets = {
       // menu
       ["image", "backgroundCity", "/images/menuScene/backgroundCity.png"],
 
+      // NEWS
+      ["image", "newsImageTest", "/assets/news/modalNews.png"],
+      
       // room
       ["image", "room1", "/assets/room/room1.png"],
       ["image", "room2", "/assets/room/room2.png"],

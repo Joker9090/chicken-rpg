@@ -14,6 +14,7 @@ export type ProductToBuy = {
 export enum modalType {
     QUEST,
     PC,
+    NEWS,
   }
 
 export type ModalConfig = {

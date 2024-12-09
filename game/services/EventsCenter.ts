@@ -22,26 +22,35 @@ class EventsCenterManager extends Phaser.Events.EventEmitter {
             this.activeEvents = {};
 
             this.possibleEvents = {
-                READY: "ready",
-                INFO_UPDATE: "infoUpdate",
-                CHANGE_DATE: "changeDate",
-                OPEN_MODAL: "openModal",
-                CLOSE_MODAL: "closeModal",
-                MISSIONS_UPDATE: "missionsUpdate",
+                READY: "ready", // WHEN THE GAME IS READY AND USER DATA HAS BEEN LOADED
+
+                INFO_UPDATE: "infoUpdate", // EVERY TIME THE INFO IS UPDATED IN GLOBAL DATA MANAGER
+                UPDATE: "update",
+                UPDATE_STATE: "updateState",
+
+                CHANGE_DATE: "changeDate", // PASS OF TIME
+                TIME_CHANGE: "timeChange",
+
+                OPEN_MODAL: "openModal", // OPEN MODAL
+                CLOSE_MODAL: "closeModal", // CLOSE MODAL
+
+                GET_NEWS: "getNews", // GET NEWS
+                READ_NEWSPAPER: "readNewspaper", // READ NEWSPAPER AND CHANGE AVAILABLE MISSIONS IN CITY
+                MISSIONS_UPDATE: "missionsUpdate", // COMPLETES A MISSION = REWARD + TIME PASS
+
                 TOGGLE_SOUND: "toggleSound",
                 TOGGLE_MUSIC: "toggleMusic",
                 TOGGLE_BTN_SOUND: "toggleBtnSound",
                 TOGGLE_BTN_MUSIC: "toggleBtnMusic",
                 FINAL_TILE_TOGGLE: "finalTileToggle",
+
                 BUY_ITEM: "buyItem",
                 BUY_ITEMS: "buyItems",
                 GET_INVENTARY: "getInventary",
-                GET_STATE: "getState",
                 GET_OBJECTINVENTARY: "getObjectInventary",
+
+                GET_STATE: "getState",
                 CHANGE_MONEY: "changeMoney",
-                TIME_CHANGE: "timeChange",
-                UPDATE_STATE: "updateState",
-                UPDATE: "update",
             }
 
         }

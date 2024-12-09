@@ -206,7 +206,6 @@ export default class RPG extends Scene {
 
 
     // -> UI
-    console.log("this.stateGlobal", this.stateGlobal);
     this.UIContainer = new UIContainer(this, 0, 0, this.mapType, this.stateGlobal);
     this.UICamera = this.cameras.add(
       0,

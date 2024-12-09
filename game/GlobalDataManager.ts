@@ -3,21 +3,39 @@ import RPG from "./rpg";
 import { Events } from "matter";
 import EventsCenterManager from "./services/EventsCenter";
 import { ProductToBuy } from "./Assets/Modals/ModalTypes";
+import newsMockData from "./MockData/News.json";
 
 export type newsType = {
+  id: number;
+  image: string;
   title: string;
   description: string;
-  reward: number;
-  time: number;
-  rquiremenets: string[];
+  reward: {
+    money: number;
+    reputation: number;
+    happines: number
+  };
+  time: number | null;
+  requirements: string[] | null;
+  readed: boolean;
 }
+
+export type newsRequirementsType = {
+  id: number,
+  name: string,
+  description: string,
+  price: number
+}
+
+export type stateTypes = number | boolean | ProductToBuy[] | newsType[] | newsRequirementsType[];
 
 export type globalState = {
   playerMoney: number;
   timeOfDay: 0 | 1 | 2 | 3;
-  newNews: boolean;
   inventary: ProductToBuy[];
+  newsToRead: boolean;
   news: newsType[];
+  newsRequirements: newsRequirementsType[];
 }
 
 export default class GlobalDataManager extends Phaser.Scene {
@@ -31,6 +49,18 @@ export default class GlobalDataManager extends Phaser.Scene {
     this.eventCenter.turnEventOn("GlobalDataManager", this.eventCenter.possibleEvents.BUY_ITEM, (payload: ProductToBuy) => {
       this.addInventary(payload);
       this.changeMoney(-payload.reward);
+    }, this);
+
+    this.eventCenter.turnEventOn("GlobalDataManager", this.eventCenter.possibleEvents.READ_NEWSPAPER, (newsId: number) => {
+      const newNews = this.state.news.map((news) => {
+        if (news.id === newsId) {
+          news.readed = true;
+        }
+        return news;
+      });
+      this.changeState("news", newNews);
+      this.changeState("news", newNews);
+
     }, this);
 
     this.eventCenter.turnEventOn("GlobalDataManager", this.eventCenter.possibleEvents.BUY_ITEMS, (payload: ProductToBuy[]) => {
@@ -74,7 +104,7 @@ export default class GlobalDataManager extends Phaser.Scene {
     this.state = {
       playerMoney: 300,
       timeOfDay: 0,
-      newNews: false,
+      newsToRead: false,
       inventary: [
         {
           title: "Bicicle",
@@ -113,7 +143,8 @@ export default class GlobalDataManager extends Phaser.Scene {
           },
         },
       ],
-      news: []
+      news: newsMockData.news,
+      newsRequirements: newsMockData.requirements,
       // missionsActive: any[]
       // items: any[]
       // news: any[{}]
@@ -124,12 +155,7 @@ export default class GlobalDataManager extends Phaser.Scene {
   //   missions.random()
   // }
 
-  newNews(state: boolean) {
-    this.state.newNews = state;
-  }
-
-
-  changeState(key: string, value: string | number | boolean) {
+  changeState(key: string, value: stateTypes) {
     this.state = { ...this.state, [key]: value }
     this.eventCenter.emit(this.eventCenter.possibleEvents.UPDATE_STATE);
   }
@@ -175,16 +201,8 @@ export default class GlobalDataManager extends Phaser.Scene {
 
   create() {
     const eventCenter = EventsCenterManager.getInstance();
+    this.state.newsToRead = true;
 
-    const timer0 = this.time.addEvent({
-      delay: 1000, // ms
-      callback: () => {
-        eventCenter.emitEvent(eventCenter.possibleEvents.READY, null);
-        this.newNews(true);
-      },
-      //args: [],
-      callbackScope: this,
-    });
   }
 
   update() { }

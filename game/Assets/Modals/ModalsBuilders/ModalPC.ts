@@ -111,7 +111,6 @@ export class ModalPC extends ModalBase {
             });
         }
 
-        console.log("Inventary modal:", inventary);
         //TOP CONTAINER
         const btnExit_p = this.scene.add.image(255, 0, "btnExit").setInteractive();
 
@@ -356,7 +355,6 @@ export class ModalPC extends ModalBase {
             rightButtonContainer,
         ]);
 
-        console.log("NETRO ACA ARIiii")
         this.modalContainerWithElements.add([
             modalBackground,
             topContainer,

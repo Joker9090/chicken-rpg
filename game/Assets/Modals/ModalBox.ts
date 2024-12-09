@@ -311,7 +311,6 @@ export class ModalBox extends Phaser.GameObjects.Container {
             case modalType.PC:
                 
                 
-                console.log("Inventary modal:", inventary);
                 //TOP CONTAINER
                 const btnExit_p = this.scene.add.image(255, 0, "btnExit").setInteractive();
 
