@@ -25,6 +25,9 @@ const loadAssets = {
       
       // TABLET
       ["image", "fondoTablet", "/tabletScene/fondoTablet.png"],
+      ["image", "tabletStatLeft", "/tabletScene/tabletStatLeft.png"],
+      ["image", "tabletRightDown", "/tabletScene/tabletRightDown.png"],
+      ["image", "tabletRightUp", "/tabletScene/tabletRightUp.png"],
 
       // room
       ["image", "room1", "/assets/room/room1.png"],

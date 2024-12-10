@@ -1,3 +1,4 @@
+import { statsContainer } from "./TabletContainers/statsContainer";
 
 export default class TabletScene extends Phaser.Scene {
 
@@ -45,14 +46,18 @@ export default class TabletScene extends Phaser.Scene {
 
         // COPNTAINER
         const containerMenu = this.add.container(0,0);
-        const MenuInicial = this.add.rectangle(0, 0, this.worldSize.width, this.worldSize.height, 0x00ff00).setOrigin(0).setOrigin(0.5).setVisible(true).setInteractive().on("pointerdown", () => {
-            this.moveCamerasTo(middlePositions[1])
-        })
+        //const MenuInicial = this.add.rectangle(0, 0, this.worldSize.width, this.worldSize.height, 0x00ff00).setOrigin(0).setOrigin(0.5).setVisible(true).setInteractive().on("pointerdown", () => {
+        //    this.moveCamerasTo(middlePositions[1])
+        //})
 
         const containerSettings = this.add.container(0, this.worldSize.height);
+        
         const Settings = this.add.rectangle(0, this.worldSize.height, this.worldSize.width, this.worldSize.height, 0xffff00).setOrigin(0).setOrigin(0.5).setVisible(true).setInteractive().on("pointerdown", () => {
             this.moveCamerasTo(middlePositions[2])
         })
+
+        const containerStats = new statsContainer(this, 0, 0, () => {});
+    
         const Stats = this.add.rectangle(-this.worldSize.width, 0, this.worldSize.width, this.worldSize.height, 0x00ffff).setOrigin(0).setOrigin(0.5).setVisible(true).setInteractive().on("pointerdown", () => {
             this.moveCamerasTo(middlePositions[3])
         })
@@ -60,9 +65,14 @@ export default class TabletScene extends Phaser.Scene {
             this.moveCamerasTo(middlePositions[0])
         })
 
-        this.cameras.main.ignore([MenuInicial,
+        this.cameras.main.ignore([/*MenuInicial,*/
             Settings,
             Stats,
-            MoneyMovement])
+            MoneyMovement,
+            containerStats,
+            ]);
+
+
+        console.log("CAMARAS NANO! ", this.cameras.main, this.cameras.getCamera("itemsCam"));
     }
 }
