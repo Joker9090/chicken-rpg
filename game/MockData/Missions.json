@@ -1,0 +1,39 @@
+{
+    "missions": [
+        {
+            "id": 0,
+            "title": "Fotos Emblemáticas",
+            "requirements": {
+                "items": [
+                    {
+                        "name": "camera",
+                        "image": "camaraWhite"
+                    }
+                ]
+            },
+            "picture": "fotoCamara",
+            "time": 2,
+            "description": "Toma una foto en un lugar emblemático de la ciudad",
+            "reward": {
+                "money": 15,
+                "reputation": 5,
+                "happiness": 5
+            }
+        },
+        {
+            "id": 1,
+            "title": "Pasear Perros",
+            "requirements": {
+                "items": []
+            },
+            "picture": "walkDogs",
+            "time": 2,
+            "description": "Pasea a los perros de Doña Florinda",
+            "reward": {
+                "money": 5,
+                "reputation": 0,
+                "happiness": -5
+            }
+        }
+    ]
+}

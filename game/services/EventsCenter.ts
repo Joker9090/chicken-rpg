@@ -38,6 +38,9 @@ class EventsCenterManager extends Phaser.Events.EventEmitter {
                 READ_NEWSPAPER: "readNewspaper", // READ NEWSPAPER AND CHANGE AVAILABLE MISSIONS IN CITY
                 MISSIONS_UPDATE: "missionsUpdate", // COMPLETES A MISSION = REWARD + TIME PASS
 
+                MAKE_MISSION: "makeMission", // MAKE A MISSION
+                ADD_MISSION: "addMission", // ADD A MISSION
+
                 TOGGLE_SOUND: "toggleSound",
                 TOGGLE_MUSIC: "toggleMusic",
                 TOGGLE_BTN_SOUND: "toggleBtnSound",

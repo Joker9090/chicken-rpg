@@ -2,6 +2,7 @@ import RPG from "@/game/rpg";
 import { ModalConfig, ProductToBuy, modalType } from "../ModalTypes";
 import EventsCenterManager from "../../../services/EventsCenter";
 import { ModalBase } from "./ModalBase";
+import { globalState } from "@/game/GlobalDataManager";
 
 
 
@@ -20,9 +21,14 @@ export class ModalQUEST extends ModalBase {
         super(scene, x, y);
         this.scene = scene;
 
+        const globalData: globalState = EventsCenterManager.emitWithResponse(EventsCenterManager.possibleEvents.GET_STATE, null)
+
+        const availableMissions = globalData.availableMissions;
+
+        const missionsSelected = availableMissions[Math.floor(Math.random() * availableMissions.length)];
 
         const handleAgreeModal = (amount: number, timePass: number) => {
-            this.eventCenter.emitEvent(this.eventCenter.possibleEvents.CHANGE_MONEY, amount);
+            this.eventCenter.emitEvent(this.eventCenter.possibleEvents.MAKE_MISSION, missionsSelected.id);
         }
         
         const modalConfig: ModalConfig = {
