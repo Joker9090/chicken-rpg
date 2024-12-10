@@ -3,14 +3,7 @@
         {
             "id": 0,
             "title": "Fotos Emblemáticas",
-            "requirements": {
-                "items": [
-                    {
-                        "name": "camera",
-                        "image": "camaraWhite"
-                    }
-                ]
-            },
+            "requirements": [3],
             "picture": "fotoCamara",
             "time": 2,
             "description": "Toma una foto en un lugar emblemático de la ciudad",
@@ -18,14 +11,14 @@
                 "money": 15,
                 "reputation": 5,
                 "happiness": 5
-            }
+            },
+            "available": true,
+            "done": false
         },
         {
             "id": 1,
             "title": "Pasear Perros",
-            "requirements": {
-                "items": []
-            },
+            "requirements": [],
             "picture": "walkDogs",
             "time": 2,
             "description": "Pasea a los perros de Doña Florinda",
@@ -33,7 +26,24 @@
                 "money": 5,
                 "reputation": 0,
                 "happiness": -5
-            }
+            },
+            "available": false,
+            "done": false
+        },
+        {
+            "id": 2,
+            "title": "Pasear Perros",
+            "requirements": [],
+            "picture": "walkDogs",
+            "time": 2,
+            "description": "Pasea a los perros de Doña Florinda",
+            "reward": {
+                "money": 5,
+                "reputation": 0,
+                "happiness": -5
+            },
+            "available": true,
+            "done": false
         }
     ]
 }

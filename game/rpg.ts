@@ -102,14 +102,13 @@ export default class RPG extends Scene {
     // -> UPDATER EVENT
     this.eventCenter.turnEventOn("RPG", this.eventCenter.possibleEvents.UPDATE_STATE, () => {
       this.stateGlobal = this.eventCenter.emitWithResponse(this.eventCenter.possibleEvents.GET_STATE, null);
-      console.log("NEW STATE GLOBAL", this.stateGlobal);
       this.UIContainer?.updateData(this.stateGlobal);
       this.map?.addMapFunctionalities(this.stateGlobal);
     }, this);
     // <- UPDATER EVENT
     // -> MODAL EVENTS
-    EventsCenterManager.turnEventOn("RPG", EventsCenterManager.possibleEvents.OPEN_MODAL, (data: {modalType: modalType}) => {
-      this.modalManager.createModal(data.modalType);
+    EventsCenterManager.turnEventOn("RPG", EventsCenterManager.possibleEvents.OPEN_MODAL, (data: {modalType: modalType, pin?: PinIsoSpriteBox}) => {
+      this.modalManager.createModal(data);
     }, this);
     EventsCenterManager.turnEventOn("RPG", EventsCenterManager.possibleEvents.CLOSE_MODAL, () => {
       this.modalManager.destroyModal();
@@ -120,14 +119,14 @@ export default class RPG extends Scene {
   }
 
   preload() {
-    let tabletScene = this.game.scene.getScene("AmbientBackgroundScene")
-    if (!tabletScene) {
-      tabletScene = new TabletScene(0, 0)
-      this.scene.add("AmbientBackgroundScene", tabletScene, true);
-      tabletScene.scene.sendToBack("AmbientBackgroundScene");
-    } else {
-      tabletScene.scene.restart()
-    }
+    // let tabletScene = this.game.scene.getScene("AmbientBackgroundScene")
+    // if (!tabletScene) {
+    //   tabletScene = new TabletScene(0, 0)
+    //   this.scene.add("AmbientBackgroundScene", tabletScene, true);
+    //   tabletScene.scene.sendToBack("AmbientBackgroundScene");
+    // } else {
+    //   tabletScene.scene.restart()
+    // }
 
     let AmbientBackScene = this.game.scene.getScene("AmbientBackgroundScene")
     if (!AmbientBackScene) {

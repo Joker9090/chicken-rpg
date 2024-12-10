@@ -5,21 +5,24 @@ import { ModalQUEST } from "./ModalsBuilders/ModalQUEST";
 import { ModalBase } from "./ModalsBuilders/ModalBase";
 import { ModalNews } from "./ModalsBuilders/ModalNews";
 import { MultiViewModal } from "./ModalsBuilders/MultiViewModal";
+import { PinIsoSpriteBox } from "../pinIsoSpriteBox";
 
 
 export class ModalManager {
     scene: RPG;
     activeModal: ModalPC | ModalQUEST | MultiViewModal | ModalNews | undefined = undefined;
+    pin?: PinIsoSpriteBox;
     constructor(
         scene: RPG,
     ) {
         this.scene = scene;
     }
 
-    createModal(modalOption: modalType) {
-        switch (modalOption) {
+    createModal(data: {modalType: modalType, pin?: PinIsoSpriteBox}) {
+        if (data.pin) this.pin = data.pin;
+        switch (data.modalType) {
             case modalType.QUEST:
-                this.activeModal = new ModalQUEST(this.scene, window.innerWidth / 2, window.innerHeight / 2);
+                this.activeModal = new ModalQUEST(this.scene, window.innerWidth / 2, window.innerHeight / 2, this.pin);
                 break;
             case modalType.PC:
                 this.activeModal = new ModalPC(this.scene, window.innerWidth / 2, window.innerHeight / 2);

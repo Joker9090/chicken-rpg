@@ -15,7 +15,6 @@ export default class City {
     const randomYPin = [11, 16, 26, 31]
     const randomHPin = [11, 6, 11, 6]
     const objects: ObjetsConfig[] = [
-
       {
         x: 8,
         y: 36,
@@ -42,18 +41,23 @@ export default class City {
       },
     ];
 
-    for (let i = 0; i < 200; i++) {
-      if (i === 0) {
-        const randomNumber = Math.floor(Math.random() * randomYPin.length)
+
+    for (let i = 0; i < randomYPin.length; i++) {
+      const randomNumber = Math.random()
+      console.log(randomNumber)
+      if (randomNumber < 0.5) {
         objects.push(
           {
             x: 5,
-            y: randomYPin[randomNumber],
-            h: randomHPin[randomNumber] * 50 + 100,
+            y: randomYPin[i],
+            h: randomHPin[i] * 50 + 100,
             type: "15",
           },
         )
       }
+    }
+
+    for (let i = 0; i < 200; i++) {
       objects.push({
         x: Math.floor(20 + Math.random() * 20),
         y: Math.floor(Math.random() * 40),
@@ -154,7 +158,7 @@ export default class City {
   }
 
   addMapFunctionalities() {
-    if(this.scene.player){
+    if (this.scene.player) {
       this.scene.player.self.setScale(0.7);
     }
   }

@@ -31,7 +31,6 @@ export default class TabletScene extends Phaser.Scene {
         this.cameras.main.setViewport(window.innerWidth / 2 - this.worldSize.width / 2, this.tabletShown ? window.innerHeight / 2 - this.worldSize.height / 2 : window.innerHeight + 200, this.worldSize.width, this.worldSize.height)
         this.cameras.main.centerOn(0, 0)
         this.tabletBorder = this.add.image(0, 0, "fondoTablet").setOrigin(0).setScale(0.5).setScrollFactor(0)
-        console.log(this.tabletBorder.width, this.tabletBorder.height);
         // const graphics = this.add.graphics();
         // graphics.fillStyle(0x000000, 0.7);
         // graphics.fillRoundedRect(-this.worldSize.width / 2 + 20, -this.worldSize.height / 2 + 33, this.worldSize.width - 46, this.worldSize.height - 60, 7);
@@ -79,7 +78,6 @@ export default class TabletScene extends Phaser.Scene {
 
         // setInterval(() => {
         //     int++;
-        //     console.log("ENTRO ACA", int)
         //     if (int === 0) this.cameras.getCamera("itemsCam")?.pan(middlePositions[0][0], middlePositions[0][1], 1000, 'Linear', true);
         //     if (int === 1) this.cameras.getCamera("itemsCam")?.pan(middlePositions[1][0], middlePositions[1][1], 1000, 'Linear', true);
         //     if (int === 2) this.cameras.getCamera("itemsCam")?.pan(middlePositions[0][0], middlePositions[0][1], 1000, 'Linear', true);

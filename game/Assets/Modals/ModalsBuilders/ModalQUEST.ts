@@ -3,6 +3,7 @@ import { ModalConfig, ProductToBuy, modalType } from "../ModalTypes";
 import EventsCenterManager from "../../../services/EventsCenter";
 import { ModalBase } from "./ModalBase";
 import { globalState } from "@/game/GlobalDataManager";
+import { PinIsoSpriteBox } from "../../pinIsoSpriteBox";
 
 
 
@@ -17,6 +18,7 @@ export class ModalQUEST extends ModalBase {
         scene: RPG,
         x: number,
         y: number,
+        pin: PinIsoSpriteBox | undefined
     ) {
         super(scene, x, y);
         this.scene = scene;
@@ -29,17 +31,22 @@ export class ModalQUEST extends ModalBase {
 
         const handleAgreeModal = (amount: number, timePass: number) => {
             this.eventCenter.emitEvent(this.eventCenter.possibleEvents.MAKE_MISSION, missionsSelected.id);
+            if (pin){
+                pin.self.destroy();
+            }
         }
-        
+
         const modalConfig: ModalConfig = {
             type: modalType.QUEST,
+            // requirements: missionsSelected.requirements,
             requires: "camera",
             requirePicture: "camaraWhite",
-            title: "FOTOS EMBLEMATICAS",
+            title: missionsSelected.title,
             picture: "fotoCamara",
-            time: 2,
-            text: "Sal a tomar fotos al parque.",
-            reward: 15,
+            // picture: missionsSelected.picture,
+            time: missionsSelected.time,
+            text: missionsSelected.description,
+            reward: missionsSelected.reward.money,
             agreeFunction: handleAgreeModal,
         }
 
