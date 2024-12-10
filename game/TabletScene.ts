@@ -33,6 +33,11 @@ export default class TabletScene extends Phaser.Scene {
         this.cameras.main.centerOn(0, 0)
         this.tabletBorder = this.add.image(0, 0, "fondoTablet").setOrigin(0).setScale(0.5).setScrollFactor(0)
         console.log(this.tabletBorder.width, this.tabletBorder.height);
+        // const graphics = this.add.graphics();
+        // graphics.fillStyle(0x000000, 0.7);
+        // graphics.fillRoundedRect(-this.worldSize.width / 2 + 20, -this.worldSize.height / 2 + 33, this.worldSize.width - 46, this.worldSize.height - 60, 7);
+        // this.mask = graphics.createGeometryMask();
+
         const middlePositions = [
             [0, 0],
             [0, this.worldSize.height],
@@ -42,9 +47,8 @@ export default class TabletScene extends Phaser.Scene {
 
         const tabletItemsCamera = this.cameras.add(window.innerWidth/2 - this.worldSize.width/2 + 20, window.innerHeight/2 - this.worldSize.height/2 + 20, this.worldSize.width - 60, this.worldSize.height - 65, false, "itemsCam")
         tabletItemsCamera.centerOn(0, 0)
+        // tabletItemsCamera.setViewport(window.innerWidth / 2 - this.worldSize.width / 2, this.worldSize.width - 46, this.worldSize.height - 60)
         tabletItemsCamera.ignore(this.tabletBorder);
-
-        // COPNTAINER
         const containerMenu = this.add.container(0,0);
         //const MenuInicial = this.add.rectangle(0, 0, this.worldSize.width, this.worldSize.height, 0x00ff00).setOrigin(0).setOrigin(0.5).setVisible(true).setInteractive().on("pointerdown", () => {
         //    this.moveCamerasTo(middlePositions[1])
