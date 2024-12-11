@@ -12,7 +12,7 @@
                 "happines": 3 
             } ,
             "time": 1,
-            "requirements": null,
+            "requirements": [],
             "readed": false
         },
         {
@@ -26,7 +26,7 @@
                 "reputation": 1,
                 "happines": 3 
             },
-            "time": null,
+            "time": 0,
             "requirements": [
                 6
             ],
@@ -44,7 +44,7 @@
                 "happines": 3 
             } ,
             "time": 2,
-            "requirements": null,
+            "requirements": [],
             "readed": false
         },
         {
@@ -59,7 +59,7 @@
                 "happines": 3 
             } ,
             "time": 2,
-            "requirements": null,
+            "requirements": [],
             "readed": false
         },
         {
@@ -182,8 +182,8 @@
                 "reputation": 1,
                 "happines": 3 
             } ,
-            "time": null,
-            "requirements": null,
+            "time": 0,
+            "requirements": [],
             "readed": false
         },
         {
@@ -197,8 +197,8 @@
                 "reputation": 1,
                 "happines": 3 
             } ,
-            "time": null,
-            "requirements": null,
+            "time": 0,
+            "requirements": [],
             "readed": false
         },
         {

@@ -6,7 +6,6 @@ import { globalState } from "@/game/GlobalDataManager";
 import { PinIsoSpriteBox } from "../../pinIsoSpriteBox";
 
 
-
 export class ModalQUEST extends ModalBase {
     scene: RPG;
     agreeButton: Phaser.GameObjects.Image;
@@ -38,15 +37,15 @@ export class ModalQUEST extends ModalBase {
 
         const modalConfig: ModalConfig = {
             type: modalType.QUEST,
-            // requirements: missionsSelected.requirements,
-            requires: "camera",
-            requirePicture: "camaraWhite",
+            requirements: missionsSelected.requirements,
+            // requires: "camera",
+            // requirePicture: "camaraWhite",
             title: missionsSelected.title,
             picture: "fotoCamara",
             // picture: missionsSelected.picture,
             time: missionsSelected.time,
             text: missionsSelected.description,
-            reward: missionsSelected.reward.money,
+            reward: missionsSelected.reward,
             agreeFunction: handleAgreeModal,
         }
 
@@ -173,19 +172,27 @@ export class ModalQUEST extends ModalBase {
         });
 
         //row 3
-        //@ts-ignore
-        const requirePicture = this.scene.add.image(-160, -30, modalConfig.requirePicture).setScale(1);
+        let haveObjects: boolean[] = []
+        const requirementsData = globalData.missionRequirements.filter((requirement) => modalConfig.requirements.includes(requirement.id));
 
-        //Check si tiene el objeto
-        const haveObject = this.eventCenter.emitWithResponse(this.eventCenter.possibleEvents.GET_OBJECTINVENTARY, modalConfig.requires);
-        if (haveObject != undefined) {
-            requirePicture.setTint(0x00ff00);
-            this.agreeButton.setAlpha(1);
-            leftTextButton.setAlpha(1);
-        } else {
-            requirePicture.setTint(0xff0000);
-            this.agreeButton.setAlpha(0.5);
-            leftTextButton.setAlpha(0.5);
+        for (let i = 0; i < requirementsData.length; i++) {
+            console.log("REQUIREMENET DATA IN MODAL", requirementsData);
+            //@ts-ignore
+            const requireItem = this.scene.add.image(-160 - i*-30, -30, requirementsData[i].miniImageModal)
+            rightContainer.add(requireItem);
+            //Check si tiene el objeto
+            const haveObject = this.eventCenter.emitWithResponse(this.eventCenter.possibleEvents.CHECK_MISSION_REQUIREMENTS, requirementsData[i]);
+            if (haveObject) {
+                requireItem.setTint(0x00ff00);
+                this.agreeButton.setAlpha(1);
+                leftTextButton.setAlpha(1);
+                haveObjects.push(true);
+            } else {
+                requireItem.setTint(0xff0000);
+                this.agreeButton.setAlpha(0.5);
+                leftTextButton.setAlpha(0.5);
+                haveObjects.push(false);
+            }
         }
 
         //row 4
@@ -195,10 +202,11 @@ export class ModalQUEST extends ModalBase {
         const nightIcon_q = this.scene.add.image(60, 10, "iconMoon").setScale(1.2);
 
         //row 5
-        const morningBar_q = this.scene.add.image(-150, 35, "barritaOn").setScale(1);
-        const afternoonBar_q = this.scene.add.image(-80, 35, "barritaOff").setScale(1);
-        const eveningBar_q = this.scene.add.image(-10, 35, "barritaOff").setScale(1);
-        const nightBar_q = this.scene.add.image(60, 35, "barritaOff").setScale(1);
+
+        const morningBar_q = this.scene.add.image(-150, 35,   modalConfig.time > 0 ? "barritaOn" : "barritaOff").setScale(1);
+        const afternoonBar_q = this.scene.add.image(-80, 35, modalConfig.time > 1 ? "barritaOn" : "barritaOff").setScale(1);
+        const eveningBar_q = this.scene.add.image(-10, 35, modalConfig.time > 2 ? "barritaOn" : "barritaOff").setScale(1);
+        const nightBar_q = this.scene.add.image(60, 35, modalConfig.time > 3 ? "barritaOn" : "barritaOff").setScale(1);
 
         //row 6
 
@@ -210,13 +218,29 @@ export class ModalQUEST extends ModalBase {
         });
 
         //@ts-ignore
-        const reward_q = this.scene.add.text(-170, 105, `${modalConfig.reward}`, {
+        const reward_q = this.scene.add.text(-160, 110, `${modalConfig.reward.money}`, {
             fontFamily: "MontserratSemiBold",
             fontSize: '24px',
             color: '#ffffff',
         }).setOrigin(0.5);
 
-        const coinIcon = this.scene.add.image(-140, 105, "coin");
+        const coinIcon = this.scene.add.image(-125, 110, "coinModalIcon");
+
+        const reward_q2 = this.scene.add.text(-60, 110, `${modalConfig.reward.reputation}`, {
+            fontFamily: "MontserratSemiBold",
+            fontSize: '24px',
+            color: '#ffffff',
+        }).setOrigin(0.5);
+
+        const reputationIcon = this.scene.add.image(-30, 110, "reputationModalIcon");
+
+        const reward_q3 = this.scene.add.text(40, 110, `${modalConfig.reward.happiness}`, {
+            fontFamily: "MontserratSemiBold",
+            fontSize: '24px',
+            color: '#ffffff',
+        }).setOrigin(0.5);
+
+        const happinessIcon = this.scene.add.image(70, 110, "happinessModalIcon");
 
 
         rightContainer.add([
@@ -224,7 +248,6 @@ export class ModalQUEST extends ModalBase {
             timeIcon_q,
             subTitleBackground_1_q,
             subTitle_1_q,
-            requirePicture,
             morningIcon_q,
             afternoonIcon_q,
             eveningIcon_q,
@@ -236,7 +259,11 @@ export class ModalQUEST extends ModalBase {
             subTitleBackground_2_q,
             subTitle_2_q,
             reward_q,
-            coinIcon
+            coinIcon,
+            reward_q2,
+            reputationIcon,
+            reward_q3,
+            happinessIcon,
         ]);
 
         this.add([
@@ -246,8 +273,9 @@ export class ModalQUEST extends ModalBase {
         ]);
 
         this.agreeButton.on('pointerup', () => {
-
-            if (haveObject != undefined) {
+            // check if haveObjects is all trues
+            const haveAll = haveObjects.every((haveObject) => haveObject);
+            if (haveAll) {
                 modalConfig.agreeFunction(modalConfig.reward, modalConfig.time);
                 this.handleClose();
             }

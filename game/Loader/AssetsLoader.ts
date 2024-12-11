@@ -115,6 +115,9 @@ const loadAssets = {
       ["image", "camaraGreen", "/assets/modalAssets/masUi/camaraGreen.png"],
       ["image", "camaraShop", "/assets/modalAssets/camaraShop.png"],
       ["image", "camaraShopOn", "/assets/modalAssets/camaraShopOn.png"],
+      ["image", "coinModalIcon", "/assets/modalAssets/coinModalIcon.png"],
+      ["image", "reputationModalIcon", "/assets/modalAssets/reputationModalIcon.png"],
+      ["image", "happinessModalIcon", "/assets/modalAssets/happinessModalIcon.png"],
 
       //Buildings
       ["image", "test1", "/images/buildingTest/test1.png"],

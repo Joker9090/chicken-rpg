@@ -10,7 +10,7 @@ import missionRequirementsMockData from "./MockData/Requirements.json";
 
 export type newsType = {
   id: number
-  missionId: number[] | undefined
+  missionId: number[] 
   image: string
   title: string
   description: string
@@ -19,13 +19,14 @@ export type newsType = {
     reputation: number
     happines: number
   }
-  time: number | null
-  requirements: number[] | null
+  time: number 
+  requirements: number[] 
   readed: boolean
 }
 
 export type missionRequirements = {
   id: number
+  type: string
   name: string
   description: string
   price: number
@@ -37,7 +38,7 @@ export type missionsType = {
   title: string
   requirements: number[]
   picture: string
-  time: number
+  time: number 
   description: string
   reward: {
     money: number
@@ -95,7 +96,7 @@ export default class GlobalDataManager extends Phaser.Scene {
     this.eventCenter.turnEventOn("GlobalDataManager", this.eventCenter.possibleEvents.MAKE_MISSION, (missionId: number) => {
       const mission = this.state.availableMissions.find((mission) => mission.id === missionId);
       if (mission){
-        this.changeMoney(-mission.reward.money);
+        this.changeMoney(mission.reward.money);
         this.changeState("doneMissions", [...this.state.doneMissions, {...mission, done: true}]);
         const newAvailableMissions = this.state.availableMissions.filter((mission) => mission.id !== missionId);
         this.changeState("availableMissions", newAvailableMissions);
@@ -138,6 +139,10 @@ export default class GlobalDataManager extends Phaser.Scene {
       return this.getObjectInventary(payload);
     }, this);
 
+    this.eventCenter.turnEventOn("GlobalDataManager", this.eventCenter.possibleEvents.CHECK_MISSION_REQUIREMENTS, (payload: missionRequirements) => {
+      return this.checkRequirements(payload);
+    }, this);
+
     this.eventCenter.turnEventOn("GlobalDataManager", this.eventCenter.possibleEvents.CHANGE_MONEY, (payload: number) => {
       this.changeMoney(payload);
     }, this);
@@ -170,6 +175,19 @@ export default class GlobalDataManager extends Phaser.Scene {
 
   changeMoney(amount: number) {
     this.changeState("playerMoney", this.state.playerMoney + amount);
+  }
+
+  checkRequirements(requirements: missionRequirements) {
+     switch (requirements.type) {
+      case "money":
+        return this.state.playerMoney >= requirements.price;
+      case "item":
+        console.log(this.state.inventary, "INVENTARY")
+        console.log(requirements, "REQUIREMENT")
+        return this.state.inventary.some((product) => product.title === requirements.name);
+      default:
+        return false;
+     }
   }
 
   passTime(amount: number) {

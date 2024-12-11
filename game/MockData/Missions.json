@@ -21,7 +21,7 @@
             "requirements": [],
             "picture": "walkDogs",
             "time": 2,
-            "description": "Pasea a los perros de Doña Florinda",
+            "description": "Saca a pasear un perro por el parque.",
             "reward": {
                 "money": 5,
                 "reputation": 0,
@@ -32,17 +32,197 @@
         },
         {
             "id": 2,
-            "title": "Pasear Perros",
-            "requirements": [],
+            "title": "Amigos de cuatro patas",
+            "requirements": [6],
             "picture": "walkDogs",
-            "time": 2,
-            "description": "Pasea a los perros de Doña Florinda",
+            "time": 0,
+            "description": "Dona dinero a un refugio de animales para cuidar a los perros callejeros.",
             "reward": {
-                "money": 5,
-                "reputation": 0,
-                "happiness": -5
+                "money": -5,
+                "reputation": 1,
+                "happiness": 3 
             },
             "available": true,
+            "done": false
+        },
+        {
+            "id": 3,
+            "title": "Paseo canino (intermedio)",
+            "requirements": [],
+            "description": "Saca a pasear tres perros por el parque.",
+            "picture": "walkDogs",
+            "reward": {
+                "money": 5,
+                "reputation": 1,
+                "happiness": 3 
+            } ,
+            "time": 2,
+            "available": false,
+            "done": false
+        },
+        {
+            "id": 4,
+            "title": "Paseo canino (avanzado)",
+            "requirements": [],
+            "description":"Saca a pasear cinco perros por el parque.",
+            "picture": "walkDogs",
+            "reward": {
+                "money": 15,
+                "reputation": 3,
+                "happiness": -2
+            } ,
+            "time": 2,
+            "available": false,
+            "done": false
+        },
+        {
+            "id": 5,
+            "title": "Delivery express",
+            "requirements": [1],
+            "description": "Reparte los pedidos por la ciudad.",
+            "picture": "walkDogs",
+            "reward": {
+                "money": 10,
+                "reputation": 3,
+                "happiness": 5
+            } ,
+            "time": 1,
+            "available": false,
+            "done": false
+        },
+        {
+            "id": 6,
+            "title": "Delivery express (intermedio)",
+            "requirements": [1],
+            "description": "Reparte los pedidos por la ciudad.",
+            "picture": "walkDogs",
+            "reward": {
+                "money": 20,
+                "reputation": 5,
+                "happiness": 10
+            } ,
+            "time": 1,
+            "available": false,
+            "done": false
+        },
+        {
+            "id": 7,
+            "title": "Delivery express (avanzado)",
+            "requirements": [1, 2],
+            "description": "Reparte los pedidos por la ciudad.",
+            "picture": "walkDogs",
+            "reward": {
+                "money": 30,
+                "reputation": 5,
+                "happiness": 10
+            } ,
+            "time": 1,
+            "available": false,
+            "done": false
+        },
+        {
+            "id": 8,
+            "title": "Fotografía de primera",
+            "requirements": [3, 4],
+            "description": "Toma fotos para un creador de contenido.",
+            "picture": "walkDogs",
+            "reward": {
+                "money": 5,
+                "reputation": 2,
+                "happiness": 5
+            } ,
+            "time": 2,
+            "available": false,
+            "done": false
+        },
+        {
+            "id": 9,
+            "title": "Fotografía de primera (intermedio)",
+            "requirements": [1, 3, 4],
+            "description": "Toma fotos para dos creadores de contenido.",
+            "picture": "walkDogs",
+            "reward": {
+                "money": 10,
+                "reputation": 5,
+                "happiness": 8
+            } ,
+            "time": 2,
+            "available": false,
+            "done": false
+        },
+        {
+            "id": 10,
+            "title": "Fotografía de primera 3",
+            "requirements": [1, 3, 4, 5],
+            "description": "Toma fotos para dos creadores de contenido y edítalas.",
+            "picture": "walkDogs",
+            "reward": {
+                "money": 15,
+                "reputation": 10,
+                "happiness": 10
+            } ,
+            "time": 2,
+            "available": false,
+            "done": false
+        },
+        {
+            "id": 11,
+            "title": "Gallina en apuros",
+            "requirements": [],
+            "description": "Encuentra a la gallina perdida en la ciudad.",
+            "picture": "walkDogs",
+            "reward": {
+                "money": 5,
+                "reputation": 20,
+                "happiness": 5
+            } ,
+            "time": 2,
+            "available": false,
+            "done": false
+        },
+        {
+            "id": 12,
+            "title": "Plazas relucientes",
+            "requirements": [],
+            "description": "Ayuda a limpiar las plazas de la ciudad.",
+            "picture": "walkDogs",
+            "reward": {
+                "money": 0,
+                "reputation": 25,
+                "happiness": -15
+            } ,
+            "time": 1,
+            "available": false,
+            "done": false
+        },
+        {
+            "id": 13,
+            "title": "¡Nuevos empleos!",
+            "requirements": [1, 2],
+            "description": "Hay más locales que requieren delivery express, realiza encargos más desafiantes.",
+            "picture": "walkDogs",
+            "reward": {
+                "money": 20,
+                "reputation": 5,
+                "happiness": 5
+            } ,
+            "time": 1,
+            "available": false,
+            "done": false
+        },
+        {
+            "id": 14,
+            "title": "Calles obstruidas",
+            "requirements": [1, 2],
+            "description": "Las calles de la ciudad están siendo arregladas, todos los encargos demorarán un poco más de lo planeado.",
+            "picture": "walkDogs",
+            "reward": {
+                "money": 5,
+                "reputation": -10,
+                "happiness": -15
+            } ,
+            "time": 2,
+            "available": false,
             "done": false
         }
     ]
