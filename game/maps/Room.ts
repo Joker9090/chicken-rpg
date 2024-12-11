@@ -101,17 +101,14 @@ export default class Room {
   }
 
   drawItems(items: ProductToBuy[]) {
-    console.log("ENTRO ACA 3", items)
     items.forEach(item => {
       if (!item.roomInformation) return;
-      console.log("ENTRO ACA ", item)
       const itemToDraw = this.scene.add.image(this.imagesPositions.x, this.imagesPositions.y, item.roomInformation.assetInRoom).setOrigin(0.5);
       item.roomInformation.frontContainer ? this.frontContainer?.add(itemToDraw) : this.backgroundContainer?.add(itemToDraw);
     });
   }
 
   addMapFunctionalities(globalState: globalState) {
-    console.log("ENTRO ACAAAA ", globalState)
 
     if (this.scene.player) {
       // @ts-ignore
@@ -130,7 +127,6 @@ export default class Room {
     this.interactiveComputer = this.scene.add.rectangle(350, -20, 100, 100, 0x6666ff, 0.3).setInteractive();
     this.interactiveComputer.on('pointerdown', () => {
       this.eventCenter.emitEvent(this.eventCenter.possibleEvents.OPEN_MODAL, { modalType: modalType.PC });
-
     });
     this.interactiveComputer.on("pointerover", () => {
       pcGlow.setVisible(true);
@@ -139,16 +135,16 @@ export default class Room {
       pcGlow.setVisible(false);
     });
 
-    // let pcGlow = this.scene.add.image(this.imagesPositions.x, this.imagesPositions.y, "pcGlow").setOrigin(0.5).setVisible(false);
-    this.interactiveNewsPaper = this.scene.add.rectangle(150, 150, 100, 100, 0x6666ff, 0.3).setInteractive();
+    let newspaperGlow = this.scene.add.image(this.imagesPositions.x, this.imagesPositions.y, "newspaperGlow").setOrigin(0.5).setVisible(false);
+    this.interactiveNewsPaper = this.scene.add.rectangle(440, 30, 40, 60, 0x6666ff, 0.3).setInteractive().setRotation(Math.PI / 3);
     this.interactiveNewsPaper.on('pointerdown', () => {
       this.eventCenter.emitEvent(this.eventCenter.possibleEvents.OPEN_MODAL, { modalType: modalType.NEWS });
     });
     this.interactiveNewsPaper.on("pointerover", () => {
-      // pcGlow.setVisible(true);
+      newspaperGlow.setVisible(true);
     });
     this.interactiveNewsPaper.on("pointerout", () => {
-      // pcGlow.setVisible(false);
+      newspaperGlow.setVisible(false);
     });
 
     let puertaGlow = this.scene.add.image(this.imagesPositions.x, this.imagesPositions.y, "puertaGlow").setOrigin(0.5).setVisible(false);
@@ -179,6 +175,7 @@ export default class Room {
       backgroundRoom,
       pcGlow,
       puertaGlow,
+      newspaperGlow,
       cama,
     ])
 

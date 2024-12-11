@@ -10,46 +10,44 @@ import missionRequirementsMockData from "./MockData/Requirements.json";
 import tabletMockData from "./MockData/Tablet.json";
 
 export type newsType = {
-  id: number;
-  missionId: number | undefined;
-  image: string;
-  title: string;
-  description: string;
+  id: number
+  missionId: number[] 
+  image: string
+  title: string
+  description: string
   reward: {
-    money: number;
-    reputation: number;
+    money: number
+    reputation: number
     happines: number
-  };
-  time: number | null;
-  requirements: string[] | null;
-  readed: boolean;
+  }
+  time: number 
+  requirements: number[] 
+  readed: boolean
 }
 
 export type missionRequirements = {
-  id: number,
-  name: string,
-  description: string,
+  id: number
+  type: string
+  name: string
+  description: string
   price: number
+  miniImageModal: string
 }
 
 export type missionsType = {
-  id: number,
-  title: string,
-  requirements: {
-    items: {
-      name: string,
-      image: string
-    }[]
-
-  },
-  picture: string,
-  time: number,
-  description: string,
+  id: number
+  title: string
+  requirements: number[]
+  picture: string
+  time: number 
+  description: string
   reward: {
-    money: number,
-    reputation: number,
+    money: number
+    reputation: number
     happiness: number
-  }
+  },
+  available: boolean
+  done: boolean
 }
 
 export type happinessType = {
@@ -100,14 +98,20 @@ export default class GlobalDataManager extends Phaser.Scene {
         return news;
       });
       this.changeState("news", newNews);
+      const news = this.state.news.find((news) => news.id === newsId);
+      if (news?.missionId && news?.missionId?.length > 0) {
+        news.missionId.forEach((missionId) => {
+          this.eventCenter.emit(this.eventCenter.possibleEvents.ADD_MISSION, missionId);
+        });
+      }
 
     }, this);
 
     this.eventCenter.turnEventOn("GlobalDataManager", this.eventCenter.possibleEvents.MAKE_MISSION, (missionId: number) => {
       const mission = this.state.availableMissions.find((mission) => mission.id === missionId);
       if (mission){
-        this.changeMoney(-mission.reward.money);
-        this.changeState("doneMissions", [...this.state.doneMissions, mission]);
+        this.changeMoney(mission.reward.money);
+        this.changeState("doneMissions", [...this.state.doneMissions, {...mission, done: true}]);
         const newAvailableMissions = this.state.availableMissions.filter((mission) => mission.id !== missionId);
         this.changeState("availableMissions", newAvailableMissions);
       }
@@ -117,7 +121,7 @@ export default class GlobalDataManager extends Phaser.Scene {
       const mission = this.state.allMissions.find((mission) => mission.id === missionId);
       if (mission){
         const newAvailableMissions = this.state.availableMissions
-        newAvailableMissions.push(mission);
+        newAvailableMissions.push({...mission, available: true, done: false});
         this.changeState("availableMissions", newAvailableMissions);
       }
     }, this);
@@ -149,6 +153,10 @@ export default class GlobalDataManager extends Phaser.Scene {
       return this.getObjectInventary(payload);
     }, this);
 
+    this.eventCenter.turnEventOn("GlobalDataManager", this.eventCenter.possibleEvents.CHECK_MISSION_REQUIREMENTS, (payload: missionRequirements) => {
+      return this.checkRequirements(payload);
+    }, this);
+
     this.eventCenter.turnEventOn("GlobalDataManager", this.eventCenter.possibleEvents.CHANGE_MONEY, (payload: number) => {
       this.changeMoney(payload);
     }, this);
@@ -168,8 +176,8 @@ export default class GlobalDataManager extends Phaser.Scene {
       news: newsMockData.news,
       missionRequirements: missionRequirementsMockData.requirements,
       allMissions: missionsMockData.missions,
-      availableMissions: missionsMockData.missions,
-      doneMissions: [],
+      availableMissions: missionsMockData.missions.filter((mission) => mission.available),
+      doneMissions: missionsMockData.missions.filter((mission) => mission.done),
       happiness: tabletMockData.happiness,
       transactions: tabletMockData.transactionsHistorial,
     };
@@ -178,10 +186,24 @@ export default class GlobalDataManager extends Phaser.Scene {
   changeState(key: string, value: stateTypes) {
     this.state = { ...this.state, [key]: value }
     this.eventCenter.emit(this.eventCenter.possibleEvents.UPDATE_STATE);
+    console.log(this.state, "NEW STATE IN CHANGE STATE")
   }
 
   changeMoney(amount: number) {
     this.changeState("playerMoney", this.state.playerMoney + amount);
+  }
+
+  checkRequirements(requirements: missionRequirements) {
+     switch (requirements.type) {
+      case "money":
+        return this.state.playerMoney >= requirements.price;
+      case "item":
+        console.log(this.state.inventary, "INVENTARY")
+        console.log(requirements, "REQUIREMENT")
+        return this.state.inventary.some((product) => product.title === requirements.name);
+      default:
+        return false;
+     }
   }
 
   passTime(amount: number) {

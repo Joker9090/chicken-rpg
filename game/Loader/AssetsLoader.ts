@@ -14,6 +14,7 @@ const loadAssets = {
       // player
       ["spritesheet", "player", "/images/chicken/spritesheetPlayer2.png", { frameWidth: 200, frameHeight: 250, startFrame: 0 }],
       ["spritesheet", "playerIdle", "/images/chicken/playerIdle.png", { frameWidth: 200, frameHeight: 250, startFrame: 0 }],
+      
       // between scenes
       ["image", "block", "/50x50.png"],
 
@@ -47,6 +48,8 @@ const loadAssets = {
       ["image", "camera", "/assets/room/camera.png"],
       ["image", "bicicle", "/assets/room/bicicle.png"],
       ["image", "degree", "/assets/room/degree.png"],
+      ["image", "newspaper", "/assets/room/newspaper.png"],
+      ["image", "newspaperGlow", "/assets/room/newspaperGlow.png"],
 
       // backgroundScenes ambient
       ["image", "statsBar", "/images/UIChicken/statsBar.png"],
@@ -123,6 +126,9 @@ const loadAssets = {
       ["image", "camaraGreen", "/assets/modalAssets/masUi/camaraGreen.png"],
       ["image", "camaraShop", "/assets/modalAssets/camaraShop.png"],
       ["image", "camaraShopOn", "/assets/modalAssets/camaraShopOn.png"],
+      ["image", "coinModalIcon", "/assets/modalAssets/coinModalIcon.png"],
+      ["image", "reputationModalIcon", "/assets/modalAssets/reputationModalIcon.png"],
+      ["image", "happinessModalIcon", "/assets/modalAssets/happinessModalIcon.png"],
 
       //Buildings
       ["image", "test1", "/images/buildingTest/test1.png"],

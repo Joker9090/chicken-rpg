@@ -23,7 +23,6 @@ export class ModalNews extends ModalBase {
         const globalData: globalState = EventsCenterManager.emitWithResponse(EventsCenterManager.possibleEvents.GET_STATE, null)
 
         const allNews = globalData.news
-        console.log(allNews, "NEWS");
 
         const availableNews = allNews.filter(news => !news.readed);
 

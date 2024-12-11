@@ -2,39 +2,51 @@
     "requirements": [
         {
             "id": 1,
+            "type": "item",
             "name": "Bicicleta",
             "description": "Necesitas una bicicleta para realizar este encargo.",
-            "price": 20
+            "price": 20,
+            "miniImageModal": "camaraWhite"
         },
         {
             "id": 2,
+            "type": "item",
             "name": "Mochila de delivery",
             "description": "Necesitas una mochila de delivery para realizar este encargo.",
-            "price": 10
+            "price": 10,
+            "miniImageModal": "camaraWhite"
         },
         {
             "id": 3,
+            "type": "item",
             "name": "Cámara de fotos",
             "description": "Necesitas una cámara de fotos para realizar este encargo.",
-            "price": 10
+            "price": 10,
+            "miniImageModal": "camaraWhite"
         },
         {
             "id": 4,
+            "type": "item",
             "name": "Curso de fotografía",
             "description": "Necesitas un curso de fotografía para realizar este encargo.",
-            "price": 10
+            "price": 10,
+            "miniImageModal": "camaraWhite"
         },
         {
             "id": 5,
+            "type": "item",
             "name": "Curso de fotografía nivel 2 o contratar servicios de edición",
             "description": "Necesitas un curso de fotografía nivel 2 o contratar servicios de edición para realizar este encargo.",
-            "price": 15
+            "price": 15,
+            "miniImageModal": "camaraWhite"
         },
         {
             "id": 6,
+            "type": "money",
             "name": "Monedas",
             "description": "Necesitas 8 monedas para realizar este encargo.",
-            "price": 8
+            "price": 8,
+            "miniImageModal": "camaraWhite"
         }
     ]
 }

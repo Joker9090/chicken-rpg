@@ -40,6 +40,7 @@ class EventsCenterManager extends Phaser.Events.EventEmitter {
 
                 MAKE_MISSION: "makeMission", // MAKE A MISSION
                 ADD_MISSION: "addMission", // ADD A MISSION
+                CHECK_MISSION_REQUIREMENTS: "checkMissionRequirements", // CHECK MISSION REQUIREMENTS TO MAKE IT
 
                 TOGGLE_SOUND: "toggleSound",
                 TOGGLE_MUSIC: "toggleMusic",

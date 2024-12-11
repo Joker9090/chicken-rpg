@@ -34,7 +34,7 @@ export class PinIsoSpriteBox extends RpgIsoSpriteBox {
   updatePin(group: Phaser.GameObjects.Group) {
     this.self.setInteractive();
     this.self.on("pointerdown", () => {
-      this.eventCenter.emitEvent(this.eventCenter.possibleEvents.OPEN_MODAL, { modalType: modalType.QUEST });
+      this.eventCenter.emitEvent(this.eventCenter.possibleEvents.OPEN_MODAL, { modalType: modalType.QUEST, pin: this });
     })
    this.scene.add.tween({
     targets: this.self,

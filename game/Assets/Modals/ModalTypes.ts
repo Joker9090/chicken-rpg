@@ -22,11 +22,16 @@ export type ModalConfig = {
     type: modalType;
     requires?: string;
     requirePicture?: string;
-    title?: string;
-    time?: number;
+    requirements: number[];
+    title: string;
+    time: number;
     picture?: string;
     text?: string;
-    reward?: number;
+    reward: {
+        money: number,
+        reputation: number,
+        happiness: number,
+    };
     agreedButtom?: any;
     closeButtom?: any;
     background?: Phaser.GameObjects.Image;
