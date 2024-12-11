@@ -3,18 +3,23 @@ import BetweenScenes, { BetweenScenesStatus } from "./BetweenScenes";
 import AssetsLoader, { SceneKeys } from "./AssetsLoader";
 import RPG from "../rpg";
 import AmbientBackgroundScene from "../ambientAssets/backgroundScene";
+import EventsCenter from "../services/EventsCenter";
+
 export default class MultiScene extends Phaser.Scene {
 
   scenekey?: string;
   assetLoaderClass?: AssetsLoader;
   sceneData?: any;
   sceneToStop?: string;
+  eventCenter = EventsCenter.getInstance();
+
 
   constructor(scenekey?: string, sceneToStop?: string, sceneData?: any, loadKey?: string) {
     super({ key: "MultiScene", active: true });
     this.scenekey = scenekey;
     this.sceneToStop = sceneToStop;
     this.sceneData = sceneData;
+
   }
 
   preload(data: any) {
@@ -41,12 +46,14 @@ export default class MultiScene extends Phaser.Scene {
   }
 
   makeTransition(sceneName: string, sceneToStop?: string | undefined, data?: any) {
+    this.eventCenter.emit(this.eventCenter.possibleEvents.CHANGE_SCENE);
     const getBetweenScenesScene = this.game.scene.getScene(
       "BetweenScenes"
     ) as BetweenScenes;
     if (getBetweenScenesScene) {
       if (getBetweenScenesScene.status != BetweenScenesStatus.IDLE)
         return false;
+      getBetweenScenesScene.scene.bringToTop("BetweenScenes")
       getBetweenScenesScene.changeSceneTo(sceneName, sceneToStop, data);
       this.time.delayedCall(1000, () => {
         this.scene.remove("MultiScene");

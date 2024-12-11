@@ -23,6 +23,7 @@ class EventsCenterManager extends Phaser.Events.EventEmitter {
 
             this.possibleEvents = {
                 READY: "ready", // WHEN THE GAME IS READY AND USER DATA HAS BEEN LOADED
+                CHANGE_SCENE: "changeScene", // WHEN THE GAME IS READY AND USER DATA HAS BEEN LOADED
 
                 INFO_UPDATE: "infoUpdate", // EVERY TIME THE INFO IS UPDATED IN GLOBAL DATA MANAGER
                 UPDATE: "update",

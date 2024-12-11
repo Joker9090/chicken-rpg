@@ -8,16 +8,16 @@ export class statsContainer extends Phaser.GameObjects.Container {
     activeTween: Phaser.Tweens.Tween | null = null;
     eventCenter = EventsCenterManager.getInstance();
     doneMissionsPaper: missionsType[] = [];
-
+    stateGlobal: globalState;
     handleGoback: Function;
     handleClose: Function;
-
     constructor(
         scene: Phaser.Scene,
         x: number,
         y: number,
         goback: Function,
         handleToClose: Function,
+        stateGlobal: globalState
 
     ) {
         super(scene,x, y);
@@ -25,7 +25,9 @@ export class statsContainer extends Phaser.GameObjects.Container {
         this.handleGoback = goback;
         this.handleClose = handleToClose;
         this.doneMissionsPaper = [];
-        const globalData: globalState = EventsCenterManager.emitWithResponse(EventsCenterManager.possibleEvents.GET_STATE, null)
+
+        this.stateGlobal = stateGlobal
+
 
         const tweenButtonOver = (_target: any) => {
             this.activeTween = this.scene.tweens.add({
@@ -125,7 +127,7 @@ export class statsContainer extends Phaser.GameObjects.Container {
 
         const leftBackground = this.scene.add.image(0,0,"tabletStatLeft").setScale(0.5);
 
-        const moneyText = this.scene.add.text(-20, -165, `${globalData.playerMoney}`, {fontFamily: "MontserratSemiBold", fontSize: 24, color: "#000000"});
+        const moneyText = this.scene.add.text(-20, -165, `${this.stateGlobal.playerMoney}`, {fontFamily: "MontserratSemiBold", fontSize: 24, color: "#000000"});
 
         //Grid de transacciones -->
         let transactionsGridGroupAmount = this.scene.add.group();
@@ -136,7 +138,7 @@ export class statsContainer extends Phaser.GameObjects.Container {
         let startY = -100;
         let rowHeight = 40;
 
-        globalData.transactions.forEach((transaction: transactionsType, index: number) => {
+        this.stateGlobal.transactions.forEach((transaction: transactionsType, index: number) => {
             const amountText = transaction.amount > 0
                 ? `+${transaction.amount} `
                 : `${transaction.amount} `;
@@ -200,8 +202,8 @@ export class statsContainer extends Phaser.GameObjects.Container {
         //RightUp CONTAINER ->
         const rightUpBackground = this.scene.add.image(0,0,"tabletRightUp").setScale(0.5);
 
-        const actualHappiness = this.scene.add.text(-100, -6, `${globalData.happiness.actualValue}`, {fontFamily: "MontserratSemiBold", fontSize: 24, color: "#000000"});
-        const maxHappiness = this.scene.add.text(20, -6, `${globalData.happiness.maxValue}`, {fontFamily: "MontserratSemiBold", fontSize: 24, color: "#000000"});
+        const actualHappiness = this.scene.add.text(-100, -6, `${this.stateGlobal.happiness.actualValue}`, {fontFamily: "MontserratSemiBold", fontSize: 24, color: "#000000"});
+        const maxHappiness = this.scene.add.text(20, -6, `${this.stateGlobal.happiness.maxValue}`, {fontFamily: "MontserratSemiBold", fontSize: 24, color: "#000000"});
 
         rightUpContainer.add([rightUpBackground, actualHappiness ,maxHappiness ]);
 
@@ -226,7 +228,7 @@ export class statsContainer extends Phaser.GameObjects.Container {
         let paperStartY = -50;
         let misionRowHeight = 40;
 
-        globalData.doneMissions.forEach((doneMission: missionsType, index: number) => {
+        this.stateGlobal.doneMissions.forEach((doneMission: missionsType, index: number) => {
             const misionTitle = doneMission.title;
 
             const amount = this.scene.add.text(150, 0, misionTitle, {
@@ -247,7 +249,7 @@ export class statsContainer extends Phaser.GameObjects.Container {
                 x: misionStartX,
                 y: misionsStartY + index * misionRowHeight
             });
-            if(globalData.news.find((newsItem) => newsItem.missionId.includes(doneMission.id))) {
+            if(this.stateGlobal.news.find((newsItem) => newsItem.missionId.includes(doneMission.id))) {
                 this.doneMissionsPaper.push(doneMission);
             }
 
@@ -256,7 +258,7 @@ export class statsContainer extends Phaser.GameObjects.Container {
         
         });
         let noIndex = 0;
-        globalData.news.forEach((newPaper: newsType, index: number) => {
+        this.stateGlobal.news.forEach((newPaper: newsType, index: number) => {
 
             if(newPaper.readed) {
                 

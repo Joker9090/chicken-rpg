@@ -2,73 +2,21 @@ import Phaser from "phaser";
 import RPG from "./rpg";
 import { Events } from "matter";
 import EventsCenterManager from "./services/EventsCenter";
-import { ProductToBuy } from "./Assets/Modals/ModalTypes";
+import { happinessType, Inventory, missionRequirements, missionsType, newsType, ProductToBuy, transactionsType } from "./Assets/Modals/ModalTypes";
 import newsMockData from "./MockData/News.json";
 import inventoryMockData from "./MockData/Inventory.json";
 import missionsMockData from "./MockData/Missions.json";
 import missionRequirementsMockData from "./MockData/Requirements.json";
 import tabletMockData from "./MockData/Tablet.json";
 
-export type newsType = {
-  id: number
-  missionId: number[] 
-  image: string
-  title: string
-  description: string
-  reward: {
-    money: number
-    reputation: number
-    happines: number
-  }
-  time: number 
-  requirements: number[] 
-  readed: boolean
-}
+export type stateTypes = number | boolean | ProductToBuy[] | newsType[] | missionRequirements[] | missionsType[] | Inventory[] | happinessType | transactionsType[];
 
-export type missionRequirements = {
-  id: number
-  type: string
-  name: string
-  description: string
-  price: number
-  miniImageModal: string
-}
-
-export type missionsType = {
-  id: number
-  title: string
-  requirements: number[]
-  picture: string
-  time: number 
-  description: string
-  reward: {
-    money: number
-    reputation: number
-    happiness: number
-  },
-  available: boolean
-  done: boolean
-}
-
-export type happinessType = {
-  actualValue: number,
-  maxValue: number,
-}
-
-export type transactionsType = {
-  date: string,
-  amount: number,
-  description: string
-}
-
-export type stateTypes = number | boolean | ProductToBuy[] | newsType[] | missionRequirements[] | missionsType[];
 
 export type globalState = {
   playerMoney: number;
   reputation: number;
-  happiness: number;
   timeOfDay: 0 | 1 | 2 | 3;
-  inventary: ProductToBuy[];
+  inventary: Inventory[];
   newsToRead: boolean;
   news: newsType[];
   missionRequirements: missionRequirements[];
@@ -173,7 +121,6 @@ export default class GlobalDataManager extends Phaser.Scene {
     this.state = {
       playerMoney: 300,
       reputation: 50,
-      happiness: 40,
       timeOfDay: 0,
       newsToRead: false,
       inventary: inventoryMockData.inventary,
@@ -225,11 +172,19 @@ export default class GlobalDataManager extends Phaser.Scene {
   }
 
   addInventary(item: ProductToBuy) {
-    if (this.state.inventary.some(product => product.title === item.title)) {
+    if (this.state.inventary.some(product => product.id === item.id)) {
       return;
     } else {
       const oldState = [...this.state.inventary];
-      oldState.push(item);
+      const newItem = {
+        id: item.id,
+        title: item.title,
+        image: item.picture,
+        description: item.text,
+        price: item.reward,
+        roomInformation: item.roomInformation
+      }
+      oldState.push(newItem);
       this.changeState("inventary", oldState);
     }
   }

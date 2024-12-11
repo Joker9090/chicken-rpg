@@ -1,12 +1,12 @@
 {
     "inventary": [
         {
+          "id": 1,
           "title": "Degree",
           "picture": "degree",
-          "pictureOn": "degree",
-          "text": "Degree in Computer Science",
-          "reward": 0,
-          "isSelected": false,
+          "description": "Curso de fotografía",
+          "image": "",
+          "price": 0,
           "roomInformation": {
             "assetInRoom": "degree",
             "frontContainer": true

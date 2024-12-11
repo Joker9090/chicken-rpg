@@ -3,7 +3,7 @@ import { changeSceneTo } from "../helpers/helpers";
 import EventsCenter from "../services/EventsCenter";
 import RPG from "../rpg";
 import { globalState } from "../GlobalDataManager";
-import { ModalConfig, modalType, ProductToBuy } from "../Assets/Modals/ModalTypes";
+import { Inventory, ModalConfig, modalType, ProductToBuy } from "../Assets/Modals/ModalTypes";
 
 export default class Room {
 
@@ -100,7 +100,7 @@ export default class Room {
     ];
   }
 
-  drawItems(items: ProductToBuy[]) {
+  drawItems(items: Inventory[]) {
     items.forEach(item => {
       if (!item.roomInformation) return;
       const itemToDraw = this.scene.add.image(this.imagesPositions.x, this.imagesPositions.y, item.roomInformation.assetInRoom).setOrigin(0.5);

@@ -27,15 +27,15 @@ export class ModalPC extends ModalBase {
             }
         }
         // separar items que van al shop de los que son el inventario
-        const modalConfig: ModalConfig = {
+        const modalConfig = {
             type: modalType.PC,
             title: "MERCADO DE PULGAS ONLINE",
             picture: "desafioTest2",
             text: "CAMARA",
-            reward: 100, //TODO FIX
             products: [
                 {
-                    title: "camera",
+                    id: 2,
+                    title: "Cámara de fotos",
                     picture: "camaraShop",
                     pictureOn: "camaraShopOn",
                     text: "CAMARA",
@@ -45,24 +45,15 @@ export class ModalPC extends ModalBase {
                         "frontContainer": true
                     }
                 }, {
-                    title: "otro",
+                    id: 3,
+                    title: "Curso de fotografía",
                     picture: "camaraShop",
                     pictureOn: "camaraShopOn",
-                    text: "otro",
-                    reward: 100,
-                    roomInformation: {
-                        "assetInRoom": "camera",
-                        "frontContainer": true
-                    }
-                }, {
-                    title: "CAMARA3",
-                    picture: "camaraShop",
-                    pictureOn: "camaraShop",
-                    text: "CAMARA",
+                    text: "Curso de fotografía",
                     reward: 0,
                     roomInformation: {
-                        "assetInRoom": "camera",
-                        "frontContainer": true
+                        assetInRoom: "degree",
+                        frontContainer: true
                     }
                 }
             ],
