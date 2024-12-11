@@ -3,10 +3,11 @@ import EventsCenterManager from "../services/EventsCenter";
 
 export class statsContainer extends Phaser.GameObjects.Container {
     scene: Phaser.Scene;
-    closeButton: Phaser.GameObjects.Image;
+    closeButton?: Phaser.GameObjects.Image;
     gobackButton: Phaser.GameObjects.Image;
     activeTween: Phaser.Tweens.Tween | null = null;
     eventCenter = EventsCenterManager.getInstance();
+    doneMissionsPaper: missionsType[] = [];
 
     handleGoback: Function;
     handleClose: Function;
@@ -23,7 +24,7 @@ export class statsContainer extends Phaser.GameObjects.Container {
         this.scene = scene;
         this.handleGoback = goback;
         this.handleClose = handleToClose;
-
+        this.doneMissionsPaper = [];
         const globalData: globalState = EventsCenterManager.emitWithResponse(EventsCenterManager.possibleEvents.GET_STATE, null)
 
         const tweenButtonOver = (_target: any) => {
@@ -84,7 +85,7 @@ export class statsContainer extends Phaser.GameObjects.Container {
 
         //TOP CONTAINER ->
 
-        this.closeButton = this.scene.add.image(355, 0, "btnExit").setInteractive();
+        /*this.closeButton = this.scene.add.image(355, 0, "btnExit").setInteractive();
 
         this.closeButton.on('pointerup', () => {
             this.handleClose();
@@ -97,9 +98,9 @@ export class statsContainer extends Phaser.GameObjects.Container {
         this.closeButton.on("pointerout", () => {
             if (this.activeTween) this.activeTween.stop();
             tweenButtonOut(this.closeButton);
-        });
+        });*/
 
-        this.gobackButton = this.scene.add.image(-375, 0, "tabletback").setScale(0.8).setInteractive();
+        this.gobackButton = this.scene.add.image(-375, 0, "tabletBack").setScale(0.8).setInteractive();
 
         this.gobackButton.on('pointerup', () => {
             console.log("go back function: ", this.handleGoback);
@@ -116,7 +117,7 @@ export class statsContainer extends Phaser.GameObjects.Container {
         });
 
 
-        topContainer.add([this.closeButton, this.gobackButton]);
+        topContainer.add([/*this.closeButton,*/ this.gobackButton]);
 
         //Top container <---
 
@@ -209,18 +210,24 @@ export class statsContainer extends Phaser.GameObjects.Container {
         //RightDown CONTAINER ->
         const rightDownBackground = this.scene.add.image(0,0,"tabletRightDown").setScale(0.5);
 
+        const titleChambas = this.scene.add.text(-135, -105, "Mis chambas", {fontFamily: "MontserratSemiBold", fontSize: 16, color: "#000000"});
+
+        const titleNews = this.scene.add.text(30, -105, "Mis News", {fontFamily: "MontserratSemiBold", fontSize: 16, color: "#000000"});
 
         //Grid de Misiones -->
         let misionsGridGroupDone = this.scene.add.group();
         let misionsGridGroupPaper = this.scene.add.group();
+        let doneGridGroupPaper = this.scene.add.group();
 
         let misionStartX = -150;
         let paperStartX = 5;
+        let doneStartX = 130;
         let misionsStartY = -50;
+        let paperStartY = -50;
         let misionRowHeight = 40;
 
-        globalData.availableMissions.forEach((availableMission: missionsType, index: number) => {
-            const misionTitle = availableMission.title;
+        globalData.doneMissions.forEach((doneMission: missionsType, index: number) => {
+            const misionTitle = doneMission.title;
 
             const amount = this.scene.add.text(150, 0, misionTitle, {
                 fontFamily: "MontserratSemiBold",
@@ -240,18 +247,22 @@ export class statsContainer extends Phaser.GameObjects.Container {
                 x: misionStartX,
                 y: misionsStartY + index * misionRowHeight
             });
+            if(globalData.news.find((newsItem) => newsItem.missionId.includes(doneMission.id))) {
+                this.doneMissionsPaper.push(doneMission);
+            }
 
 
             groupMisions.getChildren().forEach(child => misionsGridGroupDone.add(child));
         
         });
-
+        let noIndex = 0;
         globalData.news.forEach((newPaper: newsType, index: number) => {
 
             if(newPaper.readed) {
-
+                
                 const misionTitle = newPaper.title;
-                const newsTitle = this.scene.add.text(250, 0, misionTitle, { 
+                console.log("MISION TITLE: ", misionTitle);
+                const newsTitle = this.scene.add.text(0, 0, misionTitle, { 
                     fontFamily: "MontserratSemiBold",
                     fontSize: '12px', 
                     color: '#000000',
@@ -259,24 +270,44 @@ export class statsContainer extends Phaser.GameObjects.Container {
                 const groupPaper = this.scene.add.group();
                 groupPaper.add(newsTitle);
 
+                
+                let isDone = this.doneMissionsPaper.some((doneMision) => doneMision.id == newPaper.missionId[0]);
+                const doneIcon = this.scene.add.image(250, 0, isDone ? "btnCheck" : "btnCruz");
+                const groupDoneIcon = this.scene.add.group();
+                groupDoneIcon.add(doneIcon);
+ 
+
                 Phaser.Actions.GridAlign(groupPaper.getChildren(), {
                     width: 1,
                     height: 1,
                     cellWidth: 30,
                     cellHeight: 80,
                     x: paperStartX,
-                    y: misionsStartY + index * misionRowHeight
+                    y: paperStartY + noIndex * misionRowHeight
                 });
+
+                Phaser.Actions.GridAlign(groupDoneIcon.getChildren(), {
+                    width: 2,
+                    height: 1,
+                    cellWidth: 20,
+                    cellHeight: 20,
+                    x: doneStartX,
+                    y: paperStartY + noIndex * misionRowHeight
+                });
+
                 groupPaper.getChildren().forEach(child => misionsGridGroupPaper.add(child));
+                groupDoneIcon.getChildren().forEach(child => doneGridGroupPaper.add(child));
+                noIndex++;
             }
 
         });
 
         // <-- Grid de Misiones
 
-        rightDownContainer.add([rightDownBackground, ]);
+        rightDownContainer.add([rightDownBackground,titleChambas,titleNews ]);
         rightDownContainer.add(misionsGridGroupDone.getChildren());
         rightDownContainer.add(misionsGridGroupPaper.getChildren());
+        rightDownContainer.add(doneGridGroupPaper.getChildren());
 
 
         //RightDown container <---

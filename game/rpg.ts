@@ -124,8 +124,9 @@ export default class RPG extends Scene {
     if (!tabletSceneActive) {
       this.tabletScene = new TabletScene(0, 0)
       this.scene.add("TabletScene", this.tabletScene, true);
-      //tabletScene.scene.sendToBack("TabletScene");
-      this.tabletScene.scene.bringToTop("TabletScene");
+      this.tabletScene.scene.sendToBack("TabletScene");
+      //this.tabletScene.scene.setVisible(false);
+      //this.tabletScene.scene.bringToTop("TabletScene");
     } else {
       this.tabletScene = tabletSceneActive as TabletScene;
       this.tabletScene.scene.restart();

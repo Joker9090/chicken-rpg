@@ -32,11 +32,11 @@ export class menuContainer extends Phaser.GameObjects.Container {
         this.handleClose = handleToClose;
 
 
-        const tweenButtonOver = (_target: any) => {
+        const tweenButtonOver = (_target: any, scale: number = 1.2) => {
             this.activeTween = this.scene.tweens.add({
                 targets: _target,
-                scaleX: 1.2,
-                scaleY: 1.2,
+                scaleX: scale,
+                scaleY: scale,
                 duration: 300,
                 yoyo: true,
                 repeat: -1,
@@ -106,7 +106,7 @@ export class menuContainer extends Phaser.GameObjects.Container {
             tweenButtonOut(this.closeButton);
         });
 
-        this.settingsButton = this.scene.add.image(-355, 0, "tabletSettings").setInteractive();
+        this.settingsButton = this.scene.add.image(-355, 0, "tabletSettings").setScale(0.8).setInteractive();
 
         this.settingsButton.on('pointerup', () => {
             //console.log("go back function: ", this.handleGoback);
@@ -115,11 +115,11 @@ export class menuContainer extends Phaser.GameObjects.Container {
         });
         this.settingsButton.on("pointerover", () => {
             if (this.activeTween) this.activeTween.stop();
-            tweenButtonOver(this.settingsButton);
+            tweenButtonOver(this.settingsButton, 1);
         });
         this.settingsButton.on("pointerout", () => {
             if (this.activeTween) this.activeTween.stop();
-            tweenButtonOut(this.settingsButton);
+            tweenButtonOut(this.settingsButton, 0.8);
         });
 
 

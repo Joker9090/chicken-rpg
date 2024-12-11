@@ -34,10 +34,34 @@ export class ModalNews extends ModalBase {
         const leftContainer = this.scene.add.container(-150, 0);
         const rightContainer = this.scene.add.container(150, 0);
 
+        const tweenButtonOver = (_target: any) => {
+            this.activeTween = this.scene.tweens.add({
+                targets: _target,
+                scaleX: 1.2,
+                scaleY: 1.2,
+                duration: 300,
+                yoyo: true,
+                repeat: -1,
+                ease: 'lineal',
+            });
+        }
+
+        const tweenButtonOut = (_target: any, scale: number = 1) => {
+            this.activeTween = this.scene.tweens.add({
+                targets: _target,
+                scaleX: scale,
+                scaleY: scale,
+                duration: 200,
+                ease: 'Bounce.easeOut'
+            });
+
+        }
+
 
         // INFO CONTAINER
         const infoContainer = this.scene.add.container(0, 0);
-        const image = this.scene.add.image(-100, 0, newsSelected.image).setOrigin(0.5).setScale(0.45).setRotation(-Math.PI / 4);
+        //const image = this.scene.add.image(-100, 0, newsSelected.image).setOrigin(0.5).setScale(0.45).setRotation(-Math.PI / 4);
+        const image = this.scene.add.image(-165, 45, newsSelected.image).setOrigin(0.5).setScale(0.5);
         const title = this.scene.add.text(50, -50, newsSelected.title, {
             fontFamily: "MontserratBold",
             fontSize: '20px',
@@ -76,7 +100,7 @@ export class ModalNews extends ModalBase {
         ]);
 
         //backgroundModal
-        const modalBackground = this.scene.add.image(0, 0, "modalBackground").setOrigin(0.5);
+        const modalBackground = this.scene.add.image(0, 0, "diarioBackground").setOrigin(0.5).setScale(0.5);
 
         //LEFT BUTTON
         this.agreeButton = this.scene.add.image(0, 0, "btn").setOrigin(0.5).setInteractive();
@@ -87,27 +111,7 @@ export class ModalNews extends ModalBase {
             color: '#ffffff',
         }).setOrigin(0.5);
 
-        const tweenButtonOver = (_target: any) => {
-            this.activeTween = this.scene.tweens.add({
-                targets: _target,
-                scaleX: 1.2,
-                scaleY: 1.2,
-                duration: 300,
-                yoyo: true,
-                repeat: -1,
-                ease: 'lineal',
-            });
-        }
 
-        const tweenButtonOut = (_target: any) => {
-            this.activeTween = this.scene.tweens.add({
-                targets: _target,
-                scaleX: 1,
-                scaleY: 1,
-                duration: 200,
-                ease: 'Bounce.easeOut'
-            });
-        }
 
         //TOP CONTAINER
         const btnExit_p = this.scene.add.image(255, 0, "btnExit").setInteractive();
@@ -127,7 +131,7 @@ export class ModalNews extends ModalBase {
         });
 
         //@ts-ignore
-        const title_p = this.scene.add.text(0, 5, "¡Último momento!", {
+        const title_p = this.scene.add.text(0, -25, "NEWS", {
             fontFamily: "MontserratBold",
             fontStyle: "bold",
             fontSize: '24px',
@@ -150,7 +154,7 @@ export class ModalNews extends ModalBase {
 
 
         //Buttons Container
-        const buttonsContainer = this.scene.add.container(0, 175);
+        const buttonsContainer = this.scene.add.container(130, 220);
 
         //LEFT BUTTON
         //this.agreeButton = this.scene.add.image(0, 0, "btn").setOrigin(0.5).setInteractive();

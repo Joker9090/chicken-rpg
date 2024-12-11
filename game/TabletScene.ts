@@ -7,6 +7,7 @@ export default class TabletScene extends Phaser.Scene {
 
     worldSize = { width: 850, height: 500 };
     tabletShown: boolean = true;
+    checkData: boolean = true;
 
 
     tabletBorder?: Phaser.GameObjects.Image;
@@ -16,26 +17,37 @@ export default class TabletScene extends Phaser.Scene {
     stateGlobal: globalState;
 
     constructor(x: number, y: number) {
-        super({ key: "TabletScene" });
+        super({ key: "TabletScene"});
 
         this.stateGlobal = this.eventCenter.emitWithResponse(this.eventCenter.possibleEvents.GET_STATE, null);
     }
 
     showOrHideTablet() {
+
+        
         this.tweens.add({
             targets: [this.cameras.main],
             y: this.tabletShown ? window.innerHeight + 200 : window.innerHeight / 2 - this.worldSize.height / 2 ,
-            duration: 700,
+            duration: 200,
             ease: 'ease'
         })
 
         this.tweens.add({
             targets: [this.cameras.getCamera("itemsCam")],
             y: this.tabletShown ? window.innerHeight + 200 : window.innerHeight / 2 - this.worldSize.height / 2 + 20 ,
-            duration: 700,
-            ease: 'ease'
+            duration: 200,
+            ease: 'ease',
+            onComplete: () => {
+                if(!this.tabletShown) {
+                    this.scene.bringToTop("RPG");
+                }
+            }
         })
+
         this.tabletShown = !this.tabletShown;
+        this.checkData = true;
+        
+
     }
     
     moveCamerasTo(coords: number[]) {
@@ -44,7 +56,6 @@ export default class TabletScene extends Phaser.Scene {
     }
 
     create() {
-
         //this.stateGlobal = this.eventCenter.emitWithResponse(this.eventCenter.possibleEvents.GET_STATE, null);
         console.log("State david: ", this.stateGlobal);
 
@@ -125,5 +136,12 @@ export default class TabletScene extends Phaser.Scene {
 
 
         console.log("CAMARAS NANO! ", this.cameras.main, this.cameras.getCamera("itemsCam"));
+    }
+    update(){
+        /*if(this.checkData) {
+            this.stateGlobal = this.eventCenter.emitWithResponse(this.eventCenter.possibleEvents.GET_STATE, null);
+            this.checkData = false;
+        } */
+       //No updatea la data ya escrita
     }
 }

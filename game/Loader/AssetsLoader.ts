@@ -36,7 +36,9 @@ const loadAssets = {
       ["image", "tabletStats", "/tabletScene/tabletStats.png"],
       ["image", "tabletStats2", "/tabletScene/tabletStats2.png"],
       ["image", "tabletNotReady", "/tabletScene/tabletNotReady.png"],
-      ["image", "tabletback", "/tabletScene/tabletback.png"],
+      ["image", "tabletBack", "/tabletScene/tabletBack.png"],
+      ["image", "btnCheck", "/tabletScene/btnCheck.png"],
+      ["image", "btnCruz", "/tabletScene/btnCruz.png"],
 
       // room
       ["image", "room1", "/assets/room/room1.png"],
@@ -129,7 +131,10 @@ const loadAssets = {
       ["image", "coinModalIcon", "/assets/modalAssets/coinModalIcon.png"],
       ["image", "reputationModalIcon", "/assets/modalAssets/reputationModalIcon.png"],
       ["image", "happinessModalIcon", "/assets/modalAssets/happinessModalIcon.png"],
-
+      
+      ["image", "diarioBackground", "/assets/modalAssets/diarioBackground.png"],
+      ["image", "imageDiarioGeneric", "/assets/modalAssets/imageDiarioGeneric.png"],
+  
       //Buildings
       ["image", "test1", "/images/buildingTest/test1.png"],
       ["image", "test2", "/images/buildingTest/test2.png"],
