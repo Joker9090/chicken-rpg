@@ -15,6 +15,7 @@ export default class UIContainer extends Phaser.GameObjects.Container {
     walletBar: Phaser.GameObjects.Image;
     coinsCount: Phaser.GameObjects.Text;
     lvlMarker: Phaser.GameObjects.Image;
+    tabletIcon: Phaser.GameObjects.Image;
     nivel: 'ROOM' | 'CITY';
     // eventCenter = EventsCenterManager.getInstance();
     stateGlobal: globalState;
@@ -60,12 +61,17 @@ export default class UIContainer extends Phaser.GameObjects.Container {
         })
         // <- BUTTON CHANGE SCENE
 
+        this.tabletIcon = this.scene.add.image(window.innerWidth - 50 , window.innerHeight - 50, "tabletIcon").setOrigin(1).setInteractive().on('pointerdown', () => {
+            this.scene.tabletScene?.showOrHideTablet();
+        });
+
         this.add([
             this.lvlMarker,
             this.clock,
             this.walletBar,
             this.coinsCount,
             buttonChangeScene,
+            this.tabletIcon,
         ])
         this.scene.add.existing(this)
         this.scene.cameras.main.ignore(this)

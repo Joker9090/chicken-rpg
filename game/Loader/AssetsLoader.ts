@@ -25,9 +25,17 @@ const loadAssets = {
       
       // TABLET
       ["image", "fondoTablet", "/tabletScene/fondoTablet.png"],
+      ["image", "fondoTabletOp2", "/tabletScene/fondoTabletOp2.png"],
       ["image", "tabletStatLeft", "/tabletScene/tabletStatLeft.png"],
       ["image", "tabletRightDown", "/tabletScene/tabletRightDown.png"],
       ["image", "tabletRightUp", "/tabletScene/tabletRightUp.png"],
+
+      ["image", "tabletIcon", "/tabletScene/tabletIcon.png"],
+      ["image", "tabletSettings", "/tabletScene/tabletSettings.png"],
+      ["image", "tabletStats", "/tabletScene/tabletStats.png"],
+      ["image", "tabletStats2", "/tabletScene/tabletStats2.png"],
+      ["image", "tabletNotReady", "/tabletScene/tabletNotReady.png"],
+      ["image", "tabletback", "/tabletScene/tabletback.png"],
 
       // room
       ["image", "room1", "/assets/room/room1.png"],
