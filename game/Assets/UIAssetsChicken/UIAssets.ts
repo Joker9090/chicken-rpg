@@ -126,6 +126,7 @@ export class DayBlock extends Phaser.GameObjects.Container {
   flecha: Phaser.GameObjects.Image;
   // timerCall: Phaser.Time.TimerEvent;
   eventCenter = EventsCenterManager.getInstance();
+  momeentOfDay: 0 | 1 | 2 | 3 = 0;
 
   constructor(
     scene: RPG,
@@ -134,6 +135,7 @@ export class DayBlock extends Phaser.GameObjects.Container {
     globalData: globalState
   ) {
     super(scene, x, y);
+    this.momeentOfDay = globalData.timeOfDay
 
     this.dayBlock1 = this.scene.add.image(0, 0, 'dayBlock1').setOrigin(0.5)
     const widthBlock = this.dayBlock1.width / 2

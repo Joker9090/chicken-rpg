@@ -62,6 +62,7 @@ export default class RPG extends Scene {
   group?: Phaser.GameObjects.Group;
   distanceBetweenFloors: number = 50;
   eventEmitter?: Phaser.Events.EventEmitter;
+  tabletScene?: TabletScene;
 
   eventCenter = EventsCenterManager.getInstance();
   stateGlobal: globalState;
@@ -119,14 +120,17 @@ export default class RPG extends Scene {
   }
 
   preload() {
-    // let tabletScene = this.game.scene.getScene("AmbientBackgroundScene")
-    // if (!tabletScene) {
-    //   tabletScene = new TabletScene(0, 0)
-    //   this.scene.add("AmbientBackgroundScene", tabletScene, true);
-    //   tabletScene.scene.sendToBack("AmbientBackgroundScene");
-    // } else {
-    //   tabletScene.scene.restart()
-    // }
+    let tabletSceneActive = this.game.scene.getScene("TabletScene")
+    if (!tabletSceneActive) {
+      this.tabletScene = new TabletScene(0, 0)
+      this.scene.add("TabletScene", this.tabletScene, true);
+      this.tabletScene.scene.sendToBack("TabletScene");
+      //this.tabletScene.scene.setVisible(false);
+      //this.tabletScene.scene.bringToTop("TabletScene");
+    } else {
+      this.tabletScene = tabletSceneActive as TabletScene;
+      this.tabletScene.scene.restart();
+    }
 
     let AmbientBackScene = this.game.scene.getScene("AmbientBackgroundScene")
     if (!AmbientBackScene) {

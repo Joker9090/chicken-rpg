@@ -28,7 +28,7 @@
                 "happiness": -5
             },
             "available": false,
-            "done": false
+            "done": true
         },
         {
             "id": 2,
@@ -208,7 +208,7 @@
             } ,
             "time": 1,
             "available": false,
-            "done": false
+            "done": true
         },
         {
             "id": 14,

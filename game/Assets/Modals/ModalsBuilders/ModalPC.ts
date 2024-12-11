@@ -32,7 +32,7 @@ export class ModalPC extends ModalBase {
             title: "MERCADO DE PULGAS ONLINE",
             picture: "desafioTest2",
             text: "CAMARA",
-            reward: 100,
+            reward: 100, //TODO FIX
             products: [
                 {
                     title: "camera",
