@@ -124,7 +124,7 @@ export default class Room {
     let backgroundRoom = this.scene.add.image(this.imagesPositions.x, this.imagesPositions.y, "HabitacionFinalMai").setOrigin(0.5);
 
     let pcGlow = this.scene.add.image(this.imagesPositions.x, this.imagesPositions.y, "pcGlow").setOrigin(0.5).setVisible(false);
-    this.interactiveComputer = this.scene.add.rectangle(350, -20, 100, 100, 0x6666ff, 0.3).setInteractive();
+    this.interactiveComputer = this.scene.add.rectangle(350, -20, 100, 100, 0x6666ff, 0).setInteractive();
     this.interactiveComputer.on('pointerdown', () => {
       this.eventCenter.emitEvent(this.eventCenter.possibleEvents.OPEN_MODAL, { modalType: modalType.PC });
     });
@@ -136,7 +136,7 @@ export default class Room {
     });
 
     let newspaperGlow = this.scene.add.image(this.imagesPositions.x, this.imagesPositions.y, "newspaperGlow").setOrigin(0.5).setVisible(false);
-    this.interactiveNewsPaper = this.scene.add.rectangle(440, 30, 40, 60, 0x6666ff, 0.3).setInteractive().setRotation(Math.PI / 3);
+    this.interactiveNewsPaper = this.scene.add.rectangle(440, 30, 40, 60, 0x6666ff, 0).setInteractive().setRotation(Math.PI / 3);
     this.interactiveNewsPaper.on('pointerdown', () => {
       this.eventCenter.emitEvent(this.eventCenter.possibleEvents.OPEN_MODAL, { modalType: modalType.NEWS });
     });
@@ -148,7 +148,7 @@ export default class Room {
     });
 
     let puertaGlow = this.scene.add.image(this.imagesPositions.x, this.imagesPositions.y, "puertaGlow").setOrigin(0.5).setVisible(false);
-    this.interactiveDoor = this.scene.add.rectangle(-550, 65, 150, 360, 0x6666ff, 0.3).setInteractive();
+    this.interactiveDoor = this.scene.add.rectangle(-550, 65, 150, 360, 0x6666ff, 0).setInteractive();
     this.interactiveDoor.on('pointerdown', () => {
       changeSceneTo(this.scene, "RPG", "RPG", "CITY")
     });
@@ -160,7 +160,7 @@ export default class Room {
     });
 
     let cama = this.scene.add.image(this.imagesPositions.x, this.imagesPositions.y, "cama").setOrigin(0.5).setVisible(false);
-    this.interactiveBed = this.scene.add.rectangle(-150, 20, 130, 200, 0x6666ff, 0.3).setRotation(Math.PI / 3).setInteractive();
+    this.interactiveBed = this.scene.add.rectangle(-150, 20, 130, 200, 0x6666ff, 0).setRotation(Math.PI / 3).setInteractive();
     this.interactiveBed.on('pointerdown', () => {
       // globalDataManager.passTime(1)
     });

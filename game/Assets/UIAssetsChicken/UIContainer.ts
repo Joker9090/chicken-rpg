@@ -1,7 +1,7 @@
 import RPG from "@/game/rpg";
 import Phaser from "phaser";
 import { UIInterface } from "./UiInterface";
-import { Bar, DayBlock, Timer } from "./UIAssets";
+import { Avatar, DayBlock } from "./UIAssets";
 import roomMap from "../../maps/Room";
 import GlobalDataManager, { globalState } from "@/game/GlobalDataManager";
 import EventsCenterManager from "../../services/EventsCenter";
@@ -14,6 +14,8 @@ export default class UIContainer extends Phaser.GameObjects.Container {
     nivel: 'ROOM' | 'CITY';
     // eventCenter = EventsCenterManager.getInstance();
     stateGlobal: globalState;
+    dayBlock: DayBlock;
+    avatar: Avatar;
     constructor(
         scene: RPG,
         x: number,
@@ -26,7 +28,8 @@ export default class UIContainer extends Phaser.GameObjects.Container {
         this.nivel = nivel
         this.stateGlobal = data
         
-        const dayBlock = new DayBlock(scene, window.innerWidth/2, 0)
+        this.dayBlock = new DayBlock(scene, window.innerWidth/2, 0, this.stateGlobal)
+        this.avatar = new Avatar(scene, 60, 60, this.stateGlobal)
 
         // -> BUTTON CHANGE SCENE
         const buttonChangeScene = this.scene.add.image(50, window.innerHeight - 50, nivel === "ROOM" ? "goBack" : "goRoom").setOrigin(0, 1).setInteractive();
@@ -41,13 +44,16 @@ export default class UIContainer extends Phaser.GameObjects.Container {
 
         this.add([
             buttonChangeScene,
-            dayBlock,
+            this.dayBlock,
+            this.avatar
         ])
         this.scene.add.existing(this)
         this.scene.cameras.main.ignore(this)
     }
 
     updateData(data: globalState){
+        this.dayBlock.updateValues(data)
+        this.avatar.updateValues(data)
         // this.coinsCount.setText(data.playerMoney.toString())
         // nbivel del pj
         // barra de stamina

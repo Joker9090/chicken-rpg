@@ -70,6 +70,13 @@ const loadAssets = {
       ["image", "lineDayBlocks", "/UI/dayBlocks/lineDayBlocks.png"],
       ["image", "flecha", "/UI/dayBlocks/flecha.png"],
 
+      ["image", "avatar1", "/UI/avatar/avatar1.png"],
+      ["image", "avatar2", "/UI/avatar/avatar2.png"],
+      ["image", "avatarGlow", "/UI/avatar/avatarGlow.png"],
+      ["image", "avatarStats", "/UI/avatar/avatarStats.png"],
+      ["image", "avatarBackground", "/UI/avatar/avatarBackground.png"],
+
+
 
 
       // tiles  

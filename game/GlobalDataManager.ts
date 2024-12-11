@@ -53,6 +53,8 @@ export type stateTypes = number | boolean | ProductToBuy[] | newsType[] | missio
 
 export type globalState = {
   playerMoney: number;
+  reputation: number;
+  happiness: number;
   timeOfDay: 0 | 1 | 2 | 3;
   inventary: ProductToBuy[];
   newsToRead: boolean;
@@ -156,6 +158,8 @@ export default class GlobalDataManager extends Phaser.Scene {
 
     this.state = {
       playerMoney: 300,
+      reputation: 50,
+      happiness: 40,
       timeOfDay: 0,
       newsToRead: false,
       inventary: inventoryMockData.inventary,
