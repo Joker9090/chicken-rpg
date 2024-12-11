@@ -86,7 +86,7 @@ export class Avatar extends Phaser.GameObjects.Container {
     this.avatarGlow = this.scene.add.image(60, 60, 'avatarGlow').setOrigin(0.5).setScale(0.5)
     this.avatar = this.scene.add.image(60, 60, randomAvatar).setOrigin(0.5).setScale(0.35)
 
-    this.happinessBackgound = this.scene.add.circle(60, 60, this.avatarBackground.width / 4, globalData.happiness < 50 ? 0xcf1f4e : 0x34a832, 0.5).setOrigin(0.5)
+    this.happinessBackgound = this.scene.add.circle(60, 60, this.avatarBackground.width / 4, globalData.happiness.actualValue < 50 ? 0xcf1f4e : 0x34a832, 0.5).setOrigin(0.5)
     this.reputation = this.scene.add.text(170, 60, `${globalData.reputation}`, {
       fontFamily: "MontserratSemiBold",
       fontSize: 20,
@@ -112,7 +112,7 @@ export class Avatar extends Phaser.GameObjects.Container {
   updateValues(data: globalState) {
     this.reputation.setText(data.reputation.toString())
     this.money.setText(data.playerMoney.toString())
-    this.happinessBackgound.setFillStyle(data.happiness < 50 ? 0xcf1f4e : 0x34a832, 0.5)
+    this.happinessBackgound.setFillStyle(data.happiness.actualValue < 50 ? 0xcf1f4e : 0x34a832, 0.5)
   }
 }
 
