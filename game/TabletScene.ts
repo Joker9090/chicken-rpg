@@ -50,12 +50,8 @@ export default class TabletScene extends Phaser.Scene {
 
         this.cameras.main.setViewport(window.innerWidth / 2 - this.worldSize.width / 2, this.tabletShown ? window.innerHeight / 2 - this.worldSize.height / 2 : window.innerHeight + 200, this.worldSize.width, this.worldSize.height)
         this.cameras.main.centerOn(0, 0)
-<<<<<<< HEAD
         this.tabletBorder = this.add.image(0, 0, "fondoTabletOp2").setOrigin(0).setScale(0.5).setScrollFactor(0)
         console.log(this.tabletBorder.width, this.tabletBorder.height);
-=======
-        this.tabletBorder = this.add.image(0, 0, "fondoTablet").setOrigin(0).setScale(0.5).setScrollFactor(0)
->>>>>>> 55dce5787430ff248bf153be7d5c3bcfbc6fb415
         // const graphics = this.add.graphics();
         // graphics.fillStyle(0x000000, 0.7);
         // graphics.fillRoundedRect(-this.worldSize.width / 2 + 20, -this.worldSize.height / 2 + 33, this.worldSize.width - 46, this.worldSize.height - 60, 7);
