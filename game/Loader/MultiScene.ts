@@ -20,6 +20,13 @@ export default class MultiScene extends Phaser.Scene {
   preload(data: any) {
     this.game.plugins.removeScenePlugin("IsoPlugin");
     this.game.plugins.removeScenePlugin("IsoPhysics");
+    this.load.image("loadingBlock1", "/images/bloque2TEST.png");
+    this.load.image("loadingBlock2", "/images/bloque.png");
+    this.load.image("loadingBlock3", "/images/street-a.png");
+    this.load.image("loadingBlock4", "/images/street-c.png");
+    this.load.image("loadingBlock5", "/images/buildingTest/test5.png");
+    
+    
     this.assetLoaderClass = new AssetsLoader(this, ["BaseLoad"]);
     this.assetLoaderClass.runPreload(() => {
       if (this.scenekey) {
