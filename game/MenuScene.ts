@@ -39,8 +39,7 @@ export default class MenuScene extends Phaser.Scene {
     
     const eventsCenter = EventsCenterManager.getInstance();
 
-    eventsCenter.turnEventOn(this.scene.key, eventsCenter.possibleEvents.READY, this.addPlayBtn, this)
-
+    // eventsCenter.turnEventOn(this.scene.key, eventsCenter.possibleEvents.READY, this.addPlayBtn, this)
 
     const middlePoint = {
       x: window.innerWidth / 2,
@@ -80,7 +79,6 @@ export default class MenuScene extends Phaser.Scene {
       loop: -1
     })
 
-
     
     this.container.add([
       this.backgroundSky, 
@@ -89,6 +87,7 @@ export default class MenuScene extends Phaser.Scene {
       this.backgroundCity, 
     ])
     
+    this.addPlayBtn()
   } 
 
   addPlayBtn() {
@@ -105,7 +104,7 @@ export default class MenuScene extends Phaser.Scene {
           targets: this.playButton,
           scale: 1.5,
           duration: 1000,
-          delay: 2000,
+          delay: 4000,
           ease: 'bounce',
           onComplete: () => {
             this.tweens.add({

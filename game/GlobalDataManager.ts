@@ -7,6 +7,7 @@ import newsMockData from "./MockData/News.json";
 import inventoryMockData from "./MockData/Inventory.json";
 import missionsMockData from "./MockData/Missions.json";
 import missionRequirementsMockData from "./MockData/Requirements.json";
+import tabletMockData from "./MockData/Tablet.json";
 
 export type newsType = {
   id: number
@@ -49,10 +50,23 @@ export type missionsType = {
   done: boolean
 }
 
+export type happinessType = {
+  actualValue: number,
+  maxValue: number,
+}
+
+export type transactionsType = {
+  date: string,
+  amount: number,
+  description: string
+}
+
 export type stateTypes = number | boolean | ProductToBuy[] | newsType[] | missionRequirements[] | missionsType[];
 
 export type globalState = {
   playerMoney: number;
+  reputation: number;
+  happiness: number;
   timeOfDay: 0 | 1 | 2 | 3;
   inventary: ProductToBuy[];
   newsToRead: boolean;
@@ -61,6 +75,8 @@ export type globalState = {
   allMissions: missionsType[];
   availableMissions: missionsType[];
   doneMissions: missionsType[];
+  happiness: happinessType;
+  transactions: transactionsType[];
 }
 
 export default class GlobalDataManager extends Phaser.Scene {
@@ -156,6 +172,8 @@ export default class GlobalDataManager extends Phaser.Scene {
 
     this.state = {
       playerMoney: 300,
+      reputation: 50,
+      happiness: 40,
       timeOfDay: 0,
       newsToRead: false,
       inventary: inventoryMockData.inventary,
@@ -164,6 +182,8 @@ export default class GlobalDataManager extends Phaser.Scene {
       allMissions: missionsMockData.missions,
       availableMissions: missionsMockData.missions.filter((mission) => mission.available),
       doneMissions: missionsMockData.missions.filter((mission) => mission.done),
+      happiness: tabletMockData.happiness,
+      transactions: tabletMockData.transactionsHistorial,
     };
   }
 

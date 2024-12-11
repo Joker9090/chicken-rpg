@@ -3,7 +3,7 @@
         {
             "id": 1,
             "missionId": [1],
-            "image": "newsImageTest",
+            "image": "imageDiarioGeneric",
             "title": "Paseo canino",
             "description": "Saca a pasear un perro por el parque.",
             "reward": {
@@ -18,7 +18,7 @@
         {
             "id": 14,
             "missionId": [2],
-            "image": "newsImageTest",
+            "image": "imageDiarioGeneric",
             "title": "Amigos de cuatro patas",
             "description": "Dona dinero a un refugio de animales para cuidar a los perros callejeros.",
             "reward": {
@@ -35,7 +35,7 @@
         {
             "id": 2,
             "missionId": [3],
-            "image": "newsImageTest",
+            "image": "imageDiarioGeneric",
             "title": "Paseo canino (intermedio)",
             "description": "Saca a pasear tres perros por el parque.",
             "reward": {
@@ -50,7 +50,7 @@
         {
             "id": 3,
             "missionId": [4],
-            "image": "newsImageTest",
+            "image": "imageDiarioGeneric",
             "title": "Paseo canino (avanzado)",
             "description": "Saca a pasear cinco perros por el parque.",
             "reward": {
@@ -65,7 +65,7 @@
         {
             "id": 4,
             "missionId": [5],
-            "image": "newsImageTest",
+            "image": "imageDiarioGeneric",
             "title": "Delivery express",
             "description": "Reparte los pedidos por la ciudad.",
             "reward": {
@@ -77,12 +77,12 @@
             "requirements": [
                 1
             ],
-            "readed": false
+            "readed": true
         },
         {
             "id": 5,
             "missionId": [6],
-            "image": "newsImageTest",
+            "image": "imageDiarioGeneric",
             "title": "Delivery express (intermedio)",
             "description": "Reparte los pedidos por la ciudad.",
             "reward": {
@@ -99,7 +99,7 @@
         {
             "id": 6,
             "missionId": [7],
-            "image": "newsImageTest",
+            "image": "imageDiarioGeneric",
             "title": "Delivery express (avanzado)",
             "description": "Reparte los pedidos por la ciudad.",
             "reward": {
@@ -117,7 +117,7 @@
         {
             "id": 7,
             "missionId": [8],
-            "image": "newsImageTest",
+            "image": "imageDiarioGeneric",
             "title": "Fotografía de primera",
             "description": "Toma fotos para un creador de contenido.",
             "reward": {
@@ -135,7 +135,7 @@
         {
             "id": 8,
             "missionId": [9],
-            "image": "newsImageTest",
+            "image": "imageDiarioGeneric",
             "title": "Fotografía de primera (intermedio)",
             "description": "Toma fotos para dos creadores de contenido.",
             "reward": {
@@ -154,7 +154,7 @@
         {
             "id": 9,
             "missionId": [10],
-            "image": "newsImageTest",
+            "image": "imageDiarioGeneric",
             "title": "Fotografía de primera 3",
             "description": "Toma fotos para dos creadores de contenido y edítalas.",
             "reward": {
@@ -174,7 +174,7 @@
         {
             "id": 10,
             "missionId": [11],
-            "image": "newsImageTest",
+            "image": "imageDiarioGeneric",
             "title": "Gatitos en apuros",
             "description": "Encuentra a los tres gatos perdidos en la ciudad.",
             "reward": {
@@ -189,7 +189,7 @@
         {
             "id": 11,
             "missionId": [12],
-            "image": "newsImageTest",
+            "image": "imageDiarioGeneric",
             "title": "Plazas relucientes",
             "description": "Ayuda a limpiar las plazas de la ciudad.",
             "reward": {
@@ -199,12 +199,12 @@
             } ,
             "time": 0,
             "requirements": [],
-            "readed": false
+            "readed": true
         },
         {
             "id": 12,
             "missionId": [13],
-            "image": "newsImageTest",
+            "image": "imageDiarioGeneric",
             "title": "¡Nuevos empleos!",
             "description": "Hay más locales que requieren delivery express, realiza encargos más desafiantes.",
             "reward": {
@@ -222,7 +222,7 @@
         {
             "id": 13,
             "missionId": [14],
-            "image": "newsImageTest",
+            "image": "imageDiarioGeneric",
             "title": "Calles obstruidas",
             "description": "Las calles de la ciudad están siendo arregladas, todos los encargos demorarán un poco más de lo planeado.",
             "reward": {

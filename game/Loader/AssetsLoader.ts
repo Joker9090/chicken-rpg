@@ -26,6 +26,19 @@ const loadAssets = {
       
       // TABLET
       ["image", "fondoTablet", "/tabletScene/fondoTablet.png"],
+      ["image", "fondoTabletOp2", "/tabletScene/fondoTabletOp2.png"],
+      ["image", "tabletStatLeft", "/tabletScene/tabletStatLeft.png"],
+      ["image", "tabletRightDown", "/tabletScene/tabletRightDown.png"],
+      ["image", "tabletRightUp", "/tabletScene/tabletRightUp.png"],
+
+      ["image", "tabletIcon", "/tabletScene/tabletIcon.png"],
+      ["image", "tabletSettings", "/tabletScene/tabletSettings.png"],
+      ["image", "tabletStats", "/tabletScene/tabletStats.png"],
+      ["image", "tabletStats2", "/tabletScene/tabletStats2.png"],
+      ["image", "tabletNotReady", "/tabletScene/tabletNotReady.png"],
+      ["image", "tabletBack", "/tabletScene/tabletBack.png"],
+      ["image", "btnCheck", "/tabletScene/btnCheck.png"],
+      ["image", "btnCruz", "/tabletScene/btnCruz.png"],
 
       // room
       ["image", "room1", "/assets/room/room1.png"],
@@ -69,6 +82,13 @@ const loadAssets = {
       ["image", "dayBlock4Active", "/UI/dayBlocks/dayBlock4Active.png"],
       ["image", "lineDayBlocks", "/UI/dayBlocks/lineDayBlocks.png"],
       ["image", "flecha", "/UI/dayBlocks/flecha.png"],
+
+      ["image", "avatar1", "/UI/avatar/avatar1.png"],
+      ["image", "avatar2", "/UI/avatar/avatar2.png"],
+      ["image", "avatarGlow", "/UI/avatar/avatarGlow.png"],
+      ["image", "avatarStats", "/UI/avatar/avatarStats.png"],
+      ["image", "avatarBackground", "/UI/avatar/avatarBackground.png"],
+
 
 
 
@@ -122,7 +142,10 @@ const loadAssets = {
       ["image", "coinModalIcon", "/assets/modalAssets/coinModalIcon.png"],
       ["image", "reputationModalIcon", "/assets/modalAssets/reputationModalIcon.png"],
       ["image", "happinessModalIcon", "/assets/modalAssets/happinessModalIcon.png"],
-
+      
+      ["image", "diarioBackground", "/assets/modalAssets/diarioBackground.png"],
+      ["image", "imageDiarioGeneric", "/assets/modalAssets/imageDiarioGeneric.png"],
+  
       //Buildings
       ["image", "test1", "/images/buildingTest/test1.png"],
       ["image", "test2", "/images/buildingTest/test2.png"],
