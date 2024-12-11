@@ -6,7 +6,7 @@
             "name": "Bicicleta",
             "description": "Necesitas una bicicleta para realizar este encargo.",
             "price": 20,
-            "miniImageModal": "camaraWhite"
+            "miniImageModal": "iconBici1"
         },
         {
             "id": 2,
@@ -14,7 +14,7 @@
             "name": "Mochila de delivery",
             "description": "Necesitas una mochila de delivery para realizar este encargo.",
             "price": 10,
-            "miniImageModal": "camaraWhite"
+            "miniImageModal": "iconMochila1"
         },
         {
             "id": 3,
@@ -30,7 +30,7 @@
             "name": "Curso de fotografía",
             "description": "Necesitas un curso de fotografía para realizar este encargo.",
             "price": 10,
-            "miniImageModal": "camaraWhite"
+            "miniImageModal": "iconCertif1"
         },
         {
             "id": 5,
@@ -38,7 +38,7 @@
             "name": "Curso de fotografía nivel 2 o contratar servicios de edición",
             "description": "Necesitas un curso de fotografía nivel 2 o contratar servicios de edición para realizar este encargo.",
             "price": 15,
-            "miniImageModal": "camaraWhite"
+            "miniImageModal": "iconCertif1"
         },
         {
             "id": 6,
@@ -46,7 +46,7 @@
             "name": "Monedas",
             "description": "Necesitas 8 monedas para realizar este encargo.",
             "price": 8,
-            "miniImageModal": "camaraWhite"
+            "miniImageModal": "iconDona1"
         }
     ]
 }

@@ -51,25 +51,25 @@ const loadAssets = {
       ["image", "snowFlake", "/ambient/snowFlake.png"],
 
       // UI
-      ["image", "clockPointer", "/images/UIChicken/clockPointer.png"],
-      ["image", "lvlMarker", "/images/UIChicken/lvlMarker.png"],
+ 
       ["image", "goBack", "/images/UIChicken/goBack.png"],
       ["image", "goRoom", "/images/UIChicken/goRoom.png"],
       ["image", "playButton", "/images/menuScene/playButton.png"],
       ["image", "leftMenuItem", "/images/menuScene/leftMenuItem.png"],
       ["image", "rightMenuItem", "/images/menuScene/rightMenuItem.png"],
-      ["image", "reloj", "/assets/UI/UILevel/reloj.png"],
       ["image", "coinUi", "/assets/UI/UiChiken/coinUi.png"],
-      ["image", "barEmpty", "/assets/UI/UiChiken/barEmpty.png"],
-      ["image", "varStar", "/assets/UI/UiChiken/varStar.png"],
-      ["image", "varFullLila", "/assets/UI/UiChiken/varFullLila.png"],
-      ["image", "varFullYellow", "/assets/UI/UiChiken/varFullYellow.png"],
-      ["image", "varSmile", "/assets/UI/UiChiken/varSmile.png"],
-      ["image", "iconNewsOff", "/assets/UI/UiChiken/iconNewsOff.png"],
-      ["image", "iconNewsOn", "/assets/UI/UiChiken/iconNews.png"],
-      ["image", "varFull", "/assets/chickenUIAssets/varFull.png"],
-      ["image", "varEmpty", "/assets/chickenUIAssets/varEmpty.png"],
-      ["image", "varSelector", "/assets/chickenUIAssets/varSelector.png"],
+
+      ["image", "dayBlock1", "/UI/dayBlocks/dayBlock1.png"],
+      ["image", "dayBlock1Active", "/UI/dayBlocks/dayBlock1Active.png"],
+      ["image", "dayBlock2", "/UI/dayBlocks/dayBlock2.png"],
+      ["image", "dayBlock2Active", "/UI/dayBlocks/dayBlock2Active.png"],
+      ["image", "dayBlock3", "/UI/dayBlocks/dayBlock3.png"],
+      ["image", "dayBlock3Active", "/UI/dayBlocks/dayBlock3Active.png"],
+      ["image", "dayBlock4", "/UI/dayBlocks/dayBlock4.png"],
+      ["image", "dayBlock4Active", "/UI/dayBlocks/dayBlock4Active.png"],
+      ["image", "lineDayBlocks", "/UI/dayBlocks/lineDayBlocks.png"],
+      ["image", "flecha", "/UI/dayBlocks/flecha.png"],
+
 
 
       // tiles  
@@ -112,6 +112,10 @@ const loadAssets = {
       ["image", "coin", "/assets/modalAssets/coin.png"],
       ["image", "camaraGrey", "/assets/modalAssets/masUi/camaraGrey.png"],
       ["image", "camaraWhite", "/assets/modalAssets/masUi/camaraWhite.png"],
+      ["image", "iconBici1", "/assets/modalAssets/iconBici1.png"],
+      ["image", "iconCertif1", "/assets/modalAssets/iconCertif1.png"],
+      ["image", "iconDona1", "/assets/modalAssets/iconDona1.png"],
+      ["image", "iconMochila1", "/assets/modalAssets/iconMochila1.png"],
       ["image", "camaraGreen", "/assets/modalAssets/masUi/camaraGreen.png"],
       ["image", "camaraShop", "/assets/modalAssets/camaraShop.png"],
       ["image", "camaraShopOn", "/assets/modalAssets/camaraShopOn.png"],

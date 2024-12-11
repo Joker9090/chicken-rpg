@@ -1,6 +1,7 @@
 import Phaser from "phaser";
 import RPG from "@/game/rpg";
-import GlobalDataManager from "@/game/GlobalDataManager";
+import EventsCenterManager from "../../services/EventsCenter";
+
 
 export class Timer extends Phaser.GameObjects.Container {
 
@@ -61,7 +62,7 @@ export class Timer extends Phaser.GameObjects.Container {
       callbackScope: this,
       loop: true,
     });
-    
+
 
     this.add([
       graphics,
@@ -72,54 +73,40 @@ export class Timer extends Phaser.GameObjects.Container {
 
 }
 
-export class Bar extends Phaser.GameObjects.Container {
+export class Avatar extends Phaser.GameObjects.Container {
+
+    // avatarStats: Phaser.GameObjects.Image;
+    // avatarBackground: Phaser.GameObjects.Image;
+    // avatarGlow: Phaser.GameObjects.Image;
+    // avatar: Phaser.GameObjects.Image;
+
   constructor(
     scene: RPG,
     x: number,
     y: number,
-    iconTexture: string,
   ) {
     super(scene, x, y);
 
-    const graphics = this.scene.add.graphics()
-    graphics.lineStyle(4, 0xffffff, 1);
-    graphics.strokeRoundedRect(-10, -15, 200, 30, 30);
-    // create a function that recieves a number and updates the fill of the bar
-    const FillRect = (fill: number) => {
-      graphics.clear()
-      graphics.strokeRoundedRect(-10, -15, 200, 30, 30);
-      graphics.lineStyle(4, 0xffffff, 1);
-      graphics.fillStyle(0xffffff, 1);
-      graphics.fillRoundedRect(-10, -15, fill, 30, 15);
-    }
 
-    const icon = this.scene.add.image(0, 0, iconTexture).setOrigin(0.5).setScale(0.1)
-    let fillNumber = 190
 
-    const timerCall = this.scene.time.addEvent({
-      delay: 1000, // ms
-      callback: () => {
-        fillNumber -= 1
-        if (fillNumber < 150) icon.setTint(0xff0000);
-        FillRect(fillNumber)
-      },
-      callbackScope: this,
-      loop: true,
-    });
-
+  
     this.add([
-      graphics,
-      icon,
     ])
   }
 
 }
 
 
-export class Clock extends Phaser.GameObjects.Container {
-  clockPointer: Phaser.GameObjects.Image;
-  clock: Phaser.GameObjects.Image;
+export class DayBlock extends Phaser.GameObjects.Container {
+  lineDayBlock: Phaser.GameObjects.Image;
+  dayBlock1: Phaser.GameObjects.Image;
+  dayBlock2: Phaser.GameObjects.Image;
+  dayBlock3: Phaser.GameObjects.Image;
+  dayBlock4: Phaser.GameObjects.Image;
+  flecha: Phaser.GameObjects.Image;
   // timerCall: Phaser.Time.TimerEvent;
+  eventCenter = EventsCenterManager.getInstance();
+
   constructor(
     scene: RPG,
     x: number,
@@ -127,30 +114,50 @@ export class Clock extends Phaser.GameObjects.Container {
   ) {
     super(scene, x, y);
 
-    const globalDataManager = this.scene.game.scene.getScene("GlobalDataManager") as GlobalDataManager
-    const globalState = globalDataManager.getState()
-    this.clock = this.scene.add.image(0, 0, 'clockDay').setOrigin(0.5).setScale(1)
-    this.clockPointer = this.scene.add.image(0, 0, 'clockPointer').setOrigin(0.5).setScale(1).setRotation((globalState.timeOfDay)*Math.PI/2)
+    this.dayBlock1 = this.scene.add.image(0, 0, 'dayBlock1').setOrigin(0.5)
+    const widthBlock = this.dayBlock1.width / 2
+    const heightBlock = this.dayBlock1.height
+    this.dayBlock1.setPosition(-widthBlock * 1.5 - 30, heightBlock / 2 + 15).setScale(0.5)
+    this.dayBlock2 = this.scene.add.image(-widthBlock * .5 - 10, heightBlock / 2 + 15, 'dayBlock2').setOrigin(0.5).setScale(0.5)
+    this.dayBlock3 = this.scene.add.image(widthBlock * .5 + 10, heightBlock / 2 + 15, 'dayBlock3').setOrigin(0.5).setScale(0.5)
+    this.dayBlock4 = this.scene.add.image(widthBlock * 1.5 + 30, heightBlock / 2 + 15, 'dayBlock4').setOrigin(0.5).setScale(0.5)
+    this.lineDayBlock = this.scene.add.image(0, heightBlock / 2 + 15, 'lineDayBlocks').setOrigin(0.5)
+    const arrowPossiblePositions = [this.dayBlock1.x, this.dayBlock2.x, this.dayBlock3.x, this.dayBlock4.x]
+    this.flecha = this.scene.add.image(arrowPossiblePositions[0], 15, 'flecha').setOrigin(0.5).setScale(0.5)
 
     this.add([
-      this.clock,
-      this.clockPointer,
+      this.lineDayBlock,
+      this.dayBlock1,
+      this.dayBlock2,
+      this.dayBlock3,
+      this.dayBlock4,
+      this.flecha
     ])
+
+    this.setActiveBlock(0)
+  }
+
+  setActiveBlock(blockDay: number) {
+    switch (blockDay) {
+      case 0:
+        this.dayBlock1.setTexture("dayBlock1Active")
+        break;
+      case 1:
+        this.dayBlock2.setTexture("dayBlock2Active")
+        break;
+      case 2:
+        this.dayBlock3.setTexture("dayBlock3Active")
+        break;
+      case 3:
+        this.dayBlock4.setTexture("dayBlock4Active")
+        break;
+      default:
+        this.dayBlock1.setTexture("dayBlock1Active")
+        break;
+    }
   }
 
   passTime(amount: number) {
-    this.scene.add.tween({
-      targets: this.clockPointer,
-      rotation: this.clockPointer.rotation + amount*Math.PI/2,
-      duration: 2000,
-      ease: 'linear',
-    })
-  }
-  // stopOrStartClock() {
-  //   this.timerCall.paused = this.timerCall.paused ? false : true
-  // }
 
-  // setMomentDay(time: 1 | 2 | 3 | 4) {
-  //   this.clockPointer.setRotation(time*Math.PI/2)
-  // }
+  }
 }
