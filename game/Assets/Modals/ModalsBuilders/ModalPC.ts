@@ -10,7 +10,7 @@ export class ModalPC extends ModalBase {
     agreeButton: Phaser.GameObjects.Image;
     cancelButton: Phaser.GameObjects.Image;
     activeTween: Phaser.Tweens.Tween | null = null;
-
+    canBuy: boolean = false;
     constructor(
         scene: RPG,
         x: number,
@@ -19,12 +19,12 @@ export class ModalPC extends ModalBase {
         super(scene, x, y);
         this.scene = scene;
 
-        const handleAgreeModalRoom = (bought: ProductToBuy | ProductToBuy[]) => {
-            if (bought instanceof Array) {
-                this.eventCenter.emitEvent(this.eventCenter.possibleEvents.BUY_ITEMS, bought);
-            } else {
-                this.eventCenter.emitEvent(this.eventCenter.possibleEvents.BUY_ITEM, bought);
-            }
+        const handleAgreeModalRoom = (bought: ProductToBuy[]) => {
+            this.eventCenter.emitEvent(this.eventCenter.possibleEvents.BUY_ITEMS, bought);
+            // if (bought instanceof Array) {
+            // } else {
+            //     this.eventCenter.emitEvent(this.eventCenter.possibleEvents.BUY_ITEM, bought);
+            // }
         }
         // separar items que van al shop de los que son el inventario
         const modalConfig = {
@@ -40,6 +40,7 @@ export class ModalPC extends ModalBase {
                     pictureOn: "bicicletaOn",
                     text: "Bicicleta",
                     reward: 200,
+                    hasIt: false,
                     roomInformation: {
                         "assetInRoom": "bicicle",
                         "frontContainer": true
@@ -52,6 +53,7 @@ export class ModalPC extends ModalBase {
                     pictureOn: "camaraShopOn",
                     text: "CAMARA",
                     reward: 100,
+                    hasIt: false,
                     roomInformation: {
                         "assetInRoom": "camera",
                         "frontContainer": true
@@ -62,7 +64,8 @@ export class ModalPC extends ModalBase {
                     picture: "certificadoOff",
                     pictureOn: "certificadoOn",
                     text: "Curso de fotografía",
-                    reward: 0,
+                    reward: 100,
+                    hasIt: false,
                     roomInformation: {
                         assetInRoom: "degree",
                         frontContainer: true
@@ -74,7 +77,8 @@ export class ModalPC extends ModalBase {
                     picture: "bagOff",
                     pictureOn: "bagOn",
                     text: "Mochila de delivery",
-                    reward: 0,
+                    reward: 100,
+                    hasIt: false,
                     roomInformation: {
                         assetInRoom: "",//TODO AGREGAR ASSET CUANDO ESTE
                         frontContainer: false
@@ -84,13 +88,20 @@ export class ModalPC extends ModalBase {
             agreeFunction: handleAgreeModalRoom,
         }
 
-        // chequear que tenes en el inventario y pintar de verde lo que tengas
-        // 
+        const globalState = this.eventCenter.emitWithResponse(this.eventCenter.possibleEvents.GET_STATE, null);
+        const inventary = globalState.inventary;
+        modalConfig.products?.forEach((product, index) => {
+            if (inventary.some((item: Inventory) => item.id === product.id)) {
+                product.hasIt = true;
+            }
+        })
+
+        console.log(modalConfig)
+        const selectedItems: any = []
 
         const selectStates: boolean[] = (modalConfig.products ?? []).map(() => false);
         const createdProducts: { image: Phaser.GameObjects.Image, rewardBackground: Phaser.GameObjects.Image, coinIcon: Phaser.GameObjects.Image, text: Phaser.GameObjects.Text, isSelected: boolean }[] = [];
 
-        const inventary = this.eventCenter.emitWithResponse(this.eventCenter.possibleEvents.GET_INVENTARY, null);
 
         //Modals containers
         const topContainer = this.scene.add.container(0, -200);
@@ -140,9 +151,6 @@ export class ModalPC extends ModalBase {
             });
         }
 
-        console.log("modalConfig.products", modalConfig.products);
-        console.log("inventary", inventary);
-        console.log("selectStates", selectStates);
 
         //TOP CONTAINER
         const btnExit_p = this.scene.add.image(255, 0, "btnExit").setInteractive();
@@ -179,15 +187,33 @@ export class ModalPC extends ModalBase {
         const offsetX = 190;
         const offsetY = 170; // Distancia vertical entre filas
 
+        const checkMoney = () => {
+            let totalAmount = 0
+            selectedItems.forEach((product: ProductToBuy) => {
+                totalAmount += product.reward;
+            })
+            if (totalAmount > globalState.playerMoney) {
+                leftTextNotMoney.setVisible(true);
+                this.agreeButton.setAlpha(0.5);
+                leftTextButton.setAlpha(0.5);
+                this.canBuy = false;
+            } else {
+                leftTextNotMoney.setVisible(false);
+                this.agreeButton.setAlpha(1);
+                leftTextButton.setAlpha(1);
+                this.canBuy = true;
+            }
+        }
+
         //LEFT CONTAINER
         modalConfig.products?.forEach((product, index) => {
-            const x = index < 2 
-            ? baseX + index * offsetX // Primera fila
-            : baseX + (index - 2) * offsetX; // Misma alineación horizontal para la segunda fila
-    
-        const y = index < 2 
-            ? baseY // Primera fila
-            : baseY + offsetY; // Segunda fila, desplazada hacia abajo
+            const x = index < 2
+                ? baseX + index * offsetX // Primera fila
+                : baseX + (index - 2) * offsetX; // Misma alineación horizontal para la segunda fila
+
+            const y = index < 2
+                ? baseY // Primera fila
+                : baseY + offsetY; // Segunda fila, desplazada hacia abajo
 
             let isSelected = selectStates[index];
 
@@ -197,33 +223,43 @@ export class ModalPC extends ModalBase {
                 .setInteractive();
 
 
-            if (selectStates[index]) {
+            if (product.hasIt) {
                 productImage.setTexture(product.pictureOn);
             } else {
                 if (product.reward > 0) {
                     // if(inventary.playerMoney >= product.reward){
                     productImage.on('pointerup', () => {
-                        isSelected = !isSelected;
-                        productImage.setTexture(isSelected ? product.pictureOn : product.picture);
-                        selectStates[index] = isSelected;
+                        //@ts-ignore
+                        if (!selectedItems.includes(product)) {
+                            selectedItems.push(product);
+                            productImage.setTexture(product.pictureOn);
+                            checkMoney();
+                        } else {
+                            //@ts-ignore
+                            selectedItems.splice(selectedItems.indexOf(product), 1);
+                            productImage.setTexture(product.picture);
+                            checkMoney();
+                        }
+
+                        // isSelected = !isSelected;
+                        // productImage.setTexture(isSelected ? product.pictureOn : product.picture);
+                        // selectStates[index] = isSelected;
                     });
                     //}
                     productImage.on("pointerover", () => {
-                        if (!isSelected) {
-                            productImage.setTexture(product.picture);
+                        //@ts-ignore
+                        if (!selectedItems.includes(product)) {
                             productImage.setAlpha(1);
                         }
                     });
                     productImage.on("pointerout", () => {
-                        if (!isSelected) {
-                            productImage.setTexture(product.picture);
+                        //@ts-ignore
+                        if (!selectedItems.includes(product)) {
                             productImage.setAlpha(0.5);
                         }
                     });
                 }
             }
-
-
 
 
 
@@ -252,60 +288,13 @@ export class ModalPC extends ModalBase {
         //RIGHT CONTAINER
 
         rightContainer.add([
-
         ]);
 
         //Agree button config
         this.agreeButton.on('pointerup', () => {
-
-            const updatedProductsBought = modalConfig.products?.map((product, index) => ({
-                ...product,
-                isSelected: selectStates[index],
-            }));
-            let filteredProducts = [];
-            let boughtProductsOrProduct = null;
-            filteredProducts = updatedProductsBought?.filter(product => product.isSelected === true);
-
-            boughtProductsOrProduct = filteredProducts?.length === 1
-                ? filteredProducts[0]
-                : filteredProducts;
-
-            console.log("filteredProducts", filteredProducts);
-            console.log("boughtProductsOrProduct", boughtProductsOrProduct);
-            if (filteredProducts && filteredProducts?.length === 1) {
-                let cost = filteredProducts[0].reward;
-                const playerState = this.eventCenter.emitWithResponse(this.eventCenter.possibleEvents.GET_STATE, null);
-                if (playerState.playerMoney >= cost) {
-                    leftTextNotMoney.setVisible(false);
-                    modalConfig.agreeFunction(boughtProductsOrProduct);
-                    this.handleClose();
-                    //TODO- MEJORAR ESTO
-                } else if (!filteredProducts.find(product => product.title == inventary.find((inventaryProduct: ProductToBuy) => inventaryProduct.title == product.title)?.title)) {
-                    leftTextNotMoney.setVisible(true);
-                    this.agreeButton.setAlpha(0.5);
-                    leftTextButton.setAlpha(0.5);
-                } else {
-                    this.handleClose();
-                }
-            } else if (filteredProducts && filteredProducts?.length > 1) {
-                let cost = filteredProducts.reduce((acc, product) => acc + product.reward, 0);
-                const playerState = this.eventCenter.emitWithResponse(this.eventCenter.possibleEvents.GET_STATE, null);
-                if (playerState.playerMoney >= cost) {
-                    leftTextNotMoney.setVisible(false);
-                    modalConfig.agreeFunction(boughtProductsOrProduct);
-                    this.handleClose();
-                    //TODO- MEJORAR ESTO
-                } else if (!filteredProducts.find(product => product.title == inventary.find((inventaryProduct: ProductToBuy) => inventaryProduct.title == product.title)?.title)) {
-                    leftTextNotMoney.setVisible(true);
-                    this.agreeButton.setAlpha(0.5);
-                    leftTextButton.setAlpha(0.5);
-                } else {
-                    this.handleClose();
-                }
-
-            } else {
-                this.handleClose();
-            }
+            if (!this.canBuy) return;
+            modalConfig.agreeFunction(selectedItems);
+            this.handleClose();
         });
 
         this.add([
@@ -313,7 +302,6 @@ export class ModalPC extends ModalBase {
             leftContainer,
             rightContainer,
         ]);
-
 
         //Buttons Container
         const buttonsContainer = this.scene.add.container(0, 175);

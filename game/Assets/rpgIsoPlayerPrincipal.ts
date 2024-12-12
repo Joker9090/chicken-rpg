@@ -18,7 +18,8 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
   levelConfig: any;
   distanceBetweenFloors: number
   playerBuilder: PlayerBuilder;
-  
+  lastDirection: string = "s";
+
   constructor(
     scene: Phaser.Scene,
     x: number,
@@ -57,12 +58,68 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
     this.group = group;
 
     this.playerBuilder = new PlayerBuilder(scene);
-    
+
     this.playerBuilder.getContainer().setPosition(this.self.x, this.self.y, this.self.z);
     this.playerBuilder.getContainer().setDepth(this.customDepth || this.self.depth);
 
     
+    //@ts-ignore
+    // const head01 = new Phaser.GameObjects.Text(this, 600, 50, "NORMAL HEAD", { fill: "#0f0" });
+    // head01.setInteractive().on("pointerdown", () => { 
+    //   this.playerBuilder.buildPlayer("01","01","01","01","01"); 
+    //   this.playerBuilder.stopAllAnimations()
+    //   play() 
+    // })
+    // this.scene.add.existing(head01);
+    //@ts-ignore
+    // const head02 = new Phaser.GameObjects.Text(this, 600, 150, "PINK HEAD", { fill: "#0f0" });
+    // head02.setInteractive().on("pointerdown", () => { 
+    //   this.playerBuilder.buildPlayer("01","01","01","02","01"); 
+    //   this.playerBuilder.stopAllAnimations()
+    //   play()
+    // })
+
     //window.calculatePath = this.calculatePath
+
+  }
+
+  playAnimBarto (direction: string) {
+      switch (direction) {
+        case "n":
+          this.self.play("walk-n");
+          this.playerBuilder.chainMovement([
+            PossibleMovements.LEFT1, PossibleMovements.LEFT2, PossibleMovements.LEFT1, PossibleMovements.LEFT2,
+          ])
+          break;
+        case "s":
+          this.self.play("walk-s");
+          this.playerBuilder.chainMovement([
+            PossibleMovements.BOTTOM1, PossibleMovements.BOTTOM2, PossibleMovements.BOTTOM1, PossibleMovements.BOTTOM2,
+          ])
+          break;
+        case "e":
+          this.self.play("walk-e");
+
+          this.playerBuilder.chainMovement([
+            PossibleMovements.RIGHT1, PossibleMovements.RIGHT2, PossibleMovements.RIGHT1, PossibleMovements.RIGHT2,
+          ])
+          break;
+        case "w":
+          this.self.play("walk-w");
+          this.playerBuilder.chainMovement([
+            PossibleMovements.TOP1, PossibleMovements.TOP2,PossibleMovements.TOP1, PossibleMovements.TOP2,
+          ])
+          break;
+        default:
+          this.self.play("idle-s");
+          break;
+          
+        }
+
+    
+ 
+
+    
 
   }
 
@@ -167,7 +224,7 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
         tile.self.setTint(0x00ff00);
 
         let tilesListener = tile.self.eventNames();
-        if(!tilesListener.includes("pointerdown")) {
+        if (!tilesListener.includes("pointerdown")) {
           tile.self.on("pointerdown", () => this.possibleMovementMouseDown(tile));
         }
         tile.self.on("pointerover", () => this.possibleMovementMouseOver(tile));
@@ -210,30 +267,30 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
     */
 
   checkCubeAround(objectPosition: PositionMatrix) {
-    if(this.matrixPosition) {
+    if (this.matrixPosition) {
       const newDistance = {
         x: objectPosition.x - this.matrixPosition.x,
         y: objectPosition.y - this.matrixPosition.y,
         h: objectPosition.h - this.matrixPosition.h,
-      };   
+      };
       return newDistance;
     }
-    return {x:0,y:0,h:0}
+    return { x: 0, y: 0, h: 0 }
   }
 
   //Se debe optimizar aun mas
   calculatePath(start: PositionMatrix, end: PositionMatrix) {
     let pathXFirst = [];
     let pathYFirst = [];
-  
+
     let { x: xs, y: ys } = start;
     let { x: xe, y: ye } = end;
-  
+
     // Calcula movimiento en el eje X primero
     if (xs !== xe) {
       const stepsX = Math.abs(xe - xs);
       const directionX = xe > xs ? 1 : -1;
-  
+
       for (let i = 1; i <= stepsX; i++) {
         const nextPos = { ...start, x: xs + i * directionX, y: ys };
         // Verifica si la posición es válida usando getTileAt
@@ -241,18 +298,18 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
         const objectOnTile = this.getObjectAt({ x: nextPos.x, y: nextPos.y, h: nextPos.h + this.distanceBetweenFloors });
         if (tile && !objectOnTile) {
           pathXFirst.push(nextPos);
-        }else {
+        } else {
           pathXFirst = []; // Si hay obstáculo, resetea la ruta
           break;
         }
       }
     }
-  
+
     // Luego movimiento en el eje Y
     if (pathXFirst.length && ys !== ye) {
       const stepsY = Math.abs(ye - ys);
       const directionY = ye > ys ? 1 : -1;
-  
+
       for (let i = 1; i <= stepsY; i++) {
         const nextPos = { ...start, x: xe, y: ys + i * directionY };
         const [tile] = this.getTileAt(nextPos);
@@ -265,29 +322,29 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
         }
       }
     }
-  
+
     // Calcula movimiento en el eje Y primero
     if (ys !== ye) {
       const stepsY = Math.abs(ye - ys);
       const directionY = ye > ys ? 1 : -1;
-  
+
       for (let i = 1; i <= stepsY; i++) {
         const nextPos = { ...start, x: xs, y: ys + i * directionY };
         const [tile] = this.getTileAt(nextPos);
         const objectOnTile = this.getObjectAt({ x: nextPos.x, y: nextPos.y, h: nextPos.h + this.distanceBetweenFloors });
         if (tile && !objectOnTile) {
           pathYFirst.push(nextPos);
-        }else {
+        } else {
           pathYFirst = [];
           break;
         }
       }
     }
-  
+
     if (pathYFirst.length && xs !== xe) {
       const stepsX = Math.abs(xe - xs);
       const directionX = xe > xs ? 1 : -1;
-  
+
       for (let i = 1; i <= stepsX; i++) {
         const nextPos = { ...start, x: xs + i * directionX, y: ye };
         const [tile] = this.getTileAt(nextPos);
@@ -300,22 +357,22 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
         }
       }
     }
-  
+
     // Elige el camino que no está bloqueado
     if (pathXFirst.length > 0) {
       return pathXFirst;
     } else if (pathYFirst.length > 0) {
       return pathYFirst;
     }
-  
+
     // Si ambos caminos están bloqueados, regresa un array vacío
     return [];
   }
-  
-  
+
+
 
   movePath(path: PositionMatrix[]) {
-    if(path.length === 0) {
+    if (path.length === 0) {
       this.self.play("idle-" + this.facingDirection);
       this.clearPossibleMovements();
       return
@@ -324,10 +381,10 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
     //return
 
     const nextPos = path.shift();
-    if(nextPos && this.matrixPosition) {
-      const {x, y} = this.matrixPosition;
+    if (nextPos && this.matrixPosition) {
+      const { x, y } = this.matrixPosition;
       let newDirection = this.facingDirection;
-  
+
       if (nextPos.x > x) {
         newDirection = "w";
       } else if (nextPos.x < x) {
@@ -337,7 +394,7 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
       } else if (nextPos.y < y) {
         newDirection = "n";
       }
-      
+
       this.facingDirection = newDirection;
       this.self.play("walk-" + this.facingDirection);
 
@@ -358,17 +415,17 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
     let newPath = [];
     for (let i = 0; i < originalPath.length; i++) {
       //h + this.distanceBetweenFloors 
-      let testPos: PositionMatrix = {...originalPath[i] , h: originalPath[i].h + this.distanceBetweenFloors };
+      let testPos: PositionMatrix = { ...originalPath[i], h: originalPath[i].h + this.distanceBetweenFloors };
       let _tile = this.getObjectAt(testPos);
-      if(!_tile?.type){
+      if (!_tile?.type) {
         newPath.push(originalPath[i]);
       }
     }
     return newPath;
 
   }
-  
-  
+
+
 
   possibleMovementMouseDown(tile: RpgIsoSpriteBox) {
     // this.clearPossibleMovements();
@@ -379,16 +436,16 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
     if (tile.matrixPosition && this.matrixPosition) {
       // const { x, y } = tile.matrixPosition;
       // const { x: xp, y: yp } = this.matrixPosition;
-      let  path = this.calculatePath(this.matrixPosition,tile.matrixPosition);
+      let path = this.calculatePath(this.matrixPosition, tile.matrixPosition);
 
       this.movePath(path);
     }
   }
 
   possibleMovementMouseOver(tile: RpgIsoSpriteBox) {
-    if(tile){
+    if (tile) {
       // @ts-ignore
-      if(!tile.baseZ) tile.baseZ = tile.isoZ;
+      if (!tile.baseZ) tile.baseZ = tile.isoZ;
       this.scene.tweens.add({
         targets: tile,
         isoZ: tile.isoZ + 5,
@@ -401,7 +458,7 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
   }
 
   possibleMovementMouseOut(tile: RpgIsoSpriteBox) {
-    if(tile){
+    if (tile) {
       this.scene.tweens.add({
         targets: tile,
         // @ts-ignore
@@ -461,11 +518,11 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
             if (hasObject) {
               const obj = this.getObjectAt({ x: x, y: y, h: h + this.distanceBetweenFloors });
               _object = obj;
-            } 
+            }
           }
         }
       });
-      return [_tile,_object];
+      return [_tile, _object];
     } else {
       return [
         undefined,
@@ -476,7 +533,7 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
 
   tweenTile(tile: PositionMatrix, direction: string, onCallback: () => void) {
     let _tile = this.getObjectAt(tile);
-    if(_tile) {
+    if (_tile) {
       this.scene.tweens.add({
         targets: this.self,
         isoZ: this.isoZ,
@@ -514,8 +571,11 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
   }
 
   move(direction: string, newX: number, newY: number) {
+
     this.clearPossibleMovements()
-    
+
+    // this.playAnimBarto(direction)
+
     this.self.play("idle-" + this.direction);
     this.self.play("walk-" + direction);
 
@@ -526,6 +586,12 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
       s: PossibleMovements.BOTTOM1,
       e: PossibleMovements.RIGHT1,
       w: PossibleMovements.LEFT1
+    }
+    const pm2 = {
+      n: PossibleMovements.TOP2,
+      s: PossibleMovements.BOTTOM2,
+      e: PossibleMovements.RIGHT2,
+      w: PossibleMovements.LEFT2
     }
     //@ts-ignore
     this.playerBuilder.selectMovement(pm[direction]);
@@ -542,15 +608,15 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
       if (tile && !object) {
         this.isMoving = true;
         this.tweenTileBox(tile, direction);
-      } else  if (tile && object) {
-        if(object.type == "CUBE") {          
+      } else if (tile && object) {
+        if (object.type == "CUBE") {
           (object as CubeIsoSpriteBox).moveCube(this);
         }
       }
     }
   }
 
-  
+
   updateAnim(cursors: Phaser.Types.Input.Keyboard.CursorKeys) {
 
     this.playerBuilder.getContainer().setPosition(this.self.x, this.self.y, this.self.z);

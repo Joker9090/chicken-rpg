@@ -113,6 +113,7 @@ export default class Room {
     if (this.scene.player) {
       // @ts-ignore
       this.scene.cameras.main.stopFollow().centerOn(this.scene.player.x + 400, this.scene.player.y - 250);
+      this.scene.player.self.setVisible(false)
       this.scene.player.self.setScale(1.4);
     }
 

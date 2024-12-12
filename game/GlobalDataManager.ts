@@ -46,6 +46,7 @@ export default class GlobalDataManager extends Phaser.Scene {
     }, this);
 
     this.eventCenter.turnEventOn("GlobalDataManager", this.eventCenter.possibleEvents.BUY_ITEMS, (payload: ProductToBuy[]) => {
+      console.log(payload, "PAYLOAD")
       let moneyLess = 0;
       payload.forEach((item) => {
         this.addInventary(item);
@@ -167,7 +168,6 @@ export default class GlobalDataManager extends Phaser.Scene {
     });
     // this.state = { ...this.state, [key]: value }
     this.eventCenter.emit(this.eventCenter.possibleEvents.UPDATE_STATE);
-    console.log(this.state, "NEW STATE IN CHANGE STATE")
   }
 
   changeMoney(amount: number) {
@@ -179,8 +179,6 @@ export default class GlobalDataManager extends Phaser.Scene {
       case "money":
         return this.state.playerMoney >= requirements.price;
       case "item":
-        console.log(this.state.inventary, "INVENTARY")
-        console.log(requirements, "REQUIREMENT")
         return this.state.inventary.some((product) => product.title === requirements.name);
       default:
         return false;

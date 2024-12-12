@@ -1,28 +1,5 @@
 {
     "inventary": [
-        {
-          "id": 1,
-          "title": "Curso de fotografía",
-          "picture": "degree",
-          "description": "Curso de fotografía",
-          "image": "",
-          "price": 150,
-          "roomInformation": {
-            "assetInRoom": "degree",
-            "frontContainer": true
-          }
-        },
-        {
-          "id": 4,
-          "title": "Mochila para delivery",
-          "picture": "bag",
-          "description": "Mochila para entregar pedidos",
-          "image": "",
-          "price": 100,
-          "roomInformation": {
-            "assetInRoom": "bag",
-            "frontContainer": true
-          }
-        }
+       
       ]
 }

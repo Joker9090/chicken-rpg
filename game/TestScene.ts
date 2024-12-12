@@ -102,7 +102,9 @@ export default class TestScene extends Phaser.Scene {
 
   create() {
     const player = new PlayerBuilder(this);
+
     this.add.existing(player.getContainer());
+
     player.getContainer().setPosition(100, 100);
     //player.selectMovement(PossibleMovements.LEFT2);
 
@@ -111,7 +113,7 @@ export default class TestScene extends Phaser.Scene {
         PossibleMovements.RIGHT1, PossibleMovements.RIGHT2,PossibleMovements.RIGHT1, PossibleMovements.RIGHT2,
         PossibleMovements.BOTTOM1, PossibleMovements.BOTTOM2,PossibleMovements.BOTTOM1, PossibleMovements.BOTTOM2,
         PossibleMovements.LEFT1, PossibleMovements.LEFT2,PossibleMovements.LEFT1, PossibleMovements.LEFT2,
-        PossibleMovements.RIGHT1, PossibleMovements.RIGHT2,PossibleMovements.RIGHT1, PossibleMovements.RIGHT2,
+        PossibleMovements.TOP1, PossibleMovements.TOP2,PossibleMovements.TOP1, PossibleMovements.TOP2,
       ])
     }
     
@@ -193,11 +195,11 @@ export class PlayerBuilder {
     this.container.removeAll();
 
     this.container.add([
-      this.leftHand,
-      this.torso,
       this.rightHand,
-      this.head,
       this.legs,
+      this.torso,
+      this.leftHand,
+      this.head,
     ])
   }
 
@@ -242,11 +244,11 @@ export class PlayerBuilder {
 
   buildPlayer(leftHandSelected: string = "01", torsoSelected: string = "01", rightHandSelected: string = "01", headSelected: string = "01", legsSelected: string = "01") {
     const obj = {
+      legs: this.selectLegs(legsSelected),
       torso: this.selectTorso(torsoSelected),
       leftHand: this.selectLeftHand(leftHandSelected),
       rightHand: this.selectRightHand(rightHandSelected),
       head: this.selectHead(headSelected),
-      legs: this.selectLegs(legsSelected),
     };
 
     this.torso = obj.torso;
@@ -267,7 +269,6 @@ export class PlayerBuilder {
     this.torsoSelected = leftHandSelected;
     const leftHand = this.scene.add
       .sprite(0, 0, "torso-" + this.torsoSelected, 0)
-      .setAlpha(0.9)
       .setOrigin(0.5);
     this.leftHand = leftHand;
     this.buildAnimations([PlayerParts.LEFT_HAND]);
@@ -279,7 +280,7 @@ export class PlayerBuilder {
     this.torsoSelected = torsoSelected;
     const torso = this.scene.add
       .sprite(0, 0, "torso-" + this.torsoSelected, 0)
-      .setAlpha(0.5)
+      // .setScale(1.4)
       .setOrigin(0.5);
 
     this.torso = torso;
@@ -292,7 +293,7 @@ export class PlayerBuilder {
     this.torsoSelected = rightHandSelected;
     const rightHand = this.scene.add
       .sprite(0, 0, "torso-" + this.torsoSelected, 0)
-      .setAlpha(0.2)
+      // .setScale(1.4)
       .setOrigin(0.5);
     this.rightHand = rightHand;
     this.buildAnimations([PlayerParts.RIGHT_HAND]);
@@ -304,7 +305,7 @@ export class PlayerBuilder {
     this.headSelected = headSelected;
     const head = this.scene.add
       .sprite(0, 0, "head-" + this.headSelected, 0)
-      .setAlpha(0.1)
+      // .setScale(1.4)
       .setOrigin(0.5);
     this.head = head;
     this.buildAnimations([PlayerParts.HEAD]);
@@ -316,7 +317,7 @@ export class PlayerBuilder {
     this.legsSelected = legsSelected;
     const legs = this.scene.add
       .sprite(0, 0, "legs-" + this.legsSelected, 0)
-      .setAlpha(0.1)
+      // .setScale(1.4)
       .setOrigin(0.5);
 
     this.legs = legs;
@@ -352,7 +353,7 @@ export class PlayerBuilder {
       const p = this.getPartByKeyname(part);
       p.anims.pause();
       
-      p.play(`${possibleMovements[0]}-${part}`,true);
+      p.play(`${possibleMovements[0]}-${part}`, false);
       p.chain(possibleMovements.filter((v,index) => index > 0).map(v => `${v}-${part}`));
       
     }
