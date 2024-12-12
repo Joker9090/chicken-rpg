@@ -61,21 +61,20 @@ export class ModalNews extends ModalBase {
         // INFO CONTAINER
         const infoContainer = this.scene.add.container(0, 0);
 
-        //do redondea esquinas de rectangleTitle
 
         const rectangleTitle = this.scene.add.rectangle(140, -105, 290, 80, 0xBAB8BC, 0.5).setOrigin(0.5);
         const rectangleDescription = this.scene.add.rectangle(140, 75, 290, 250, 0xF1EFF4, 0.5).setOrigin(0.5);
 
         const graphicsTitle = this.scene.make.graphics();
-        graphicsTitle.fillStyle(0xBAB8BC); // El color no importa para máscaras
-        graphicsTitle.fillRoundedRect(-8, -145, 290, 80, 20); // Posición, tamaño y radio de los bordes
+        graphicsTitle.fillStyle(0xBAB8BC); 
+        graphicsTitle.fillRoundedRect(-8, -145, 290, 80, 20); 
         const maskTitle = graphicsTitle.createGeometryMask();
 
         rectangleTitle.setMask(maskTitle);
 
         const graphicsDescription = this.scene.make.graphics();
-        graphicsDescription.fillStyle(0xF1EFF4); // El color no importa para máscaras
-        graphicsDescription.fillRoundedRect(-8, -50, 290, 250, 20); // Ajusta la posición, tamaño y radio
+        graphicsDescription.fillStyle(0xF1EFF4); 
+        graphicsDescription.fillRoundedRect(-8, -50, 290, 250, 20); 
         const maskDescription = graphicsDescription.createGeometryMask();
 
         rectangleDescription.setMask(maskDescription);
@@ -93,13 +92,13 @@ export class ModalNews extends ModalBase {
         }).setAlign('center').setOrigin(0.5);
 
     
-        const description = this.scene.add.text(140, 180, newsSelected.description, {
+        const description = this.scene.add.text(140, 185, newsSelected.description, {
             fontFamily: "MontserratSemiBold",
             fontSize: '16px',
             color: '#000000',
             wordWrap: { width: 280 },
             fixedWidth: 280,
-            fixedHeight: 300,
+            fixedHeight: 280,
         }).setAlign('center').setOrigin(0.5);
         /* const reward = this.scene.add.text(50, 50, `Recompensa: $${newsSelected.reward.money}`, {
             fontFamily: "MontserratRegular",
@@ -164,7 +163,7 @@ export class ModalNews extends ModalBase {
         });
 
         //@ts-ignore
-        const title_p = this.scene.add.text(0, -25, "NOTICIAS", {
+        const title_p = this.scene.add.text(0, -35, "NOTICIAS", {
             fontFamily: "MontserratBold",
             fontStyle: "bold",
             fontSize: '24px',
