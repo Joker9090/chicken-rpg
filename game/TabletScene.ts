@@ -73,26 +73,22 @@ export default class TabletScene extends Phaser.Scene {
 
     create() {
         this.stateGlobal = this.eventCenter.emitWithResponse(this.eventCenter.possibleEvents.GET_STATE, null);
-        console.log("State david: ", this.stateGlobal);
 
 
 
         this.cameras.main.setViewport(window.innerWidth / 2 - this.worldSize.width / 2, this.tabletShown ? window.innerHeight / 2 - this.worldSize.height / 2 : window.innerHeight + 200, this.worldSize.width, this.worldSize.height)
         this.cameras.main.centerOn(0, 0)
         this.tabletBorder = this.add.image(0, 0, "fondoTabletOp2").setOrigin(0).setScale(0.5).setScrollFactor(0).setInteractive()
-        console.log(this.tabletBorder.width, this.tabletBorder.height);
         // const graphics = this.add.graphics();
         // graphics.fillStyle(0x000000, 0.7);
         // graphics.fillRoundedRect(-this.worldSize.width / 2 + 20, -this.worldSize.height / 2 + 33, this.worldSize.width - 46, this.worldSize.height - 60, 7);
         // this.mask = graphics.createGeometryMask();
 
         const handleMoveMenu = () => {
-            console.log("se mueve al menu !");
             this.moveCamerasTo(middlePositions[0]);
         }
 
         const handleMove = (coords: number[]) => {
-            console.log("se mueve al settings !");
             this.moveCamerasTo(coords);
         };
 

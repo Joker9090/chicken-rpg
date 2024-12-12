@@ -1,5 +1,5 @@
 import RPG from "@/game/rpg";
-import { ModalConfig, ProductToBuy, modalType } from "../ModalTypes";
+import { Inventory, ModalConfig, ProductToBuy, modalType } from "../ModalTypes";
 import EventsCenterManager from "../../../services/EventsCenter";
 import { ModalBase } from "./ModalBase";
 
@@ -34,6 +34,18 @@ export class ModalPC extends ModalBase {
             text: "CAMARA",
             products: [
                 {
+                    id: 1,
+                    title: "Bicicleta",
+                    picture: "bicicletaOff",
+                    pictureOn: "bicicletaOn",
+                    text: "Bicicleta",
+                    reward: 200,
+                    roomInformation: {
+                        "assetInRoom": "bicicle",
+                        "frontContainer": true
+                    }
+                },
+                {
                     id: 2,
                     title: "Cámara de fotos",
                     picture: "camaraShop",
@@ -47,13 +59,25 @@ export class ModalPC extends ModalBase {
                 }, {
                     id: 3,
                     title: "Curso de fotografía",
-                    picture: "camaraShop",
-                    pictureOn: "camaraShopOn",
+                    picture: "certificadoOff",
+                    pictureOn: "certificadoOn",
                     text: "Curso de fotografía",
                     reward: 0,
                     roomInformation: {
                         assetInRoom: "degree",
                         frontContainer: true
+                    }
+                },
+                {
+                    id: 4,
+                    title: "Mochila de delivery",
+                    picture: "bagOff",
+                    pictureOn: "bagOn",
+                    text: "Mochila de delivery",
+                    reward: 0,
+                    roomInformation: {
+                        assetInRoom: "",//TODO AGREGAR ASSET CUANDO ESTE
+                        frontContainer: false
                     }
                 }
             ],
@@ -66,12 +90,12 @@ export class ModalPC extends ModalBase {
         const inventary = this.eventCenter.emitWithResponse(this.eventCenter.possibleEvents.GET_INVENTARY, null);
 
         //Modals containers
-        const topContainer = this.scene.add.container(0, -170);
+        const topContainer = this.scene.add.container(0, -200);
         const leftContainer = this.scene.add.container(-150, 0);
         const rightContainer = this.scene.add.container(150, 0);
 
         //backgroundModal
-        const modalBackground = this.scene.add.image(0, 0, "modalBackground").setOrigin(0.5);
+        const modalBackground = this.scene.add.image(0, 0, "modalBackground").setOrigin(0.5).setScale(1.2);
 
         //LEFT BUTTON
         this.agreeButton = this.scene.add.image(0, 0, "btn").setOrigin(0.5).setInteractive();
@@ -107,12 +131,16 @@ export class ModalPC extends ModalBase {
 
         if (modalConfig.products && modalConfig.products.length > 0) {
             selectStates.forEach((state, index) => {
-                if (modalConfig.products && inventary.some((product: ProductToBuy) => product.title === modalConfig.products![index].title)) {
+                if (modalConfig.products && inventary.some((item: Inventory) => item.title === modalConfig.products![index].title)) {
                     selectStates[index] = true;
 
                 } else selectStates[index] = false;
             });
         }
+
+        console.log("modalConfig.products", modalConfig.products);
+        console.log("inventary", inventary);
+        console.log("selectStates", selectStates);
 
         //TOP CONTAINER
         const btnExit_p = this.scene.add.image(255, 0, "btnExit").setInteractive();
@@ -144,14 +172,20 @@ export class ModalPC extends ModalBase {
             btnExit_p,
         ]);
 
-        const baseX = -40;
-        const baseY = -40;
+        const baseX = 40;
+        const baseY = -70;
         const offsetX = 190;
+        const offsetY = 170; // Distancia vertical entre filas
 
         //LEFT CONTAINER
         modalConfig.products?.forEach((product, index) => {
-            const x = baseX + index * offsetX;
-            const y = baseY;
+            const x = index < 2 
+            ? baseX + index * offsetX // Primera fila
+            : baseX + (index - 2) * offsetX; // Misma alineación horizontal para la segunda fila
+    
+        const y = index < 2 
+            ? baseY // Primera fila
+            : baseY + offsetY; // Segunda fila, desplazada hacia abajo
 
             let isSelected = selectStates[index];
 
@@ -191,19 +225,19 @@ export class ModalPC extends ModalBase {
 
 
 
-            const rewardBackground = this.scene.add.image(x - 40, 10, "barraTitle")
+            const rewardBackground = this.scene.add.image(x - 40, y + 50, "barraTitle")
                 .setOrigin(0, -0.1)
                 .setScale(0.28, 1.3);
 
 
-            const rewardText = this.scene.add.text(x - 15, 30, `${product.reward}`, {
+            const rewardText = this.scene.add.text(x - 15, y + 70, `${product.reward}`, {
                 fontFamily: "MontserratSemiBold",
                 fontSize: '24px',
                 color: '#ffffff',
             }).setOrigin(0.5);
 
 
-            const coinIcon = this.scene.add.image(x + 20, 30, "coin");
+            const coinIcon = this.scene.add.image(x + 20, y + 70, "coin");
 
             createdProducts.push({ image: productImage, rewardBackground: rewardBackground, coinIcon: coinIcon, text: rewardText, isSelected: isSelected });
         });
@@ -226,13 +260,16 @@ export class ModalPC extends ModalBase {
                 ...product,
                 isSelected: selectStates[index],
             }));
+            let filteredProducts = [];
+            let boughtProductsOrProduct = null;
+            filteredProducts = updatedProductsBought?.filter(product => product.isSelected === true);
 
-            const filteredProducts = updatedProductsBought?.filter(product => product.isSelected === true);
-
-            const boughtProductsOrProduct = filteredProducts?.length === 1
+            boughtProductsOrProduct = filteredProducts?.length === 1
                 ? filteredProducts[0]
                 : filteredProducts;
 
+            console.log("filteredProducts", filteredProducts);
+            console.log("boughtProductsOrProduct", boughtProductsOrProduct);
             if (filteredProducts && filteredProducts?.length === 1) {
                 let cost = filteredProducts[0].reward;
                 const playerState = this.eventCenter.emitWithResponse(this.eventCenter.possibleEvents.GET_STATE, null);
@@ -278,8 +315,8 @@ export class ModalPC extends ModalBase {
 
         //Buttons Container
         const buttonsContainer = this.scene.add.container(0, 175);
-        const leftButtonContainer = this.scene.add.container(-100, 0);
-        const rightButtonContainer = this.scene.add.container(100, 0);
+        const leftButtonContainer = this.scene.add.container(-100, 40);
+        const rightButtonContainer = this.scene.add.container(100, 40);
 
         //LEFT BUTTON
         //this.agreeButton = this.scene.add.image(0, 0, "btn").setOrigin(0.5).setInteractive();

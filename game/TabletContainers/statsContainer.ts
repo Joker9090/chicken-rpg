@@ -1,4 +1,5 @@
-import { globalState, missionsType, newsType, transactionsType } from "../GlobalDataManager";
+import { globalState } from "../GlobalDataManager";
+import { happinessType, Inventory, missionRequirements, missionsType, newsType, ProductToBuy, transactionsType } from "../Assets/Modals/ModalTypes";
 import EventsCenterManager from "../services/EventsCenter";
 
 export class statsContainer extends Phaser.GameObjects.Container {
@@ -105,8 +106,6 @@ export class statsContainer extends Phaser.GameObjects.Container {
         this.gobackButton = this.scene.add.image(-375, 0, "tabletBack").setScale(0.8).setInteractive();
 
         this.gobackButton.on('pointerup', () => {
-            console.log("go back function: ", this.handleGoback);
-            console.log("Goback");
             this.handleGoback();
         });
         this.gobackButton.on("pointerover", () => {
@@ -263,7 +262,6 @@ export class statsContainer extends Phaser.GameObjects.Container {
             if(newPaper.readed) {
                 
                 const misionTitle = newPaper.title;
-                console.log("MISION TITLE: ", misionTitle);
                 const newsTitle = this.scene.add.text(0, 0, misionTitle, { 
                     fontFamily: "MontserratSemiBold",
                     fontSize: '12px', 
@@ -320,8 +318,6 @@ export class statsContainer extends Phaser.GameObjects.Container {
             rightUpContainer,
             rightDownContainer
         ]);
-
-        console.log("CONTAINER STAT: ", this);
 
         this.scene.add.existing(this)
         //this.scene.cameras.main.ignore(this)

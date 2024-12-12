@@ -2,7 +2,7 @@ import RPG from "@/game/rpg";
 import { ModalConfig, ProductToBuy, modalType } from "../ModalTypes";
 import EventsCenterManager from "../../../services/EventsCenter";
 import { ModalBase } from "./ModalBase";
-import { globalState, newsType } from "@/game/GlobalDataManager";
+import { globalState } from "@/game/GlobalDataManager";
 import { info } from "console";
 
 
@@ -60,42 +60,52 @@ export class ModalNews extends ModalBase {
 
         // INFO CONTAINER
         const infoContainer = this.scene.add.container(0, 0);
+
+        //do redondea esquinas de rectangleTitle
+
+        const rectangleTitle = this.scene.add.rectangle(140, -105, 290, 80, 0xBAB8BC, 0.5).setOrigin(0.5);
+        const rectangleDescription = this.scene.add.rectangle(140, 75, 290, 250, 0xF1EFF4, 0.5).setOrigin(0.5);
         //const image = this.scene.add.image(-100, 0, newsSelected.image).setOrigin(0.5).setScale(0.45).setRotation(-Math.PI / 4);
         const image = this.scene.add.image(-165, 45, newsSelected.image).setOrigin(0.5).setScale(0.5);
-        const title = this.scene.add.text(50, -50, newsSelected.title, {
+        const borderImage = this.scene.add.image(-165, 45, "bordeImgDiario").setOrigin(0.5).setScale(0.5);
+        const title = this.scene.add.text(130, -105, newsSelected.title, {
             fontFamily: "MontserratBold",
-            fontSize: '20px',
+            fontSize: '18px',
             color: '#ffffff',
+            wordWrap: { width: 290, useAdvancedWrap: true }
         }).setOrigin(0.5);
 
     
-        const description = this.scene.add.text(50, 0, newsSelected.description, {
+        const description = this.scene.add.text(140, -20, newsSelected.description, {
             fontFamily: "MontserratRegular",
             fontSize: '16px',
             color: '#ffffff',
-            wordWrap: { width: 300, useAdvancedWrap: true }
+            wordWrap: { width: 290, useAdvancedWrap: true }
         }).setOrigin(0.5);
-        const reward = this.scene.add.text(50, 50, `Recompensa: $${newsSelected.reward.money}`, {
+        /* const reward = this.scene.add.text(50, 50, `Recompensa: $${newsSelected.reward.money}`, {
             fontFamily: "MontserratRegular",
             fontSize: '16px',
             color: '#ffffff',
-        }).setOrigin(0.5);
-        const time = this.scene.add.text(50, 100, `Tiempo: ${newsSelected.time} minutos`, {
+        }).setOrigin(0.5); */
+        /* const time = this.scene.add.text(50, 100, `Tiempo: ${newsSelected.time} minutos`, {
             fontFamily: "MontserratRegular",
             fontSize: '16px',
             color: '#ffffff',
-        }).setOrigin(0.5);
+        }).setOrigin(0.5); */
         // const requirements = this.scene.add.text(0, 200, `Requisitos: ${newsSelected.requirements.join(", ")}`, {
         //     fontFamily: "MontserratRegular",
         //     fontSize: '16px',
         //     color: '#ffffff',
         // }).setOrigin(0.5);
         infoContainer.add([
+            rectangleTitle,
+            rectangleDescription,
             image,
+            borderImage,
             title,
             description,
-            reward,
-            time,
+            //reward,
+            //time,
             // requirements,
         ]);
 
@@ -114,7 +124,7 @@ export class ModalNews extends ModalBase {
 
 
         //TOP CONTAINER
-        const btnExit_p = this.scene.add.image(255, 0, "btnExit").setInteractive();
+        const btnExit_p = this.scene.add.image(255, -40, "btnExit").setInteractive();
 
         btnExit_p.on('pointerup', () => {
             this.handleClose();
@@ -154,7 +164,7 @@ export class ModalNews extends ModalBase {
 
 
         //Buttons Container
-        const buttonsContainer = this.scene.add.container(130, 220);
+        const buttonsContainer = this.scene.add.container(130, 225);
 
         //LEFT BUTTON
         //this.agreeButton = this.scene.add.image(0, 0, "btn").setOrigin(0.5).setInteractive();

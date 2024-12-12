@@ -22,7 +22,7 @@ const loadAssets = {
       ["image", "backgroundCity", "/images/menuScene/backgroundCity.png"],
 
       // NEWS
-      ["image", "newsImageTest", "/assets/news/modalNews.png"],
+      //["image", "newsImageTest", "/assets/news/modalNews.png"],
       
       // TABLET
       ["image", "fondoTablet", "/tabletScene/fondoTablet.png"],
@@ -114,7 +114,7 @@ const loadAssets = {
 
       // modal
       ["image", "imageModalPhoto", "/assets/modalAssets/imageModalPhoto.png"],
-      ["image", "modalNews", "/assets/modalAssets/modalNews.png"],
+      //["image", "modalNews", "/assets/modalAssets/modalNews.png"],
       ["image", "fotoCamara", "/assets/modalAssets/fotoCamara.png"],
       ["image", "modalBackground", "/assets/modalAssets/modal.png"],
       ["image", "desafioTest1", "/assets/modalAssets/maskImg2.png"],
@@ -136,15 +136,24 @@ const loadAssets = {
       ["image", "iconCertif1", "/assets/modalAssets/iconCertif1.png"],
       ["image", "iconDona1", "/assets/modalAssets/iconDona1.png"],
       ["image", "iconMochila1", "/assets/modalAssets/iconMochila1.png"],
+
       ["image", "camaraGreen", "/assets/modalAssets/masUi/camaraGreen.png"],
       ["image", "camaraShop", "/assets/modalAssets/camaraShop.png"],
       ["image", "camaraShopOn", "/assets/modalAssets/camaraShopOn.png"],
+      ["image", "certificadoOn", "/assets/modalAssets/certificadoOn.png"],
+      ["image", "certificadoOff", "/assets/modalAssets/certificadoOff.png"],
+      ["image", "bicicletaOn", "/assets/modalAssets/bicicletaOn.png"],
+      ["image", "bicicletaOff", "/assets/modalAssets/bicicletaOff.png"],
+      ["image", "bagOn", "/assets/modalAssets/bagOn.png"],
+      ["image", "bagOff", "/assets/modalAssets/bagOff.png"],
       ["image", "coinModalIcon", "/assets/modalAssets/coinModalIcon.png"],
       ["image", "reputationModalIcon", "/assets/modalAssets/reputationModalIcon.png"],
       ["image", "happinessModalIcon", "/assets/modalAssets/happinessModalIcon.png"],
       
       ["image", "diarioBackground", "/assets/modalAssets/diarioBackground.png"],
       ["image", "imageDiarioGeneric", "/assets/modalAssets/imageDiarioGeneric.png"],
+      ["image", "bordeImgDiario", "/assets/modalAssets/bordeImgDiario.png"],
+      
   
       //Buildings
       ["image", "test1", "/images/buildingTest/test1.png"],
@@ -252,8 +261,8 @@ class AssetsLoader {
     },10)
 
     const logic = () => {
-      const width = this.scene.cameras.main.width
-      const height = this.scene.cameras.main.height
+      const width = window.innerWidth; //this.scene.cameras.main.width // TODO REVISAR 
+      const height = window.innerHeight; //this.scene.cameras.main.height // TODO REVISAR 
       const blockSize = 56
       const middlePoint = {
         x: width/2 - blockSize*3,

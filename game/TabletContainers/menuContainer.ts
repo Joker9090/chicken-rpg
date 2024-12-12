@@ -95,7 +95,6 @@ export class menuContainer extends Phaser.GameObjects.Container {
 
         this.closeButton.on('pointerup', () => {
             this.handleClose();
-            console.log("CLOSE");
         });
         this.closeButton.on("pointerover", () => {
             if (this.activeTween) this.activeTween.stop();
@@ -110,7 +109,6 @@ export class menuContainer extends Phaser.GameObjects.Container {
 
         this.settingsButton.on('pointerup', () => {
             //console.log("go back function: ", this.handleGoback);
-            console.log("Settings");
             //this.handleGoback();
         });
         this.settingsButton.on("pointerover", () => {
@@ -180,7 +178,6 @@ export class menuContainer extends Phaser.GameObjects.Container {
 
         ]);
 
-        console.log("CONTAINER STAT: ", this);
 
         this.scene.add.existing(this)
         //this.scene.cameras.main.ignore(this)
