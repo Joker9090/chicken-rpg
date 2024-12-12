@@ -225,6 +225,8 @@ export default class RPG extends Scene {
       window.innerHeight
     );
     this.UICamera.ignore(this.isoGroup);
+    if(this.player) this.UICamera.ignore(this.player.playerBuilder.getContainer());
+
     const forestContainers = this.forest.map((arbolito) => arbolito.container);
     this.UICamera.ignore(forestContainers);
     this.UIContainer.updateData(this.stateGlobal);

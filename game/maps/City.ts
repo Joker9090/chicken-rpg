@@ -41,21 +41,26 @@ export default class City {
       },
     ];
 
-
-    for (let i = 0; i < randomYPin.length; i++) {
-      const randomNumber = Math.random()
-      console.log(randomNumber)
-      if (randomNumber < 0.5) {
-        objects.push(
-          {
-            x: 5,
-            y: randomYPin[i],
-            h: randomHPin[i] * 50 + 100,
-            type: "15",
-          },
-        )
+    const createPins = () => {
+      for (let i = 0; i < randomYPin.length; i++) {
+        const randomNumber = Math.random()
+        console.log(randomNumber)
+        if (randomNumber < 0.1) {
+          objects.push(
+            {
+              x: 5,
+              y: randomYPin[i],
+              h: randomHPin[i] * 50 + 100,
+              type: "15",
+            },
+          )
+        }
       }
+      console.log(objects.length)
+      if (objects.length === 4) createPins()
     }
+
+    createPins()
 
     for (let i = 0; i < 200; i++) {
       objects.push({

@@ -84,6 +84,9 @@ export class ModalPC extends ModalBase {
             agreeFunction: handleAgreeModalRoom,
         }
 
+        // chequear que tenes en el inventario y pintar de verde lo que tengas
+        // 
+
         const selectStates: boolean[] = (modalConfig.products ?? []).map(() => false);
         const createdProducts: { image: Phaser.GameObjects.Image, rewardBackground: Phaser.GameObjects.Image, coinIcon: Phaser.GameObjects.Image, text: Phaser.GameObjects.Text, isSelected: boolean }[] = [];
 
@@ -131,9 +134,8 @@ export class ModalPC extends ModalBase {
 
         if (modalConfig.products && modalConfig.products.length > 0) {
             selectStates.forEach((state, index) => {
-                if (modalConfig.products && inventary.some((item: Inventory) => item.title === modalConfig.products![index].title)) {
+                if (modalConfig.products && inventary.some((item: Inventory) => item.id === modalConfig.products![index].id)) {
                     selectStates[index] = true;
-
                 } else selectStates[index] = false;
             });
         }

@@ -11,6 +11,41 @@ const loadAssets = {
 
   BaseLoad: {
     assets: [
+      ["assetWithCallback", (scene: Phaser.Scene) => {
+        scene.load.spritesheet("torso-01", "/images/player/01/walkBrazosTorso.png", {
+          frameWidth: 200,
+          frameHeight: 250,
+          startFrame: 0,
+          endFrame: 232
+        });
+      }],
+
+      ["assetWithCallback", (scene: Phaser.Scene) => {
+        scene.load.spritesheet("legs-01", "/images/player/01/walkLegs.png", {
+          frameWidth: 200,
+          frameHeight: 250,
+          startFrame: 0,
+          endFrame: 200
+        });
+      }],
+
+      ["assetWithCallback", (scene: Phaser.Scene) => {
+        scene.load.spritesheet("head-01", "/images/player/01/walkHead.png", {
+          frameWidth: 200,
+          frameHeight: 250,
+          startFrame: 0,
+          endFrame: 200
+        });
+      }],
+
+      ["assetWithCallback", (scene: Phaser.Scene) => {
+        scene.load.spritesheet("head-02", "/images/player/02/walkHead.png", {
+          frameWidth: 200,
+          frameHeight: 250,
+          startFrame: 0,
+          endFrame: 200
+        });
+      }],
       // player
       ["spritesheet", "player", "/images/chicken/spritesheetPlayer2.png", { frameWidth: 200, frameHeight: 250, startFrame: 0 }],
       ["spritesheet", "playerIdle", "/images/chicken/playerIdle.png", { frameWidth: 200, frameHeight: 250, startFrame: 0 }],

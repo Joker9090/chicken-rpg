@@ -4,6 +4,7 @@ import AssetsLoader, { SceneKeys } from "./AssetsLoader";
 import RPG from "../rpg";
 import AmbientBackgroundScene from "../ambientAssets/backgroundScene";
 import EventsCenter from "../services/EventsCenter";
+import TestScene from "../TestScene";
 
 export default class MultiScene extends Phaser.Scene {
 
@@ -38,13 +39,13 @@ export default class MultiScene extends Phaser.Scene {
         this.makeTransition(this.scenekey, this.sceneToStop ?? undefined, this.sceneData ?? undefined);
       } else {
         // this.makeTransition("MenuScene", undefined);
-        // this.makeTransition("RPG", undefined, "ROOM");
-        this.makeTransition("RPG", undefined, "CITY");
+        this.makeTransition("RPG", undefined, "ROOM");
+        // this.makeTransition("RPG", undefined, "CITY");
    
       }
     });
   }
-
+  
   makeTransition(sceneName: string, sceneToStop?: string | undefined, data?: any) {
     this.eventCenter.emit(this.eventCenter.possibleEvents.CHANGE_SCENE);
     const getBetweenScenesScene = this.game.scene.getScene(

@@ -1,3 +1,4 @@
+import { PlayerBuilder, PossibleMovements } from "../TestScene";
 import { CubeIsoSpriteBox } from "./cubeIsoSpriteBox";
 import { RpgIsoSpriteBox } from "./rpgIsoSpriteBox";
 
@@ -16,6 +17,7 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
   possibleMovements: RpgIsoSpriteBox[] = [];
   levelConfig: any;
   distanceBetweenFloors: number
+  playerBuilder: PlayerBuilder;
   
   constructor(
     scene: Phaser.Scene,
@@ -54,6 +56,12 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
     this.type = "PLAYER";
     this.group = group;
 
+    this.playerBuilder = new PlayerBuilder(scene);
+    
+    this.playerBuilder.getContainer().setPosition(this.self.x, this.self.y, this.self.z);
+    this.playerBuilder.getContainer().setDepth(this.customDepth || this.self.depth);
+
+    
     //window.calculatePath = this.calculatePath
 
   }
@@ -507,8 +515,21 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
 
   move(direction: string, newX: number, newY: number) {
     this.clearPossibleMovements()
+    
     this.self.play("idle-" + this.direction);
     this.self.play("walk-" + direction);
+
+
+    // trasnform direction into possibleMovement
+    const pm = {
+      n: PossibleMovements.TOP1,
+      s: PossibleMovements.BOTTOM1,
+      e: PossibleMovements.RIGHT1,
+      w: PossibleMovements.LEFT1
+    }
+    //@ts-ignore
+    this.playerBuilder.selectMovement(pm[direction]);
+
     this.facingDirection = direction;
     if (this.matrixPosition) {
       const { x, y, h } = this.matrixPosition;
@@ -529,7 +550,12 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
     }
   }
 
+  
   updateAnim(cursors: Phaser.Types.Input.Keyboard.CursorKeys) {
+
+    this.playerBuilder.getContainer().setPosition(this.self.x, this.self.y, this.self.z);
+    this.playerBuilder.getContainer().setDepth(this.customDepth || this.self.depth);
+
     if (cursors && !this.isMoving) {
       const { up, down, left, right } = cursors;
       // if (up.isUp && down.isUp && left.isUp && right.isUp) this.self.stop(); // se comentó esto
