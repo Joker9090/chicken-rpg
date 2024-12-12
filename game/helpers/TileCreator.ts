@@ -400,7 +400,7 @@ export default class TileCreator {
         tileObj.tileY = c;
         tileObj.self.on("pointerover", this.highlightTile(tileObj));
         tileObj.self.on("pointerout", this.noHighlightTile(tileObj));
-        tileObj.self.on("pointerdown", this.destroyTile(tileObj));
+        //tileObj.self.on("pointerdown", this.destroyTile(tileObj)); //TODO: COMENTADO DE MOMENTO
 
         // log the position of tile every 10 tiles
     }

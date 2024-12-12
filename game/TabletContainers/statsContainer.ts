@@ -227,78 +227,97 @@ export class statsContainer extends Phaser.GameObjects.Container {
         let paperStartY = -50;
         let misionRowHeight = 40;
 
+        let maxShowElements = 5;
+
         this.stateGlobal.doneMissions.forEach((doneMission: missionsType, index: number) => {
-            const misionTitle = doneMission.title;
 
-            const amount = this.scene.add.text(150, 0, misionTitle, {
-                fontFamily: "MontserratSemiBold",
-                fontSize: '12px',
-                color: '#000000'
-            });
+            if(index >= maxShowElements) {
+                return;
+            }else {
+                const misionTitle = doneMission.title;
+    
+                const amount = this.scene.add.text(150, 0, misionTitle, {
+                    fontFamily: "MontserratSemiBold",
+                    fontSize: '12px',
+                    color: '#000000',
+                    wordWrap: { width: 100, useAdvancedWrap: true },
+                    fixedWidth:100,
+                    fixedHeight:0,
 
-            const groupMisions = this.scene.add.group();
-            groupMisions.add(amount);
-
-
-            Phaser.Actions.GridAlign(groupMisions.getChildren(), {
-                width: 1,
-                height: 1,
-                cellWidth: 30,
-                cellHeight: 80,
-                x: misionStartX,
-                y: misionsStartY + index * misionRowHeight
-            });
-            if(this.stateGlobal.news.find((newsItem) => newsItem.missionId.includes(doneMission.id))) {
-                this.doneMissionsPaper.push(doneMission);
+                }).setAlign('left').setLineSpacing(3);
+    
+                const groupMisions = this.scene.add.group();
+                groupMisions.add(amount);
+    
+    
+                Phaser.Actions.GridAlign(groupMisions.getChildren(), {
+                    width: 1,
+                    height: 1,
+                    cellWidth: 30,
+                    cellHeight: 80,
+                    x: misionStartX,
+                    y: misionsStartY + index * misionRowHeight
+                });
+                if(this.stateGlobal.news.find((newsItem) => newsItem.missionId.includes(doneMission.id))) {
+                    this.doneMissionsPaper.push(doneMission);
+                }
+    
+    
+                groupMisions.getChildren().forEach(child => misionsGridGroupDone.add(child));
             }
-
-
-            groupMisions.getChildren().forEach(child => misionsGridGroupDone.add(child));
         
         });
         let noIndex = 0;
         this.stateGlobal.news.forEach((newPaper: newsType, index: number) => {
 
-            if(newPaper.readed) {
-                
-                const misionTitle = newPaper.title;
-                const newsTitle = this.scene.add.text(0, 0, misionTitle, { 
-                    fontFamily: "MontserratSemiBold",
-                    fontSize: '12px', 
-                    color: '#000000',
-                 });
-                const groupPaper = this.scene.add.group();
-                groupPaper.add(newsTitle);
+            if(noIndex >= maxShowElements) {
+                return;
+            }else { 
+                if(newPaper.readed) {
+                    
+                    const misionTitle = newPaper.title;
+                    const newsTitle = this.scene.add.text(0, 0, misionTitle, { 
+                        fontFamily: "MontserratSemiBold",
+                        fontSize: '12px', 
+                        color: '#000000',
+                        wordWrap: { width: 100, useAdvancedWrap: true },
+                        fixedWidth:100,
+                        fixedHeight:0,
+                    }).setAlign('left');
+                    const groupPaper = this.scene.add.group();
+                    groupPaper.add(newsTitle);
 
-                
-                let isDone = this.doneMissionsPaper.some((doneMision) => doneMision.id == newPaper.missionId[0]);
-                const doneIcon = this.scene.add.image(250, 0, isDone ? "btnCheck" : "btnCruz");
-                const groupDoneIcon = this.scene.add.group();
-                groupDoneIcon.add(doneIcon);
- 
+                    
+                    let isDone = this.doneMissionsPaper.some((doneMision) => doneMision.id == newPaper.missionId[0]);
+                    const doneIcon = this.scene.add.image(250, 0, isDone ? "btnCheck" : "btnCruz");
+                    const groupDoneIcon = this.scene.add.group();
+                    groupDoneIcon.add(doneIcon);
+    
 
-                Phaser.Actions.GridAlign(groupPaper.getChildren(), {
-                    width: 1,
-                    height: 1,
-                    cellWidth: 30,
-                    cellHeight: 80,
-                    x: paperStartX,
-                    y: paperStartY + noIndex * misionRowHeight
-                });
+                    Phaser.Actions.GridAlign(groupPaper.getChildren(), {
+                        width: 1,
+                        height: 1,
+                        cellWidth: 30,
+                        cellHeight: 80,
+                        x: paperStartX,
+                        y: paperStartY + noIndex * misionRowHeight
+                    });
 
-                Phaser.Actions.GridAlign(groupDoneIcon.getChildren(), {
-                    width: 2,
-                    height: 1,
-                    cellWidth: 20,
-                    cellHeight: 20,
-                    x: doneStartX,
-                    y: paperStartY + noIndex * misionRowHeight
-                });
+                    Phaser.Actions.GridAlign(groupDoneIcon.getChildren(), {
+                        width: 2,
+                        height: 1,
+                        cellWidth: 20,
+                        cellHeight: 20,
+                        x: doneStartX,
+                        y: paperStartY + noIndex * misionRowHeight
+                    });
 
-                groupPaper.getChildren().forEach(child => misionsGridGroupPaper.add(child));
-                groupDoneIcon.getChildren().forEach(child => doneGridGroupPaper.add(child));
-                noIndex++;
+                    groupPaper.getChildren().forEach(child => misionsGridGroupPaper.add(child));
+                    groupDoneIcon.getChildren().forEach(child => doneGridGroupPaper.add(child));
+                    noIndex++;
+                }
             }
+
 
         });
 
