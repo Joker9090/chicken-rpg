@@ -16,15 +16,14 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>Powerball by Noswar</title>
+        <title>Chambix</title>
         <meta name="description" content="Welcome to the game" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       {/* Este contenido puede ser opcional, ya que se redirigirá automáticamente */}
       <main>
-        <h1>Welcome to the Game</h1>
-        <p>Initializing world</p>
+
       </main>
     </>
   )

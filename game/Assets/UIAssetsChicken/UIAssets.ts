@@ -126,7 +126,7 @@ export class DayBlock extends Phaser.GameObjects.Container {
   flecha: Phaser.GameObjects.Image;
   // timerCall: Phaser.Time.TimerEvent;
   eventCenter = EventsCenterManager.getInstance();
-  momeentOfDay: 0 | 1 | 2 | 3 = 0;
+  momentOfDay: 1 | 2 | 3 | 4 = 1;
 
   constructor(
     scene: RPG,
@@ -135,7 +135,7 @@ export class DayBlock extends Phaser.GameObjects.Container {
     globalData: globalState
   ) {
     super(scene, x, y);
-    this.momeentOfDay = globalData.timeOfDay
+    this.momentOfDay = globalData.timeOfDay
 
     this.dayBlock1 = this.scene.add.image(0, 0, 'dayBlock1').setOrigin(0.5)
     const widthBlock = this.dayBlock1.width / 2
@@ -157,25 +157,32 @@ export class DayBlock extends Phaser.GameObjects.Container {
       this.flecha
     ])
 
-    this.setActiveBlock(0)
+    this.setActiveBlock(1)
   }
 
   updateValues(data: globalState) {
-
+    this.scene.tweens.add({
+      targets: this.flecha,
+      scale: 0.35,
+      duration: 200,
+      ease: 'ease',
+      yoyo: true,
+      repeat: 0
+    })
   }
 
   setActiveBlock(blockDay: number) {
     switch (blockDay) {
-      case 0:
+      case 1:
         this.dayBlock1.setTexture("dayBlock1Active")
         break;
-      case 1:
+      case 2:
         this.dayBlock2.setTexture("dayBlock2Active")
         break;
-      case 2:
+      case 3:
         this.dayBlock3.setTexture("dayBlock3Active")
         break;
-      case 3:
+      case 4:
         this.dayBlock4.setTexture("dayBlock4Active")
         break;
       default:

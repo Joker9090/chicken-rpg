@@ -30,7 +30,7 @@ export class ModalQUEST extends ModalBase {
 
         const handleAgreeModal = (amount: number, timePass: number) => {
             this.eventCenter.emitEvent(this.eventCenter.possibleEvents.MAKE_MISSION, missionsSelected.id);
-            if (pin){
+            if (pin) {
                 pin.self.destroy();
             }
         }
@@ -175,11 +175,19 @@ export class ModalQUEST extends ModalBase {
 
         //row 3
         let haveObjects: boolean[] = []
+        if (modalConfig.time + globalData.timeOfDay <= 4) {
+            haveObjects.push(true)
+        } else {
+            haveObjects.push(false)
+            timeNumber_q.setTint(0xff0000);
+            this.agreeButton.setAlpha(0.5);
+            leftTextButton.setAlpha(0.5);
+        }
         const requirementsData = globalData.missionRequirements.filter((requirement) => modalConfig.requirements.includes(requirement.id));
 
         for (let i = 0; i < requirementsData.length; i++) {
             //@ts-ignore
-            const requireItem = this.scene.add.image(-160 - i*-30, -30, requirementsData[i].miniImageModal)
+            const requireItem = this.scene.add.image(-160 - i * -30, -30, requirementsData[i].miniImageModal)
             rightContainer.add(requireItem);
             //Check si tiene el objeto
             const haveObject = this.eventCenter.emitWithResponse(this.eventCenter.possibleEvents.CHECK_MISSION_REQUIREMENTS, requirementsData[i]);
@@ -204,7 +212,7 @@ export class ModalQUEST extends ModalBase {
 
         //row 5
 
-        const morningBar_q = this.scene.add.image(-150, 35,   modalConfig.time > 0 ? "barritaOn" : "barritaOff").setScale(1);
+        const morningBar_q = this.scene.add.image(-150, 35, modalConfig.time > 0 ? "barritaOn" : "barritaOff").setScale(1);
         const afternoonBar_q = this.scene.add.image(-80, 35, modalConfig.time > 1 ? "barritaOn" : "barritaOff").setScale(1);
         const eveningBar_q = this.scene.add.image(-10, 35, modalConfig.time > 2 ? "barritaOn" : "barritaOff").setScale(1);
         const nightBar_q = this.scene.add.image(60, 35, modalConfig.time > 3 ? "barritaOn" : "barritaOff").setScale(1);

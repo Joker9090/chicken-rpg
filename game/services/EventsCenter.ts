@@ -29,6 +29,10 @@ class EventsCenterManager extends Phaser.Events.EventEmitter {
                 UPDATE: "update",
                 UPDATE_STATE: "updateState",
 
+                LEAVE_ROOM: "leaveRoom",
+                LEAVE_CITY: "leaveCity",
+
+
                 CHANGE_DATE: "changeDate", // PASS OF TIME
                 TIME_CHANGE: "timeChange",
 

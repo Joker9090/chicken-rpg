@@ -15,16 +15,21 @@ export type stateTypes = number | boolean | ProductToBuy[] | newsType[] | missio
 export type globalState = {
   playerMoney: number;
   reputation: number;
-  timeOfDay: 0 | 1 | 2 | 3;
+  happiness: happinessType;
+
+  timeOfDay: 1 | 2 | 3 | 4;
+  hoursPassed: number;
+
   inventary: Inventory[];
+  transactions: transactionsType[];
+
   newsToRead: boolean;
   news: newsType[];
+
   missionRequirements: missionRequirements[];
   allMissions: missionsType[];
   availableMissions: missionsType[];
   doneMissions: missionsType[];
-  happiness: happinessType;
-  transactions: transactionsType[];
 }
 
 export default class GlobalDataManager extends Phaser.Scene {
@@ -40,6 +45,15 @@ export default class GlobalDataManager extends Phaser.Scene {
       this.changeMoney(-payload.reward);
     }, this);
 
+    this.eventCenter.turnEventOn("GlobalDataManager", this.eventCenter.possibleEvents.BUY_ITEMS, (payload: ProductToBuy[]) => {
+      let moneyLess = 0;
+      payload.forEach((item) => {
+        this.addInventary(item);
+        moneyLess += item.reward;
+      });
+      this.changeMoney(-moneyLess);
+    }, this);
+  
     this.eventCenter.turnEventOn("GlobalDataManager", this.eventCenter.possibleEvents.READ_NEWSPAPER, (newsId: number) => {
       const newNews = this.state.news.map((news) => {
         if (news.id === newsId) {
@@ -54,7 +68,6 @@ export default class GlobalDataManager extends Phaser.Scene {
           this.eventCenter.emit(this.eventCenter.possibleEvents.ADD_MISSION, missionId);
         });
       }
-
     }, this);
 
     this.eventCenter.turnEventOn("GlobalDataManager", this.eventCenter.possibleEvents.MAKE_MISSION, (missionId: number) => {
@@ -74,10 +87,9 @@ export default class GlobalDataManager extends Phaser.Scene {
           newHappiness
         ];
         this.changeState(keysToBeChanged, valuesToBeChanged);
-        // this.changeState("doneMissions", [...this.state.doneMissions, {...mission, done: true}]);
-        // this.changeMoney(mission.reward.money);
-        // const newAvailableMissions = this.state.availableMissions.filter((mission) => mission.id !== missionId);
-        // this.changeState("availableMissions", newAvailableMissions);
+        if (mission.time > 0){
+          this.eventCenter.emit(this.eventCenter.possibleEvents.TIME_CHANGE, mission.time);
+        }
       }
     }, this);
 
@@ -90,16 +102,13 @@ export default class GlobalDataManager extends Phaser.Scene {
       }
     }, this);
 
-    this.eventCenter.turnEventOn("GlobalDataManager", this.eventCenter.possibleEvents.BUY_ITEMS, (payload: ProductToBuy[]) => {
-      let moneyLess = 0;
-      payload.forEach((item) => {
-        this.addInventary(item);
-        moneyLess += item.reward;
-      });
-      this.changeMoney(-moneyLess);
-    }, this);
+    this.eventCenter.turnEventOn("GlobalDataManager", this.eventCenter.possibleEvents.LEAVE_ROOM, ()=>{
 
-    // this.eventCenter.turnEventOn("GlobalDataManager", this.eventCenter.possibleEvents.UPDATE, ()=>this.eventCenter.emit(this.eventCenter.possibleEvents.UPDATE_STATE) ,this);
+    } ,this);
+
+    this.eventCenter.turnEventOn("GlobalDataManager", this.eventCenter.possibleEvents.LEAVE_CITY, ()=>{
+
+    } ,this);
 
     this.eventCenter.turnEventOn("GlobalDataManager", this.eventCenter.possibleEvents.GET_INVENTARY, () => {
       return this.getInventary();
@@ -130,21 +139,25 @@ export default class GlobalDataManager extends Phaser.Scene {
     }, this);
 
     // <--- Events
-    // axios
 
     this.state = {
       playerMoney: 300,
-      reputation: 50,
-      timeOfDay: 0,
-      newsToRead: false,
+      reputation: 10,
+      happiness: tabletMockData.happiness,
+
+      timeOfDay: 1,
+      hoursPassed: 0,
+
       inventary: inventoryMockData.inventary,
+      transactions: tabletMockData.transactionsHistorial,
+
+      newsToRead: false,
       news: newsMockData.news,
+
       missionRequirements: missionRequirementsMockData.requirements,
       allMissions: missionsMockData.missions,
       availableMissions: missionsMockData.missions.filter((mission) => mission.available),
       doneMissions: missionsMockData.missions.filter((mission) => mission.done),
-      happiness: tabletMockData.happiness,
-      transactions: tabletMockData.transactionsHistorial,
     };
   }
 
@@ -178,13 +191,10 @@ export default class GlobalDataManager extends Phaser.Scene {
     if (this.dayState === "RUNNING") return;
     else {
       this.dayState = "RUNNING";
-      const gameScene = this.game.scene.getScene("RPG") as RPG;
-      // gameScene.UICont?.clock.passTime(amount);
-      // gameScene.makeDayCycle(this.state.timeOfDay, () => {
-      //   this.dayState = "IDLE";
-      // });
-      this.state.timeOfDay += amount;
-      if (this.state.timeOfDay > 3) this.state.timeOfDay = 0;
+      let newTimeOfDay = this.state.timeOfDay + amount;
+      if (newTimeOfDay > 3) newTimeOfDay = 0;
+      if (this.state.timeOfDay > 4) this.state.timeOfDay = 1;
+      this.changeState(["hoursPassed", "timeOfDay"], [amount, this.state.timeOfDay ]);
     }
   }
 
@@ -221,7 +231,6 @@ export default class GlobalDataManager extends Phaser.Scene {
   create() {
     const eventCenter = EventsCenterManager.getInstance();
     this.state.newsToRead = true;
-
   }
 
   update() { }

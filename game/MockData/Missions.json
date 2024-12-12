@@ -42,7 +42,7 @@
                 "reputation": 1,
                 "happiness": 3 
             },
-            "available": true,
+            "available": false,
             "done": false
         },
         {
