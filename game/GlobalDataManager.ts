@@ -47,7 +47,7 @@ export default class GlobalDataManager extends Phaser.Scene {
         }
         return news;
       });
-      this.changeState("news", newNews);
+      this.changeState(["news"], [newNews]);
       const news = this.state.news.find((news) => news.id === newsId);
       if (news?.missionId && news?.missionId?.length > 0) {
         news.missionId.forEach((missionId) => {
@@ -59,20 +59,34 @@ export default class GlobalDataManager extends Phaser.Scene {
 
     this.eventCenter.turnEventOn("GlobalDataManager", this.eventCenter.possibleEvents.MAKE_MISSION, (missionId: number) => {
       const mission = this.state.availableMissions.find((mission) => mission.id === missionId);
-      if (mission){
-        this.changeMoney(mission.reward.money);
-        this.changeState("doneMissions", [...this.state.doneMissions, {...mission, done: true}]);
+      if (mission) {
+        const keysToBeChanged = ["playerMoney", "doneMissions", "availableMissions", "reputation", "happiness"];
+        const newMoney = this.state.playerMoney + mission.reward.money;
+        const newDoneMissions = [...this.state.doneMissions, { ...mission, done: true }];
         const newAvailableMissions = this.state.availableMissions.filter((mission) => mission.id !== missionId);
-        this.changeState("availableMissions", newAvailableMissions);
+        const newReputation = this.state.reputation + mission.reward.reputation;
+        const newHappiness = this.state.happiness.actualValue + mission.reward.happiness;
+        const valuesToBeChanged = [
+          newMoney,
+          newDoneMissions,
+          newAvailableMissions,
+          newReputation,
+          newHappiness
+        ];
+        this.changeState(keysToBeChanged, valuesToBeChanged);
+        // this.changeState("doneMissions", [...this.state.doneMissions, {...mission, done: true}]);
+        // this.changeMoney(mission.reward.money);
+        // const newAvailableMissions = this.state.availableMissions.filter((mission) => mission.id !== missionId);
+        // this.changeState("availableMissions", newAvailableMissions);
       }
     }, this);
 
     this.eventCenter.turnEventOn("GlobalDataManager", this.eventCenter.possibleEvents.ADD_MISSION, (missionId: number) => {
       const mission = this.state.allMissions.find((mission) => mission.id === missionId);
-      if (mission){
+      if (mission) {
         const newAvailableMissions = this.state.availableMissions
-        newAvailableMissions.push({...mission, available: true, done: false});
-        this.changeState("availableMissions", newAvailableMissions);
+        newAvailableMissions.push({ ...mission, available: true, done: false });
+        this.changeState(["availableMissions"], [newAvailableMissions]);
       }
     }, this);
 
@@ -134,18 +148,21 @@ export default class GlobalDataManager extends Phaser.Scene {
     };
   }
 
-  changeState(key: string, value: stateTypes) {
-    this.state = { ...this.state, [key]: value }
+  changeState(keys: string[], values: stateTypes[]) {
+    keys.forEach((key, index) => {
+      this.state = { ...this.state, [key]: values[index] }
+    });
+    // this.state = { ...this.state, [key]: value }
     this.eventCenter.emit(this.eventCenter.possibleEvents.UPDATE_STATE);
     console.log(this.state, "NEW STATE IN CHANGE STATE")
   }
 
   changeMoney(amount: number) {
-    this.changeState("playerMoney", this.state.playerMoney + amount);
+    this.changeState(["playerMoney"], [this.state.playerMoney + amount]);
   }
 
   checkRequirements(requirements: missionRequirements) {
-     switch (requirements.type) {
+    switch (requirements.type) {
       case "money":
         return this.state.playerMoney >= requirements.price;
       case "item":
@@ -154,7 +171,7 @@ export default class GlobalDataManager extends Phaser.Scene {
         return this.state.inventary.some((product) => product.title === requirements.name);
       default:
         return false;
-     }
+    }
   }
 
   passTime(amount: number) {
@@ -185,7 +202,7 @@ export default class GlobalDataManager extends Phaser.Scene {
         roomInformation: item.roomInformation
       }
       oldState.push(newItem);
-      this.changeState("inventary", oldState);
+      this.changeState(["inventary"], [oldState]);
     }
   }
 

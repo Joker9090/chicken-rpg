@@ -35,6 +35,8 @@ export class ModalQUEST extends ModalBase {
             }
         }
 
+        console.log("MISSION SELECTED", missionsSelected);
+
         const modalConfig: ModalConfig = {
             type: modalType.QUEST,
             requirements: missionsSelected.requirements,
@@ -176,7 +178,6 @@ export class ModalQUEST extends ModalBase {
         const requirementsData = globalData.missionRequirements.filter((requirement) => modalConfig.requirements.includes(requirement.id));
 
         for (let i = 0; i < requirementsData.length; i++) {
-            console.log("REQUIREMENET DATA IN MODAL", requirementsData);
             //@ts-ignore
             const requireItem = this.scene.add.image(-160 - i*-30, -30, requirementsData[i].miniImageModal)
             rightContainer.add(requireItem);
