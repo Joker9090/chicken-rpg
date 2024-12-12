@@ -63,6 +63,7 @@ export default class RPG extends Scene {
   distanceBetweenFloors: number = 50;
   eventEmitter?: Phaser.Events.EventEmitter;
   tabletScene?: TabletScene;
+  tabletNoInteractiveMesh?: Phaser.GameObjects.Rectangle;
 
   eventCenter = EventsCenterManager.getInstance();
   stateGlobal: globalState;
@@ -116,6 +117,16 @@ export default class RPG extends Scene {
     }, this);
     // <- MODAL
     // <- CREATE EVENTS
+    //tabletModalTransp
+    EventsCenterManager.turnEventOn("RPG", EventsCenterManager.possibleEvents.OPEN_TABLET_MENU, () => {
+      console.log("MESH ON");
+      this.tabletNoInteractiveMesh?.setVisible(true);
+    }, this);
+
+    EventsCenterManager.turnEventOn("RPG", EventsCenterManager.possibleEvents.CLOSE_TABLET_MENU, () => {
+      console.log("MESH OFF");
+      this.tabletNoInteractiveMesh?.setVisible(false);
+    }, this);
 
   }
 
@@ -169,6 +180,8 @@ export default class RPG extends Scene {
     this.eventEmitter = ee;
     this.scale.resize(window.innerWidth, window.innerHeight);
     this.cursors = this.input.keyboard.createCursorKeys();
+
+    this.tabletNoInteractiveMesh = this.add.rectangle(window.innerWidth/2, window.innerHeight/2, window.innerWidth, window.innerHeight, 0x000000, 0).setInteractive().setVisible(false);
 
 
     // -> ESTO HAY QUE MOVERLO AL FILE DE PLAYER
