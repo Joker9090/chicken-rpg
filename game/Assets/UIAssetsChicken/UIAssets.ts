@@ -109,6 +109,10 @@ export class Avatar extends Phaser.GameObjects.Container {
     ])
   }
 
+  setHead(avatar: string) {
+    this.avatar.setTexture(avatar === "01" ? 'avatar2' : 'avatar1')
+  }
+
   updateValues(data: globalState) {
     this.reputation.setText(data.reputation.toString())
     this.money.setText(data.playerMoney.toString())

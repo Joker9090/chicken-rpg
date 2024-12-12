@@ -1,4 +1,5 @@
 import Phaser from "phaser";
+import RPG from "./rpg";
 
 
 export enum PossibleMovements {
@@ -142,7 +143,7 @@ export default class TestScene extends Phaser.Scene {
 export class PlayerBuilder {
   // this is a class to consolidate different player parts and create a player
   private torsoSelected = "01";
-  private headSelected = "02";
+  private headSelected = "01";
   private legsSelected = "01";
   private torso: Phaser.GameObjects.Sprite;
   private leftHand: Phaser.GameObjects.Sprite;
@@ -150,14 +151,18 @@ export class PlayerBuilder {
   private head: Phaser.GameObjects.Sprite;
   private legs: Phaser.GameObjects.Sprite;
   private container: Phaser.GameObjects.Container;
-  private scene: Phaser.Scene;
+  private scene: RPG;
 
-  constructor(scene: Phaser.Scene) {
+  constructor(scene: RPG) {
     this.scene = scene;
     this.container = this.scene.add.container(0, 0);
+    // this.headSelected = Math.random() < 0.5 ? "01" : "02";
+    console.log(this.headSelected, "HEAD SELECTED")
+    this.scene.UIContainer?.avatar?.setHead(this.headSelected);
+
     const { torso, leftHand, rightHand, head, legs } = this.buildPlayer(this.torsoSelected, this.torsoSelected, this.torsoSelected, this.headSelected, this.legsSelected);
     
-    //
+    
     this.torso = torso;
     this.leftHand = leftHand;
     this.rightHand = rightHand;
@@ -243,6 +248,7 @@ export class PlayerBuilder {
 
 
   buildPlayer(leftHandSelected: string = "01", torsoSelected: string = "01", rightHandSelected: string = "01", headSelected: string = "01", legsSelected: string = "01") {
+    console.log(this.headSelected, "HEAD SELECTED 2")
     const obj = {
       legs: this.selectLegs(legsSelected),
       torso: this.selectTorso(torsoSelected),

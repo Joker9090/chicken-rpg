@@ -1,3 +1,4 @@
+import RPG from "../rpg";
 import { PlayerBuilder, PossibleMovements } from "../TestScene";
 import { CubeIsoSpriteBox } from "./cubeIsoSpriteBox";
 import { RpgIsoSpriteBox } from "./rpgIsoSpriteBox";
@@ -21,7 +22,7 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
   lastDirection: string = "s";
 
   constructor(
-    scene: Phaser.Scene,
+    scene: RPG,
     x: number,
     y: number,
     z: number,
