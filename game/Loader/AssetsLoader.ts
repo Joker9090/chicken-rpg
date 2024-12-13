@@ -89,7 +89,7 @@ const loadAssets = {
       ["image", "tabletStats", "/tabletScene/tabletStats.png"],
       ["image", "tabletStats2", "/tabletScene/tabletStats2.png"],
       ["image", "tabletNotReady", "/tabletScene/tabletNotReady.png"],
-      ["image", "tabletBack", "/tabletScene/tabletBack.png"],
+      ["image", "tabletBack", "/tabletScene/tabletback.png"],
       ["image", "btnCheck", "/tabletScene/btnCheck.png"],
       ["image", "btnCruz", "/tabletScene/btnCruz.png"],
 
@@ -169,6 +169,9 @@ const loadAssets = {
       ["image", "imageModalPhoto", "/assets/modalAssets/imageModalPhoto.png"],
       //["image", "modalNews", "/assets/modalAssets/modalNews.png"],
       ["image", "fotoCamara", "/assets/modalAssets/fotoCamara.png"],
+      ["image", "walkDogs", "/assets/modalAssets/walkDogs.png"],
+      ["image", "defaultImage", "/assets/modalAssets/default.png"],
+      ["image", "deliverFood", "/assets/modalAssets/deliverFood.png"],
       ["image", "modalBackground", "/assets/modalAssets/modal.png"],
       ["image", "desafioTest1", "/assets/modalAssets/maskImg2.png"],
       ["image", "desafioTest2", "/assets/modalAssets/maskImg3.png"],

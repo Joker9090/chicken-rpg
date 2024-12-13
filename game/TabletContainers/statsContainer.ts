@@ -200,7 +200,7 @@ export class statsContainer extends Phaser.GameObjects.Container {
         //RightUp CONTAINER ->
         const rightUpBackground = this.scene.add.image(0,0,"tabletRightUp").setScale(0.5);
 
-        const actualHappiness = this.scene.add.text(-100, -6, `${this.stateGlobal.happiness.actualValue}`, {fontFamily: "MontserratSemiBold", fontSize: 24, color: "#000000"});
+        const actualHappiness = this.scene.add.text(-100, -6, `${this.stateGlobal.reputation}`, {fontFamily: "MontserratSemiBold", fontSize: 24, color: "#000000"});
         const maxHappiness = this.scene.add.text(20, -6, `${this.stateGlobal.happiness.maxValue}`, {fontFamily: "MontserratSemiBold", fontSize: 24, color: "#000000"});
 
         rightUpContainer.add([rightUpBackground, actualHappiness ,maxHappiness ]);

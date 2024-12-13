@@ -25,7 +25,7 @@ export class ModalNews extends ModalBase {
         const allNews = globalData.news
 
         const availableNews = allNews.filter(news => !news.readed);
-
+        if (availableNews.length === 1) this.eventCenter.emit(this.eventCenter.possibleEvents.RESTART_NEWS, undefined);
         const newsSelected = availableNews[Math.floor(Math.random() * availableNews.length)];
         EventsCenterManager.emit(this.eventCenter.possibleEvents.READ_NEWSPAPER, newsSelected.id);
 
@@ -66,15 +66,15 @@ export class ModalNews extends ModalBase {
         const rectangleDescription = this.scene.add.rectangle(140, 75, 290, 250, 0xF1EFF4, 0.5).setOrigin(0.5);
 
         const graphicsTitle = this.scene.make.graphics();
-        graphicsTitle.fillStyle(0xBAB8BC); 
-        graphicsTitle.fillRoundedRect(-8, -145, 290, 80, 20); 
+        graphicsTitle.fillStyle(0xBAB8BC);
+        graphicsTitle.fillRoundedRect(-8, -145, 290, 80, 20);
         const maskTitle = graphicsTitle.createGeometryMask();
 
         rectangleTitle.setMask(maskTitle);
 
         const graphicsDescription = this.scene.make.graphics();
-        graphicsDescription.fillStyle(0xF1EFF4); 
-        graphicsDescription.fillRoundedRect(-8, -50, 290, 250, 20); 
+        graphicsDescription.fillStyle(0xF1EFF4);
+        graphicsDescription.fillRoundedRect(-8, -50, 290, 250, 20);
         const maskDescription = graphicsDescription.createGeometryMask();
 
         rectangleDescription.setMask(maskDescription);
@@ -91,7 +91,7 @@ export class ModalNews extends ModalBase {
             fixedHeight: 0,
         }).setAlign('center').setOrigin(0.5);
 
-    
+
         const description = this.scene.add.text(140, 185, newsSelected.description, {
             fontFamily: "MontserratSemiBold",
             fontSize: '16px',

@@ -35,6 +35,10 @@ export class ModalQUEST extends ModalBase {
             }
         }
 
+        // fotoCamara
+        // walkDogs
+        // defaultImage
+        // deliverFood
 
         const modalConfig: ModalConfig = {
             type: modalType.QUEST,
@@ -42,7 +46,7 @@ export class ModalQUEST extends ModalBase {
             // requires: "camera",
             // requirePicture: "camaraWhite",
             title: missionsSelected.title,
-            picture: "fotoCamara",
+            picture: missionsSelected.picture,
             // picture: missionsSelected.picture,
             time: missionsSelected.time,
             text: missionsSelected.description,
@@ -224,7 +228,7 @@ export class ModalQUEST extends ModalBase {
             color: '#ffffff',
         }).setOrigin(0.5);
 
-        const coinIcon = this.scene.add.image(-125, 110, "coinModalIcon");
+        const coinIcon = this.scene.add.image(-120, 110, "coinModalIcon");
 
         const reward_q2 = this.scene.add.text(-60, 110, `${modalConfig.reward.reputation}`, {
             fontFamily: "MontserratSemiBold",

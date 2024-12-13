@@ -78,7 +78,10 @@ export default class GlobalDataManager extends Phaser.Scene {
         const newDoneMissions = [...this.state.doneMissions, { ...mission, done: true }];
         const newAvailableMissions = this.state.availableMissions.filter((mission) => mission.id !== missionId);
         const newReputation = this.state.reputation + mission.reward.reputation;
-        const newHappiness = this.state.happiness.actualValue + mission.reward.happiness;
+        const newHappiness = {
+          actualValue: this.state.happiness.actualValue + mission.reward.happiness,
+          maxValue: this.state.happiness.maxValue
+        }
         const valuesToBeChanged = [
           newMoney,
           newDoneMissions,
@@ -110,6 +113,14 @@ export default class GlobalDataManager extends Phaser.Scene {
 
     this.eventCenter.turnEventOn("GlobalDataManager", this.eventCenter.possibleEvents.LEAVE_CITY, ()=>{
 
+    } ,this);
+
+    this.eventCenter.turnEventOn("GlobalDataManager", this.eventCenter.possibleEvents.RESTART_NEWS, ()=>{
+      const newNews = this.state.news.map((news) => {
+        news.readed = false;
+        return news;
+      });
+      this.changeState(["news"], [newNews]);
     } ,this);
 
     this.eventCenter.turnEventOn("GlobalDataManager", this.eventCenter.possibleEvents.GET_INVENTARY, () => {

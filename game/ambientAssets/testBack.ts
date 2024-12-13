@@ -33,6 +33,7 @@ export default class TestBack extends Phaser.GameObjects.Container {
     }
 
     tweenSky(target: 'morning' | 'middleDay' | 'afternoun' | 'night', on: boolean) {
+
         const targets = {
             'morning': [this.morning],
             'middleDay': [this.middleDay],

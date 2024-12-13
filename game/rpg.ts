@@ -149,7 +149,7 @@ export default class RPG extends Scene {
       this.scene.add("TabletScene", this.tabletScene, true);
     } else {
       this.tabletScene = tabletSceneActive as TabletScene;
-      this.tabletScene.scene.restart();
+      // this.tabletScene.scene.restart();
     }
 
     let AmbientBackScene = this.game.scene.getScene("AmbientBackgroundScene")
@@ -158,7 +158,8 @@ export default class RPG extends Scene {
       this.scene.add("AmbientBackgroundScene", AmbientBackScene, true);
       AmbientBackScene.scene.sendToBack("AmbientBackgroundScene");
     } else {
-      // AmbientBackScene.scene.restart({ sceneKey: "DayAndNight" })
+      this.eventCenter.turnOffAllEventsByScene("AmbientBackgroundScene")
+      AmbientBackScene.scene.restart({ sceneKey: "DayAndNight" })
     }
 
     // let AmbientFrontScene = this.game.scene.getScene("AmbientFrontgroundScene")
