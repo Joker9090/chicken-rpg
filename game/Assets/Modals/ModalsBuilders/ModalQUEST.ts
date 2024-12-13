@@ -51,15 +51,13 @@ export class ModalQUEST extends ModalBase {
             agreeFunction: handleAgreeModal,
         }
 
-        const selectStates: boolean[] = (modalConfig.products ?? []).map(() => false);
-        const createdProducts: { image: Phaser.GameObjects.Image, rewardBackground: Phaser.GameObjects.Image, coinIcon: Phaser.GameObjects.Image, text: Phaser.GameObjects.Text, isSelected: boolean }[] = [];
         //const globalDataManager = this.scene.game.scene.getScene("GlobalDataManager") as GlobalDataManager;
         const inventary = this.eventCenter.emitWithResponse(this.eventCenter.possibleEvents.GET_INVENTARY, null);
 
         //Modals containers
         const topContainer = this.scene.add.container(0, -170);
         const leftContainer = this.scene.add.container(-150, 0);
-        const rightContainer = this.scene.add.container(150, 0);
+        const rightContainer = this.scene.add.container(150, 10);
 
 
 
@@ -101,15 +99,6 @@ export class ModalQUEST extends ModalBase {
 
         }
 
-        if (modalConfig.products && modalConfig.products.length > 0) {
-            selectStates.forEach((state, index) => {
-                if (modalConfig.products && inventary.some((product: ProductToBuy) => product.title === modalConfig.products![index].title)) {
-                    selectStates[index] = true;
-
-                } else selectStates[index] = false;
-            });
-        }
-
 
         const btnExit = this.scene.add.image(255, 0, "btnExit").setInteractive();
 
@@ -143,7 +132,7 @@ export class ModalQUEST extends ModalBase {
         //LEFT CONTAINER
 
         //@ts-ignore
-        const photo_q = this.scene.add.image(-20, 10, modalConfig.picture).setScale(1);
+        const photo_q = this.scene.add.image(-20, -2, modalConfig.picture).setScale(1);
         const graphics = this.scene.make.graphics();
         graphics.fillRoundedRect(-100, -100, 170, 220, 20);
         const mask = graphics.createGeometryMask();
@@ -158,12 +147,15 @@ export class ModalQUEST extends ModalBase {
 
         //row 1
         //@ts-ignore
-        const timeNumber_q = this.scene.add.text(-175, -100, `${modalConfig.time}`, {
+        const description = this.scene.add.text(-24, -110, `${modalConfig.text}`, {
             fontFamily: "MontserratSemiBold",
-            fontSize: '24px',
+            fontSize: '14px',
             color: '#ffffff',
-        }).setOrigin(0.5);
-        const timeIcon_q = this.scene.add.image(-145, -105, "iconClock").setOrigin(0.5);
+            wordWrap: { width: 300 },
+            fixedWidth: 300,
+            fixedHeight: 0,
+        }).setOrigin(0.5).setAlign('left').setLineSpacing(3);
+        //const timeIcon_q = this.scene.add.image(-145, -105, "iconClock").setOrigin(0.5);
 
         //row 2
         const subTitleBackground_1_q = this.scene.add.image(-185, -80, "barraTitle").setOrigin(0, -0.1).setScale(1);
@@ -179,7 +171,7 @@ export class ModalQUEST extends ModalBase {
             haveObjects.push(true)
         } else {
             haveObjects.push(false)
-            timeNumber_q.setTint(0xff0000);
+            //timeNumber_q.setTint(0xff0000);
             this.agreeButton.setAlpha(0.5);
             leftTextButton.setAlpha(0.5);
         }
@@ -253,8 +245,9 @@ export class ModalQUEST extends ModalBase {
 
 
         rightContainer.add([
-            timeNumber_q,
-            timeIcon_q,
+            /*timeNumber_q,*/
+            /*timeIcon_q,*/
+            description,
             subTitleBackground_1_q,
             subTitle_1_q,
             morningIcon_q,

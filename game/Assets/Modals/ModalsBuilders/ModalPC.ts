@@ -182,8 +182,8 @@ export class ModalPC extends ModalBase {
             btnExit_p,
         ]);
 
-        const baseX = 40;
-        const baseY = -70;
+        const baseX = 60;
+        const baseY = -80;
         const offsetX = 190;
         const offsetY = 170; // Distancia vertical entre filas
 
@@ -314,9 +314,9 @@ export class ModalPC extends ModalBase {
 
 
         //not enough money text
-        const leftTextNotMoney = this.scene.add.text(0, -30, "NO TIENES SUFICIENTE DINERO", {
+        const leftTextNotMoney = this.scene.add.text(0, 15, "NO TIENES SUFICIENTE DINERO", {
             fontFamily: "MontserratSemiBold",
-            fontSize: '14px',
+            fontSize: '12px',
             color: '#ff0011',
         }).setOrigin(0.5).setVisible(false);
 
@@ -341,7 +341,7 @@ export class ModalPC extends ModalBase {
         leftButtonContainer.add([
             this.agreeButton,
             leftTextButton,
-            leftTextNotMoney
+            /*leftTextNotMoney*/
         ]);
 
         //RIGHT BUTTON
@@ -383,6 +383,7 @@ export class ModalPC extends ModalBase {
         buttonsContainer.add([
             leftButtonContainer,
             rightButtonContainer,
+            leftTextNotMoney,
         ]);
 
         this.modalContainerWithElements.add([
@@ -390,7 +391,7 @@ export class ModalPC extends ModalBase {
             topContainer,
             leftContainer,
             rightContainer,
-            buttonsContainer
+            buttonsContainer,
         ]);
     }
 }

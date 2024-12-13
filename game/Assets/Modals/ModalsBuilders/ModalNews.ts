@@ -61,27 +61,45 @@ export class ModalNews extends ModalBase {
         // INFO CONTAINER
         const infoContainer = this.scene.add.container(0, 0);
 
-        //do redondea esquinas de rectangleTitle
 
         const rectangleTitle = this.scene.add.rectangle(140, -105, 290, 80, 0xBAB8BC, 0.5).setOrigin(0.5);
         const rectangleDescription = this.scene.add.rectangle(140, 75, 290, 250, 0xF1EFF4, 0.5).setOrigin(0.5);
+
+        const graphicsTitle = this.scene.make.graphics();
+        graphicsTitle.fillStyle(0xBAB8BC); 
+        graphicsTitle.fillRoundedRect(-8, -145, 290, 80, 20); 
+        const maskTitle = graphicsTitle.createGeometryMask();
+
+        rectangleTitle.setMask(maskTitle);
+
+        const graphicsDescription = this.scene.make.graphics();
+        graphicsDescription.fillStyle(0xF1EFF4); 
+        graphicsDescription.fillRoundedRect(-8, -50, 290, 250, 20); 
+        const maskDescription = graphicsDescription.createGeometryMask();
+
+        rectangleDescription.setMask(maskDescription);
+
         //const image = this.scene.add.image(-100, 0, newsSelected.image).setOrigin(0.5).setScale(0.45).setRotation(-Math.PI / 4);
         const image = this.scene.add.image(-165, 45, newsSelected.image).setOrigin(0.5).setScale(0.5);
         const borderImage = this.scene.add.image(-165, 45, "bordeImgDiario").setOrigin(0.5).setScale(0.5);
-        const title = this.scene.add.text(130, -105, newsSelected.title, {
+        const title = this.scene.add.text(140, -105, newsSelected.title, {
             fontFamily: "MontserratBold",
             fontSize: '18px',
-            color: '#ffffff',
-            wordWrap: { width: 290, useAdvancedWrap: true }
-        }).setOrigin(0.5);
+            color: '#000000',
+            wordWrap: { width: 280 },
+            fixedWidth: 280,
+            fixedHeight: 0,
+        }).setAlign('center').setOrigin(0.5);
 
     
-        const description = this.scene.add.text(140, -20, newsSelected.description, {
-            fontFamily: "MontserratRegular",
+        const description = this.scene.add.text(140, 185, newsSelected.description, {
+            fontFamily: "MontserratSemiBold",
             fontSize: '16px',
-            color: '#ffffff',
-            wordWrap: { width: 290, useAdvancedWrap: true }
-        }).setOrigin(0.5);
+            color: '#000000',
+            wordWrap: { width: 280 },
+            fixedWidth: 280,
+            fixedHeight: 280,
+        }).setAlign('center').setOrigin(0.5);
         /* const reward = this.scene.add.text(50, 50, `Recompensa: $${newsSelected.reward.money}`, {
             fontFamily: "MontserratRegular",
             fontSize: '16px',
@@ -98,6 +116,10 @@ export class ModalNews extends ModalBase {
         //     color: '#ffffff',
         // }).setOrigin(0.5);
         infoContainer.add([
+            graphicsTitle,
+            //maskTitle,
+            graphicsDescription,
+            //maskDescription,
             rectangleTitle,
             rectangleDescription,
             image,
@@ -141,12 +163,15 @@ export class ModalNews extends ModalBase {
         });
 
         //@ts-ignore
-        const title_p = this.scene.add.text(0, -25, "NEWS", {
+        const title_p = this.scene.add.text(0, -35, "NOTICIAS", {
             fontFamily: "MontserratBold",
             fontStyle: "bold",
             fontSize: '24px',
             color: '#ffffff',
-        }).setOrigin(0.5);
+            wordWrap: { width: 300 },
+            fixedWidth: 300,
+            fixedHeight: 0,
+        }).setAlign('center').setOrigin(0.5);
 
         topContainer.add([
             title_p,

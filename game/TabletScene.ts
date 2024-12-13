@@ -62,6 +62,9 @@ export default class TabletScene extends Phaser.Scene {
             this.tabletShown = false;
         }
 
+        if(this.tabletShown) this.eventCenter.emitWithResponse(this.eventCenter.possibleEvents.OPEN_TABLET_MENU, null);
+        else this.eventCenter.emitWithResponse(this.eventCenter.possibleEvents.CLOSE_TABLET_MENU, null);
+
     }
 
     moveCamerasTo(coords: number[]) {

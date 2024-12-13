@@ -39,6 +39,9 @@ class EventsCenterManager extends Phaser.Events.EventEmitter {
                 OPEN_MODAL: "openModal", // OPEN MODAL
                 CLOSE_MODAL: "closeModal", // CLOSE MODAL
 
+                OPEN_TABLET_MENU: "openTabletMenu", // OPEN TABLET MENU
+                CLOSE_TABLET_MENU: "closeTabletMenu", // CLOSE TABLET MENU
+
                 GET_NEWS: "getNews", // GET NEWS
                 READ_NEWSPAPER: "readNewspaper", // READ NEWSPAPER AND CHANGE AVAILABLE MISSIONS IN CITY
                 MISSIONS_UPDATE: "missionsUpdate", // COMPLETES A MISSION = REWARD + TIME PASS
