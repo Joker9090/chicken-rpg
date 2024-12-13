@@ -166,7 +166,7 @@ export default class GlobalDataManager extends Phaser.Scene {
       reputation: 10,
       happiness: tabletMockData.happiness,
 
-      timeOfDay: 1,
+      timeOfDay: 4,
       hoursPassed: 0,
       sleepping: false,
 

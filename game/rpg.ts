@@ -124,6 +124,10 @@ export default class RPG extends Scene {
         duration: 400,
         ease: "ease",
         repeat: 0,
+        onComplete: () => {
+          this.UIContainer?.blackScreen.setAlpha(0);
+          (this.map as Room).sleeping = false; 
+        },
         yoyo: true,
         hold: 800,
         delay: 800,

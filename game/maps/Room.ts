@@ -19,6 +19,7 @@ export default class Room {
   backgroundContainer?: Phaser.GameObjects.Container;
   frontContainer?: Phaser.GameObjects.Container;
 
+  sleeping: boolean = false;
   constructor(scene: RPG) {
     this.scene = scene;
 
@@ -113,7 +114,7 @@ export default class Room {
 
     if (this.scene.player) {
       // @ts-ignore
-      this.scene.cameras.main.stopFollow().centerOn(this.scene.player.x + 400, this.scene.player.y - 250);
+      this.scene.cameras.main.stopFollow().centerOn(this.scene.player.x , this.scene.player.y - 250);
       this.scene.player.self.setVisible(false)
       this.scene.player.self.setScale(1.4);
     }
@@ -166,7 +167,10 @@ export default class Room {
     let cama = this.scene.add.image(this.imagesPositions.x, this.imagesPositions.y, "cama").setOrigin(0.5).setVisible(false);
     this.interactiveBed = this.scene.add.rectangle(-150, 20, 130, 200, 0x6666ff, 0).setRotation(Math.PI / 3).setInteractive();
     this.interactiveBed.on('pointerdown', () => {
-      if (!globalState.sleepping) {
+      console.log("ENTRO ACA 1", globalState.sleepping)
+      if (!this.sleeping) {
+        console.log("ENTRO ACA")
+        this.sleeping = true;
         this.eventCenter.emitEvent(this.eventCenter.possibleEvents.SLEEP, undefined);
       }
       });

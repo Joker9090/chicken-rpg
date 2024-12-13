@@ -12,6 +12,7 @@ export default class TestBack extends Phaser.GameObjects.Container {
     eventCenter = EventsCenterManager.getInstance();
     globalState: globalState;
     stateBackground: "RUNNING" | "IDLE" = "IDLE"
+    ANIM_DURATION = 800
 
     constructor(scene: AmbientBackgroundScene, x: number, y: number, width: number, height: number) {
         super(scene, x, y);
@@ -22,6 +23,7 @@ export default class TestBack extends Phaser.GameObjects.Container {
         this.night = scene.add.image(0, 0, "night").setAlpha(0);
         this.stars = scene.add.image(0, 0, "stars").setAlpha(0);
         this.globalState = this.eventCenter.emitWithResponse(this.eventCenter.possibleEvents.GET_STATE, undefined)
+        console.log(this.globalState.timeOfDay, this.night, this.stars)
         this.changeSky(this.globalState.timeOfDay)
         this.add([this.morning, this.middleDay, this.afternoun, this.night, this.stars]);
         this.scene.add.existing(this)
@@ -33,8 +35,6 @@ export default class TestBack extends Phaser.GameObjects.Container {
     }
 
     tweenSky(target: 'morning' | 'middleDay' | 'afternoun' | 'night', on: boolean) {
-        if (this.stateBackground === "RUNNING") return
-        this.stateBackground = "RUNNING"
         const targets = {
             'morning': [this.morning],
             'middleDay': [this.middleDay],
@@ -44,15 +44,14 @@ export default class TestBack extends Phaser.GameObjects.Container {
         this.scene.tweens.add({
             targets: targets[target],
             alpha: on ? 1 : 0,
-            duration: 800,
-            onComplete: () => {
-                this.stateBackground = "IDLE"
-            },
+            duration: this.ANIM_DURATION,
             ease: 'ease',
         });
     }
 
     changeSky(momentOfDay: number) {
+        if (this.stateBackground === "RUNNING") return
+        this.stateBackground = "RUNNING"
         switch (momentOfDay) {
             case 1:
                 this.tweenSky('morning', true)
@@ -79,5 +78,8 @@ export default class TestBack extends Phaser.GameObjects.Container {
                 this.tweenSky('night', true)
                 break;
         }
+        this.scene.time.delayedCall(this.ANIM_DURATION, () => {
+            this.stateBackground = "IDLE"
+        })
     }
 }
