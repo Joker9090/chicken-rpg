@@ -19,6 +19,7 @@ export type globalState = {
 
   timeOfDay: 1 | 2 | 3 | 4;
   hoursPassed: number;
+  sleepping: boolean;
 
   inventary: Inventory[];
   transactions: transactionsType[];
@@ -152,7 +153,7 @@ export default class GlobalDataManager extends Phaser.Scene {
     }, this);
 
     this.eventCenter.turnEventOn("GlobalDataManager", this.eventCenter.possibleEvents.SLEEP, () => {
-      this.changeState(["timeOfDay", "hoursPassed"], [4, 4 - this.state.timeOfDay]);
+      this.changeState(["timeOfDay", "hoursPassed", "sleeping"], [4, 4 - this.state.timeOfDay, true]);
       this.time.delayedCall(1200, () => {
         this.sleep();
       })
@@ -167,6 +168,7 @@ export default class GlobalDataManager extends Phaser.Scene {
 
       timeOfDay: 1,
       hoursPassed: 0,
+      sleepping: false,
 
       inventary: inventoryMockData.inventary,
       transactions: tabletMockData.transactionsHistorial,
@@ -205,7 +207,7 @@ export default class GlobalDataManager extends Phaser.Scene {
   }
 
   sleep() {
-    this.changeState(["timeOfDay", "hoursPassed"], [1, 0]);
+    this.changeState(["timeOfDay", "hoursPassed", "sleepping"], [1, 0, false]);
   }
 
   passTime(amount: number) {

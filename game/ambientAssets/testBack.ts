@@ -11,11 +11,11 @@ export default class TestBack extends Phaser.GameObjects.Container {
     stars: Phaser.GameObjects.Image;
     eventCenter = EventsCenterManager.getInstance();
     globalState: globalState;
+    stateBackground: "RUNNING" | "IDLE" = "IDLE"
+
     constructor(scene: AmbientBackgroundScene, x: number, y: number, width: number, height: number) {
         super(scene, x, y);
         this.scene = scene
-        // this.morning = scene.add.rectangle(0, 0, window.innerWidth, window.innerHeight, 0x4ddbff).setAlpha(1).setOrigin(0.5)
-        // this.middleDay = scene.add.rectangle(0, 0, window.innerWidth, window.innerHeight, 0x4ddbff).setAlpha(0).setOrigin(0.5)
         this.morning = scene.add.rectangle(0, 0, window.innerWidth, window.innerHeight, 0xaefbff).setAlpha(1).setOrigin(0.5)
         this.middleDay = scene.add.rectangle(0, 0, window.innerWidth, window.innerHeight, 0x4ddbff).setAlpha(0).setOrigin(0.5)
         this.afternoun = scene.add.image(0, 0, "day").setAlpha(0);
@@ -33,7 +33,8 @@ export default class TestBack extends Phaser.GameObjects.Container {
     }
 
     tweenSky(target: 'morning' | 'middleDay' | 'afternoun' | 'night', on: boolean) {
-
+        if (this.stateBackground === "RUNNING") return
+        this.stateBackground = "RUNNING"
         const targets = {
             'morning': [this.morning],
             'middleDay': [this.middleDay],
@@ -44,9 +45,11 @@ export default class TestBack extends Phaser.GameObjects.Container {
             targets: targets[target],
             alpha: on ? 1 : 0,
             duration: 800,
+            onComplete: () => {
+                this.stateBackground = "IDLE"
+            },
             ease: 'ease',
         });
-
     }
 
     changeSky(momentOfDay: number) {

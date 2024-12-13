@@ -4,6 +4,7 @@ import EventsCenter from "../services/EventsCenter";
 import RPG from "../rpg";
 import { globalState } from "../GlobalDataManager";
 import { Inventory, ModalConfig, modalType, ProductToBuy } from "../Assets/Modals/ModalTypes";
+import AmbientBackgroundScene from "../ambientAssets/backgroundScene";
 
 export default class Room {
 
@@ -141,9 +142,11 @@ export default class Room {
     this.interactiveNewsPaper.on('pointerdown', () => {
       this.eventCenter.emitEvent(this.eventCenter.possibleEvents.OPEN_MODAL, { modalType: modalType.NEWS });
     });
+
     this.interactiveNewsPaper.on("pointerover", () => {
       newspaperGlow.setVisible(true);
     });
+
     this.interactiveNewsPaper.on("pointerout", () => {
       newspaperGlow.setVisible(false);
     });
@@ -163,8 +166,10 @@ export default class Room {
     let cama = this.scene.add.image(this.imagesPositions.x, this.imagesPositions.y, "cama").setOrigin(0.5).setVisible(false);
     this.interactiveBed = this.scene.add.rectangle(-150, 20, 130, 200, 0x6666ff, 0).setRotation(Math.PI / 3).setInteractive();
     this.interactiveBed.on('pointerdown', () => {
-      this.eventCenter.emitEvent(this.eventCenter.possibleEvents.SLEEP, undefined);
-    });
+      if (!globalState.sleepping) {
+        this.eventCenter.emitEvent(this.eventCenter.possibleEvents.SLEEP, undefined);
+      }
+      });
     this.interactiveBed.on("pointerover", () => {
       cama.setVisible(true);
     });
