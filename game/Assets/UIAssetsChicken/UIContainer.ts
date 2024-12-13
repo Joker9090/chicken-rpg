@@ -41,20 +41,17 @@ export default class UIContainer extends Phaser.GameObjects.Container {
         })
         // <- BUTTON CHANGE SCENE
 
-        this.tabletIcon = this.scene.add.image(window.innerWidth - 50 , window.innerHeight - 50, "tabletIcon").setOrigin(1).setInteractive().on('pointerdown', () => {
+        this.tabletIcon = this.scene.add.image(window.innerWidth - 50 , window.innerHeight + 50, "tabletIcon").setOrigin(1).setInteractive().on('pointerdown', () => {
             this.scene.game.scene.bringToTop("TabletScene");
             this.scene.tabletScene?.showOrHideTablet();
 
         });
 
-        
-
-
         this.tabletIcon.on('pointerover', () => {
             if (this.activeTween) this.activeTween.stop();
             this.activeTween = this.scene.tweens.add({
                 targets: this.tabletIcon,
-                y: window.innerHeight - 70,
+                y: window.innerHeight - 20,
                 duration: 200,
                 ease: 'ease',
             });
@@ -65,7 +62,7 @@ export default class UIContainer extends Phaser.GameObjects.Container {
             if (this.activeTween) this.activeTween.stop();
             this.activeTween = this.scene.tweens.add({
                 targets: this.tabletIcon,
-                y: window.innerHeight - 50,
+                y: window.innerHeight + 50,
                 duration: 200,
                 ease: 'ease'
             });

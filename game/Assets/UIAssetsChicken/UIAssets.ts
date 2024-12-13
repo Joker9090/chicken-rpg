@@ -165,17 +165,24 @@ export class DayBlock extends Phaser.GameObjects.Container {
   }
 
   updateValues(data: globalState) {
+    const possiblePositions = [this.dayBlock1.x, this.dayBlock2.x, this.dayBlock3.x, this.dayBlock4.x]
+    this.setActiveBlock(data.timeOfDay + data.hoursPassed)
+
     this.scene.tweens.add({
       targets: this.flecha,
-      scale: 0.35,
+      x: possiblePositions[data.timeOfDay + data.hoursPassed - 1],
       duration: 200,
       ease: 'ease',
-      yoyo: true,
       repeat: 0
     })
   }
 
   setActiveBlock(blockDay: number) {
+    this.dayBlock1.setTexture("dayBlock1")
+    this.dayBlock2.setTexture("dayBlock2")
+    this.dayBlock3.setTexture("dayBlock3")
+    this.dayBlock4.setTexture("dayBlock4")
+
     switch (blockDay) {
       case 1:
         this.dayBlock1.setTexture("dayBlock1Active")

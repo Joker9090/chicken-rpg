@@ -45,7 +45,7 @@ export default class City {
       for (let i = 0; i < randomYPin.length; i++) {
         const randomNumber = Math.random()
         console.log(randomNumber)
-        if (randomNumber < 0.1) {
+        if (randomNumber < 0.5) {
           objects.push(
             {
               x: 5,
