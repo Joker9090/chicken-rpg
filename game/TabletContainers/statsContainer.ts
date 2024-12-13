@@ -92,7 +92,6 @@ export class statsContainer extends Phaser.GameObjects.Container {
 
         this.closeButton.on('pointerup', () => {
             this.handleClose();
-            console.log("CLOSE");
         });
         this.closeButton.on("pointerover", () => {
             if (this.activeTween) this.activeTween.stop();

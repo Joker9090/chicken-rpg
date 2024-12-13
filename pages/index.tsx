@@ -19,7 +19,7 @@ export default function Home() {
         <title>Chambix</title>
         <meta name="description" content="Welcome to the game" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/favicon2.png" />
       </Head>
       {/* Este contenido puede ser opcional, ya que se redirigirá automáticamente */}
       <main>

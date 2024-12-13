@@ -114,6 +114,7 @@ export class Avatar extends Phaser.GameObjects.Container {
       "01": "avatar1",
       "02": "avatar2"
     }
+    //@ts-ignore
     this.avatar.setTexture(headMap[avatar] ?? 'avatar1')
   }
 
@@ -170,11 +171,11 @@ export class DayBlock extends Phaser.GameObjects.Container {
 
   updateValues(data: globalState) {
     const possiblePositions = [this.dayBlock1.x, this.dayBlock2.x, this.dayBlock3.x, this.dayBlock4.x]
-    this.setActiveBlock(data.timeOfDay + data.hoursPassed)
+    this.setActiveBlock(data.timeOfDay)
 
     this.scene.tweens.add({
       targets: this.flecha,
-      x: possiblePositions[data.timeOfDay + data.hoursPassed - 1],
+      x: possiblePositions[data.timeOfDay - 1],
       duration: 200,
       ease: 'ease',
       repeat: 0
@@ -186,7 +187,6 @@ export class DayBlock extends Phaser.GameObjects.Container {
     this.dayBlock2.setTexture("dayBlock2")
     this.dayBlock3.setTexture("dayBlock3")
     this.dayBlock4.setTexture("dayBlock4")
-
     switch (blockDay) {
       case 1:
         this.dayBlock1.setTexture("dayBlock1Active")

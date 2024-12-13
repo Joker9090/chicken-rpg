@@ -46,7 +46,6 @@ export default class GlobalDataManager extends Phaser.Scene {
     }, this);
 
     this.eventCenter.turnEventOn("GlobalDataManager", this.eventCenter.possibleEvents.BUY_ITEMS, (payload: ProductToBuy[]) => {
-      console.log(payload, "PAYLOAD")
       let moneyLess = 0;
       payload.forEach((item) => {
         this.addInventary(item);
@@ -89,7 +88,9 @@ export default class GlobalDataManager extends Phaser.Scene {
         ];
         this.changeState(keysToBeChanged, valuesToBeChanged);
         if (mission.time > 0){
-          this.eventCenter.emit(this.eventCenter.possibleEvents.TIME_CHANGE, mission.time);
+          this.time.delayedCall(400, ()=>{
+            this.eventCenter.emit(this.eventCenter.possibleEvents.TIME_CHANGE, mission.time);
+          })
         }
       }
     }, this);
@@ -139,6 +140,13 @@ export default class GlobalDataManager extends Phaser.Scene {
       this.passTime(payload);
     }, this);
 
+    this.eventCenter.turnEventOn("GlobalDataManager", this.eventCenter.possibleEvents.SLEEP, () => {
+      this.changeState(["timeOfDay", "hoursPassed"], [4, 4 - this.state.timeOfDay]);
+      this.time.delayedCall(1200, () => {
+        this.sleep();
+      })
+    }, this);
+
     // <--- Events
 
     this.state = {
@@ -185,15 +193,14 @@ export default class GlobalDataManager extends Phaser.Scene {
     }
   }
 
+  sleep() {
+    this.changeState(["timeOfDay", "hoursPassed"], [1, 0]);
+  }
+
   passTime(amount: number) {
-    if (this.dayState === "RUNNING") return;
-    else {
-      this.dayState = "RUNNING";
       let newTimeOfDay = this.state.timeOfDay + amount;
-      if (newTimeOfDay > 3) newTimeOfDay = 0;
-      if (this.state.timeOfDay > 4) this.state.timeOfDay = 1;
-      this.changeState(["hoursPassed", "timeOfDay"], [amount, this.state.timeOfDay ]);
-    }
+      if (newTimeOfDay > 4) newTimeOfDay = 1;
+      this.changeState(["hoursPassed", "timeOfDay"], [amount, newTimeOfDay ]);
   }
 
   addInventary(item: ProductToBuy) {

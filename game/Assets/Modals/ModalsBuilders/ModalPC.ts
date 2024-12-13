@@ -96,7 +96,6 @@ export class ModalPC extends ModalBase {
             }
         })
 
-        console.log(modalConfig)
         const selectedItems: any = []
 
         const selectStates: boolean[] = (modalConfig.products ?? []).map(() => false);

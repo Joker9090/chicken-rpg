@@ -1,4 +1,4 @@
-import { buidling1, buidling3, buidling4 } from "./buildings";
+import { buidling1, buidling3, buidling4, rotateBuilding } from "./buildings";
 import { generateBuildings, createBase, createSideWalk, createStreets, createGrass, addItems } from "./mapCreationFunctions";
 import { ObjetsConfig } from "./mapTypes";
 import { RpgIsoSpriteBox } from "../Assets/rpgIsoSpriteBox";
@@ -12,8 +12,9 @@ export default class City {
   eventCenter = EventsCenter.getInstance();
   constructor(scene: RPG) {
     this.scene = scene;
-    const randomYPin = [11, 16, 26, 31]
-    const randomHPin = [11, 6, 11, 6]
+    const randomYPin = [11, 16, 26, 31, 5, 5, 5, 5]
+    const randomXPin = [5, 5, 5, 5, 18, 23, 28, 33]
+    const randomHPin = [11, 6, 11, 6, 11, 6, 6, 11]
     const objects: ObjetsConfig[] = [
       {
         x: 8,
@@ -44,11 +45,10 @@ export default class City {
     const createPins = () => {
       for (let i = 0; i < randomYPin.length; i++) {
         const randomNumber = Math.random()
-        console.log(randomNumber)
         if (randomNumber < 0.5) {
           objects.push(
             {
-              x: 5,
+              x: randomXPin[i],
               y: randomYPin[i],
               h: randomHPin[i] * 50 + 100,
               type: "15",
@@ -56,7 +56,6 @@ export default class City {
           )
         }
       }
-      console.log(objects.length)
       if (objects.length === 4) createPins()
     }
 
@@ -65,7 +64,7 @@ export default class City {
     for (let i = 0; i < 200; i++) {
       objects.push({
         x: Math.floor(20 + Math.random() * 20),
-        y: Math.floor(Math.random() * 40),
+        y: Math.floor(13 + Math.random() * 27),
         h: 0,
         type: "8",
       });
@@ -89,6 +88,11 @@ export default class City {
       { x: 4, y: 20, w: 4, z: 4, h: 17, type: "21", replace: buidling1 }, // <----
       { x: 4, y: 25, w: 4, z: 4, h: 11, type: "21", replace: buidling3 }, // <----
       { x: 4, y: 30, w: 4, z: 4, h: 6, type: "21", replace: buidling4 }, // <----
+      
+      { x: 17, y: 4, w: 4, z: 4, h: 11, type: "21", replace: buidling3 }, // <----
+      { x: 22, y: 4, w: 4, z: 4, h: 6, type: "21", replace: buidling4 }, // <----
+      { x: 27, y: 4, w: 4, z: 4, h: 6, type: "21", replace: buidling4 }, // <----
+      { x: 32, y: 4, w: 4, z: 4, h: 11, type: "21", replace: buidling3 }, // <----
     ]);
 
 
@@ -146,7 +150,7 @@ export default class City {
       },
 
       // MAP PLAYER / ITEMS CONFIG
-      [createBase(40, [10, 25])],
+      [createBase(40, [15, 15])],
       createSideWalk(createStreets(createGrass(40, false), streetConfig, false) as number[][], sideWalkConfig, true) as number[][],
       ...buildings.map((_buildings, index) => {
         const items = objects.filter(

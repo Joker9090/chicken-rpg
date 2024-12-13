@@ -35,6 +35,7 @@ class EventsCenterManager extends Phaser.Events.EventEmitter {
 
                 CHANGE_DATE: "changeDate", // PASS OF TIME
                 TIME_CHANGE: "timeChange",
+                SLEEP: "sleep", // SLEEP
 
                 OPEN_MODAL: "openModal", // OPEN MODAL
                 CLOSE_MODAL: "closeModal", // CLOSE MODAL

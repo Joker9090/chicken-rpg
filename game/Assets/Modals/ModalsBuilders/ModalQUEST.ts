@@ -35,7 +35,6 @@ export class ModalQUEST extends ModalBase {
             }
         }
 
-        console.log("MISSION SELECTED", missionsSelected);
 
         const modalConfig: ModalConfig = {
             type: modalType.QUEST,

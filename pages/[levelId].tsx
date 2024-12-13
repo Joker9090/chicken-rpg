@@ -67,7 +67,7 @@ export default function Level() {
         <title>Chambix</title>
         <meta name="description" content={`Experimental Map - Level ${levelId}`} />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/favicon2.png" />
       </Head>
       <main>
         <div className="game-container">

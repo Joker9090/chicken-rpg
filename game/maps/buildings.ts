@@ -211,3 +211,29 @@ export const buidling4 = [
         [44, 45, 45, 43],
     ]
 ];
+
+export const rotateBuilding = (building: number[][][], times: number) => {
+    for (let i = 0; i < times; i++) {
+        building.map((floor: number[][])=> rotateMatrix(floor))
+    }
+    return building.map((row, i) => row.map((_, j) => building[j][i]));
+}
+
+export const rotateMatrix = (matrix: number[][]) => {
+    let result: number[][] = [];
+    for (let i = 0; i < matrix[0].length; i++) {
+        let row: number[] = [];
+        for (let j = matrix.length - 1; j >= 0; j--) {
+            row.push(matrix[j][i]);
+        }
+        result.push(row);
+    }
+    return result;
+}
+
+// const testMatrix = [
+//     [18, 18, 18, 41],
+//     [18, 18, 18, 42],
+//     [18, 18, 18, 42],
+//     [44, 45, 45, 43],
+// ]

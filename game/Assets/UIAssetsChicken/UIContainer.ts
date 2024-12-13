@@ -3,6 +3,7 @@ import Phaser from "phaser";
 import { Avatar, DayBlock } from "./UIAssets";
 import { globalState } from "@/game/GlobalDataManager";
 import { changeSceneTo } from "@/game/helpers/helpers";
+import EventsCenterManager from "../../services/EventsCenter";
 
 
 export default class UIContainer extends Phaser.GameObjects.Container {
@@ -15,6 +16,9 @@ export default class UIContainer extends Phaser.GameObjects.Container {
     stateGlobal: globalState;
     dayBlock: DayBlock;
     avatar: Avatar;
+    eventCenter = EventsCenterManager.getInstance();
+    blackScreen: Phaser.GameObjects.Rectangle;
+
     constructor(
         scene: RPG,
         x: number,
@@ -69,11 +73,14 @@ export default class UIContainer extends Phaser.GameObjects.Container {
             
         });
 
+        this.blackScreen = this.scene.add.rectangle(-100, -100, window.innerWidth + 200, window.innerHeight + 200, 0x000000, 1).setOrigin(0, 0).setAlpha(0)
+
         this.add([
             buttonChangeScene,
             this.dayBlock,
             this.avatar,
             this.tabletIcon,
+            this.blackScreen
         ])
         this.scene.add.existing(this)
         this.scene.cameras.main.ignore(this)

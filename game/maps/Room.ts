@@ -163,7 +163,7 @@ export default class Room {
     let cama = this.scene.add.image(this.imagesPositions.x, this.imagesPositions.y, "cama").setOrigin(0.5).setVisible(false);
     this.interactiveBed = this.scene.add.rectangle(-150, 20, 130, 200, 0x6666ff, 0).setRotation(Math.PI / 3).setInteractive();
     this.interactiveBed.on('pointerdown', () => {
-      // globalDataManager.passTime(1)
+      this.eventCenter.emitEvent(this.eventCenter.possibleEvents.SLEEP, undefined);
     });
     this.interactiveBed.on("pointerover", () => {
       cama.setVisible(true);

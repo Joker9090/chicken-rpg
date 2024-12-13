@@ -109,22 +109,34 @@ export default class RPG extends Scene {
     }, this);
     // <- UPDATER EVENT
     // -> MODAL EVENTS
-    EventsCenterManager.turnEventOn("RPG", EventsCenterManager.possibleEvents.OPEN_MODAL, (data: {modalType: modalType, pin?: PinIsoSpriteBox}) => {
+    EventsCenterManager.turnEventOn("RPG", EventsCenterManager.possibleEvents.OPEN_MODAL, (data: { modalType: modalType, pin?: PinIsoSpriteBox }) => {
       this.modalManager.createModal(data);
     }, this);
     EventsCenterManager.turnEventOn("RPG", EventsCenterManager.possibleEvents.CLOSE_MODAL, () => {
       this.modalManager.destroyModal();
     }, this);
     // <- MODAL
+    // -> SLEEP EVENTS
+    EventsCenterManager.turnEventOn("RPG", EventsCenterManager.possibleEvents.SLEEP, () => {
+      this.tweens.add({
+        targets: this.UIContainer?.blackScreen,
+        alpha: 1,
+        duration: 400,
+        ease: "ease",
+        repeat: 0,
+        yoyo: true,
+        hold: 800,
+        delay: 800,
+      })
+    }, this);
+    // <- SLEEP
     // <- CREATE EVENTS
     //tabletModalTransp
     EventsCenterManager.turnEventOn("RPG", EventsCenterManager.possibleEvents.OPEN_TABLET_MENU, () => {
-      console.log("MESH ON");
       this.tabletNoInteractiveMesh?.setVisible(true);
     }, this);
 
     EventsCenterManager.turnEventOn("RPG", EventsCenterManager.possibleEvents.CLOSE_TABLET_MENU, () => {
-      console.log("MESH OFF");
       this.tabletNoInteractiveMesh?.setVisible(false);
     }, this);
 
@@ -146,17 +158,17 @@ export default class RPG extends Scene {
       this.scene.add("AmbientBackgroundScene", AmbientBackScene, true);
       AmbientBackScene.scene.sendToBack("AmbientBackgroundScene");
     } else {
-      AmbientBackScene.scene.restart({ sceneKey: "DayAndNight" })
+      // AmbientBackScene.scene.restart({ sceneKey: "DayAndNight" })
     }
 
-    let AmbientFrontScene = this.game.scene.getScene("AmbientFrontgroundScene")
-    if (!AmbientFrontScene) {
-      AmbientFrontScene = new AmbientFrontgroundScene(200, 200)
-      this.scene.add("AmbientFrontgroundScene", AmbientFrontScene, true);
-      AmbientFrontScene.scene.bringToTop("AmbientFrontgroundScene");
-    } else {
-      AmbientFrontScene.scene.restart({ sceneKey: "DayAndNight" })
-    }
+    // let AmbientFrontScene = this.game.scene.getScene("AmbientFrontgroundScene")
+    // if (!AmbientFrontScene) {
+    //   AmbientFrontScene = new AmbientFrontgroundScene(200, 200)
+    //   this.scene.add("AmbientFrontgroundScene", AmbientFrontScene, true);
+    //   AmbientFrontScene.scene.bringToTop("AmbientFrontgroundScene");
+    // } else {
+    //   AmbientFrontScene.scene.restart({ sceneKey: "DayAndNight" })
+    // }
 
     this.load.scenePlugin({
       key: "IsoPlugin",
@@ -181,7 +193,7 @@ export default class RPG extends Scene {
     this.scale.resize(window.innerWidth, window.innerHeight);
     this.cursors = this.input.keyboard.createCursorKeys();
 
-    this.tabletNoInteractiveMesh = this.add.rectangle(window.innerWidth/2, window.innerHeight/2, window.innerWidth, window.innerHeight, 0x000000, 0).setInteractive().setVisible(false);
+    this.tabletNoInteractiveMesh = this.add.rectangle(window.innerWidth / 2, window.innerHeight / 2, window.innerWidth, window.innerHeight, 0x000000, 0).setInteractive().setVisible(false);
 
 
     // -> ESTO HAY QUE MOVERLO AL FILE DE PLAYER
@@ -238,7 +250,7 @@ export default class RPG extends Scene {
       window.innerHeight
     );
     this.UICamera.ignore(this.isoGroup);
-    if(this.player) {
+    if (this.player) {
       this.UICamera.ignore(this.player.playerBuilder.getContainer());
       this.UIContainer?.avatar?.setHead(this.player?.playerBuilder.getHeadSelected());
     }
@@ -354,6 +366,22 @@ export default class RPG extends Scene {
         if (this.isoGroup) pin.updatePin(this.isoGroup);
       });
     });
+
+    // makes sure that there is no more pins than missions
+    this.time.delayedCall(300, () => {
+      const pins = getObjectByType(this, "PIN")
+      const maxPins = this.stateGlobal.availableMissions.length
+      if (pins) {
+        if (pins?.length > maxPins) {
+          const difference = pins.length - maxPins
+          for (let index = 0; index < difference; index++) {
+            const pin = pins[index] as unknown as PinIsoSpriteBox;
+            pin.self.destroy()
+          }
+        }
+      }
+    });
+
   }
 
   spawnObjects() {

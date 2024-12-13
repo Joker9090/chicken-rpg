@@ -10,10 +10,6 @@ export default class AmbientBackgroundScene extends Phaser.Scene{
     } 
     sceneKey: string;
     
-  // sky1?: Phaser.GameObjects.Rectangle;
-  // sky2?: Phaser.GameObjects.Rectangle;
-  // sky3?: Phaser.GameObjects.Rectangle;
-  // sky4?: Phaser.GameObjects.Rectangle;
     constructor(sceneKey: string) {
         super({ key: "AmbientBackgroundScene" });
         this.middlePoint = {

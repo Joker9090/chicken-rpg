@@ -108,7 +108,6 @@ export class menuContainer extends Phaser.GameObjects.Container {
         this.settingsButton = this.scene.add.image(-355, 0, "tabletSettings").setScale(0.8).setInteractive();
 
         this.settingsButton.on('pointerup', () => {
-            //console.log("go back function: ", this.handleGoback);
             //this.handleGoback();
         });
         this.settingsButton.on("pointerover", () => {
