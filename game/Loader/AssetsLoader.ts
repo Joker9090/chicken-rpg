@@ -85,6 +85,7 @@ const loadAssets = {
       ["image", "tabletRightUp", "/tabletScene/tabletRightUp.png"],
 
       ["image", "tabletIcon", "/tabletScene/tabletIcon.png"],
+      ["image", "tabletIconOn", "/tabletScene/tabletIconOn.png"],
       ["image", "tabletSettings", "/tabletScene/tabletSettings.png"],
       ["image", "tabletStats", "/tabletScene/tabletStats.png"],
       ["image", "tabletStats2", "/tabletScene/tabletStats2.png"],

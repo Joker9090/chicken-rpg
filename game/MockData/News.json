@@ -1,21 +1,6 @@
 {
     "news": [
-        {
-            "id": 1,
-            "missionId": [1],
-            "image": "imageDiarioGeneric",
-            "title": "Paseo canino",
-            "description": "Saca a pasear un perro por el parque.",
-            "reward": {
-                "money": 5,
-                "reputation": 1,
-                "happines": 3 
-            } ,
-            "time": 1,
-            "requirements": [],
-            "readed": false
-        },
-        {
+        { 
             "id": 14,
             "missionId": [2],
             "image": "imageDiarioGeneric",
@@ -32,146 +17,8 @@
             ],
             "readed": false
         },
-        {
-            "id": 2,
-            "missionId": [3],
-            "image": "imageDiarioGeneric",
-            "title": "Paseo canino 2",
-            "description": "Saca a pasear tres perros por el parque.",
-            "reward": {
-                "money": 5,
-                "reputation": 1,
-                "happines": 3 
-            } ,
-            "time": 2,
-            "requirements": [],
-            "readed": false
-        },
-        {
-            "id": 3,
-            "missionId": [4],
-            "image": "imageDiarioGeneric",
-            "title": "Paseo canino 3",
-            "description": "Saca a pasear cinco perros por el parque.",
-            "reward": {
-                "money": 5,
-                "reputation": 1,
-                "happines": 3 
-            } ,
-            "time": 2,
-            "requirements": [],
-            "readed": false
-        },
-        {
-            "id": 4,
-            "missionId": [5],
-            "image": "imageDiarioGeneric",
-            "title": "Delivery express",
-            "description": "Reparte los pedidos por la ciudad.",
-            "reward": {
-                "money": 5,
-                "reputation": 1,
-                "happines": 3 
-            } ,
-            "time": 2,
-            "requirements": [
-                1
-            ],
-            "readed": true
-        },
-        {
-            "id": 5,
-            "missionId": [6],
-            "image": "imageDiarioGeneric",
-            "title": "Delivery express 2",
-            "description": "Reparte los pedidos por la ciudad.",
-            "reward": {
-                "money": 5,
-                "reputation": 1,
-                "happines": 3 
-            } ,
-            "time": 2,
-            "requirements": [
-                1
-            ],
-            "readed": false
-        },
-        {
-            "id": 6,
-            "missionId": [7],
-            "image": "imageDiarioGeneric",
-            "title": "Delivery express 3",
-            "description": "Reparte los pedidos por la ciudad.",
-            "reward": {
-                "money": 5,
-                "reputation": 1,
-                "happines": 3 
-            } ,
-            "time": 2,
-            "requirements": [
-                1,
-                2
-            ],
-            "readed": false
-        },
-        {
-            "id": 7,
-            "missionId": [8],
-            "image": "imageDiarioGeneric",
-            "title": "Fotografía de primera",
-            "description": "Toma fotos para un creador de contenido.",
-            "reward": {
-                "money": 5,
-                "reputation": 1,
-                "happines": 3 
-            } ,
-            "time": 2,
-            "requirements": [
-                3,
-                4
-            ],
-            "readed": false
-        },
-        {
-            "id": 8,
-            "missionId": [9],
-            "image": "imageDiarioGeneric",
-            "title": "Fotografía de primera 2",
-            "description": "Toma fotos para dos creadores de contenido.",
-            "reward": {
-                "money": 5,
-                "reputation": 1,
-                "happines": 3 
-            } ,
-            "time": 2,
-            "requirements": [
-                1,
-                3,
-                4
-            ],
-            "readed": false
-        },
-        {
-            "id": 9,
-            "missionId": [10],
-            "image": "imageDiarioGeneric",
-            "title": "Fotografía de primera 3",
-            "description": "Toma fotos para dos creadores de contenido y edítalas.",
-            "reward": {
-                "money": 5,
-                "reputation": 1,
-                "happines": 3 
-            } ,
-            "time": 2,
-            "requirements": [
-                1,
-                3,
-                4,
-                5
-            ],
-            "readed": false
-        },
-        {
+
+        { 
             "id": 10,
             "missionId": [11],
             "image": "imageDiarioGeneric",
@@ -186,7 +33,7 @@
             "requirements": [],
             "readed": false
         },
-        {
+        { 
             "id": 11,
             "missionId": [12],
             "image": "imageDiarioGeneric",
@@ -201,7 +48,7 @@
             "requirements": [],
             "readed": true
         },
-        {
+        { 
             "id": 12,
             "missionId": [13],
             "image": "imageDiarioGeneric",
