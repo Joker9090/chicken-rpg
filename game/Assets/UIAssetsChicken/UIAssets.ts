@@ -110,7 +110,11 @@ export class Avatar extends Phaser.GameObjects.Container {
   }
 
   setHead(avatar: string) {
-    this.avatar.setTexture(avatar === "01" ? 'avatar2' : 'avatar1')
+    const headMap = {
+      "01": "avatar1",
+      "02": "avatar2"
+    }
+    this.avatar.setTexture(headMap[avatar] ?? 'avatar1')
   }
 
   updateValues(data: globalState) {

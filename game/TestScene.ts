@@ -156,10 +156,15 @@ export class PlayerBuilder {
   constructor(scene: RPG) {
     this.scene = scene;
     this.container = this.scene.add.container(0, 0);
-    // this.headSelected = Math.random() < 0.5 ? "01" : "02";
-    console.log(this.headSelected, "HEAD SELECTED")
-    this.scene.UIContainer?.avatar?.setHead(this.headSelected);
+    // this.scene.UIContainer?.avatar?.setHead(this.headSelected);
+    const options = ["01","02"];
+    const randomBetween01 = () => options[Math.floor(Math.random() * options.length)];
+    
 
+    this.torsoSelected = randomBetween01();
+    this.headSelected = randomBetween01();
+    this.legsSelected = randomBetween01();
+    
     const { torso, leftHand, rightHand, head, legs } = this.buildPlayer(this.torsoSelected, this.torsoSelected, this.torsoSelected, this.headSelected, this.legsSelected);
     
     
@@ -184,7 +189,9 @@ export class PlayerBuilder {
     // this.buildPlayer = this.buildPlayer.bind(this);
     // this.selectMovement(PossibleMovements.LEFT1);
   }
-
+  getHeadSelected() {
+    return this.headSelected || "01";
+  }
   getPlayerParts() {
     return {
       torso: this.torso,
@@ -248,7 +255,6 @@ export class PlayerBuilder {
 
 
   buildPlayer(leftHandSelected: string = "01", torsoSelected: string = "01", rightHandSelected: string = "01", headSelected: string = "01", legsSelected: string = "01") {
-    console.log(this.headSelected, "HEAD SELECTED 2")
     const obj = {
       legs: this.selectLegs(legsSelected),
       torso: this.selectTorso(torsoSelected),
@@ -285,7 +291,7 @@ export class PlayerBuilder {
     if (this.torso) this.torso.destroy();
     this.torsoSelected = torsoSelected;
     const torso = this.scene.add
-      .sprite(0, 0, "torso-" + this.torsoSelected, 0)
+      .sprite(0, 0, "torso-" + this.torsoSelected, 10)
       // .setScale(1.4)
       .setOrigin(0.5);
 
@@ -298,7 +304,7 @@ export class PlayerBuilder {
     if (this.rightHand) this.rightHand.destroy();
     this.torsoSelected = rightHandSelected;
     const rightHand = this.scene.add
-      .sprite(0, 0, "torso-" + this.torsoSelected, 0)
+      .sprite(0, 0, "torso-" + this.torsoSelected, 20)
       // .setScale(1.4)
       .setOrigin(0.5);
     this.rightHand = rightHand;

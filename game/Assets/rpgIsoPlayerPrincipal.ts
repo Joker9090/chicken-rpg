@@ -11,7 +11,7 @@ export type PositionMatrix = {
 export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
   direction: string = "s";
   group?: Phaser.GameObjects.Group;
-  velocity: number = 2;
+  velocity: number = 4;
   name: string;
   isMoving: boolean = false;
   facingDirection: string = "s";
@@ -20,6 +20,7 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
   distanceBetweenFloors: number
   playerBuilder: PlayerBuilder;
   lastDirection: string = "s";
+  step: 0 | 1 = 0;
 
   constructor(
     scene: RPG,
@@ -62,7 +63,7 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
 
     this.playerBuilder.getContainer().setPosition(this.self.x, this.self.y, this.self.z);
     this.playerBuilder.getContainer().setDepth(this.customDepth || this.self.depth);
-
+    this.self?.setAlpha(0);
     
     //@ts-ignore
     // const head01 = new Phaser.GameObjects.Text(this, 600, 50, "NORMAL HEAD", { fill: "#0f0" });
@@ -580,7 +581,6 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
     this.self.play("idle-" + this.direction);
     this.self.play("walk-" + direction);
 
-
     // trasnform direction into possibleMovement
     const pm = {
       n: PossibleMovements.TOP1,
@@ -594,8 +594,16 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
       e: PossibleMovements.RIGHT2,
       w: PossibleMovements.LEFT2
     }
-    //@ts-ignore
-    this.playerBuilder.selectMovement(pm[direction]);
+    if(this.step == 0) {
+      //@ts-ignore
+      this.playerBuilder.selectMovement(pm[direction]);
+      this.step = 1;
+    } else {
+      //@ts-ignore
+      this.playerBuilder.selectMovement(pm2[direction]);
+      this.step = 0;
+    }
+
 
     this.facingDirection = direction;
     if (this.matrixPosition) {
@@ -622,6 +630,7 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
 
     this.playerBuilder.getContainer().setPosition(this.self.x, this.self.y, this.self.z);
     this.playerBuilder.getContainer().setDepth(this.customDepth || this.self.depth);
+    this.playerBuilder.getContainer().setScale(this.self.scaleX, this.self.scaleY);
 
     if (cursors && !this.isMoving) {
       const { up, down, left, right } = cursors;
