@@ -10,7 +10,7 @@ export default class TestBack extends Phaser.GameObjects.Container {
     night: Phaser.GameObjects.Image;
     stars: Phaser.GameObjects.Image;
     eventCenter = EventsCenterManager.getInstance();
-
+    globalState: globalState;
     constructor(scene: AmbientBackgroundScene, x: number, y: number, width: number, height: number) {
         super(scene, x, y);
         this.scene = scene
@@ -21,8 +21,8 @@ export default class TestBack extends Phaser.GameObjects.Container {
         this.afternoun = scene.add.image(0, 0, "day").setAlpha(0);
         this.night = scene.add.image(0, 0, "night").setAlpha(0);
         this.stars = scene.add.image(0, 0, "stars").setAlpha(0);
-
-
+        this.globalState = this.eventCenter.emitWithResponse(this.eventCenter.possibleEvents.GET_STATE, undefined)
+        this.changeSky(this.globalState.timeOfDay)
         this.add([this.morning, this.middleDay, this.afternoun, this.night, this.stars]);
         this.scene.add.existing(this)
 

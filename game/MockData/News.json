@@ -36,7 +36,7 @@
             "id": 2,
             "missionId": [3],
             "image": "imageDiarioGeneric",
-            "title": "Paseo canino (intermedio)",
+            "title": "Paseo canino 2",
             "description": "Saca a pasear tres perros por el parque.",
             "reward": {
                 "money": 5,
@@ -51,7 +51,7 @@
             "id": 3,
             "missionId": [4],
             "image": "imageDiarioGeneric",
-            "title": "Paseo canino (avanzado)",
+            "title": "Paseo canino 3",
             "description": "Saca a pasear cinco perros por el parque.",
             "reward": {
                 "money": 5,
@@ -83,7 +83,7 @@
             "id": 5,
             "missionId": [6],
             "image": "imageDiarioGeneric",
-            "title": "Delivery express (intermedio)",
+            "title": "Delivery express 2",
             "description": "Reparte los pedidos por la ciudad.",
             "reward": {
                 "money": 5,
@@ -100,7 +100,7 @@
             "id": 6,
             "missionId": [7],
             "image": "imageDiarioGeneric",
-            "title": "Delivery express (avanzado)",
+            "title": "Delivery express 3",
             "description": "Reparte los pedidos por la ciudad.",
             "reward": {
                 "money": 5,
@@ -136,7 +136,7 @@
             "id": 8,
             "missionId": [9],
             "image": "imageDiarioGeneric",
-            "title": "Fotografía de primera (intermedio)",
+            "title": "Fotografía de primera 2",
             "description": "Toma fotos para dos creadores de contenido.",
             "reward": {
                 "money": 5,

@@ -170,14 +170,7 @@ export class ModalQUEST extends ModalBase {
 
         //row 3
         let haveObjects: boolean[] = []
-        if (modalConfig.time + globalData.timeOfDay <= 4) {
-            haveObjects.push(true)
-        } else {
-            haveObjects.push(false)
-            //timeNumber_q.setTint(0xff0000);
-            this.agreeButton.setAlpha(0.5);
-            leftTextButton.setAlpha(0.5);
-        }
+     
         const requirementsData = globalData.missionRequirements.filter((requirement) => modalConfig.requirements.includes(requirement.id));
 
         for (let i = 0; i < requirementsData.length; i++) {
@@ -204,13 +197,27 @@ export class ModalQUEST extends ModalBase {
         const afternoonIcon_q = this.scene.add.image(-80, 10, "iconSun").setScale(1.2);
         const eveningIcon_q = this.scene.add.image(-10, 10, "iconSunset").setScale(1.2);
         const nightIcon_q = this.scene.add.image(60, 10, "iconMoon").setScale(1.2);
-
+        const blocksOfTime = [morningIcon_q, afternoonIcon_q, eveningIcon_q, nightIcon_q];
         //row 5
 
         const morningBar_q = this.scene.add.image(-150, 35, modalConfig.time > 0 ? "barritaOn" : "barritaOff").setScale(1);
         const afternoonBar_q = this.scene.add.image(-80, 35, modalConfig.time > 1 ? "barritaOn" : "barritaOff").setScale(1);
         const eveningBar_q = this.scene.add.image(-10, 35, modalConfig.time > 2 ? "barritaOn" : "barritaOff").setScale(1);
         const nightBar_q = this.scene.add.image(60, 35, modalConfig.time > 3 ? "barritaOn" : "barritaOff").setScale(1);
+        const blocksOfTimeBar = [morningBar_q, afternoonBar_q, eveningBar_q, nightBar_q];
+
+        if (modalConfig.time + globalData.timeOfDay <= 4) {
+            haveObjects.push(true)
+        } else {
+            haveObjects.push(false)
+            //timeNumber_q.setTint(0xff0000);
+            this.agreeButton.setAlpha(0.5);
+            leftTextButton.setAlpha(0.5);
+            for (let i = 0; i < modalConfig.time; i++) {
+                blocksOfTime[i].setTint(0xff0000);
+                blocksOfTimeBar[i].setTint(0xff0000);
+            }
+        }
 
         //row 6
 
@@ -277,10 +284,19 @@ export class ModalQUEST extends ModalBase {
             rightContainer,
         ]);
 
+        const canDoMission = haveObjects.every((haveObject) => haveObject);
+
+        if (!canDoMission) {
+            this.agreeButton.setAlpha(0.5);
+                leftTextButton.setAlpha(0.5);
+        } else {
+            this.agreeButton.setAlpha(1);
+            leftTextButton.setAlpha(1);
+        }
+
         this.agreeButton.on('pointerup', () => {
             // check if haveObjects is all trues
-            const haveAll = haveObjects.every((haveObject) => haveObject);
-            if (haveAll) {
+            if (canDoMission) {
                 modalConfig.agreeFunction(modalConfig.reward, modalConfig.time);
                 this.handleClose();
             }

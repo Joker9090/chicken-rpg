@@ -71,19 +71,19 @@ export class ModalPC extends ModalBase {
                         frontContainer: true
                     }
                 },
-                {
-                    id: 4,
-                    title: "Mochila de delivery",
-                    picture: "bagOff",
-                    pictureOn: "bagOn",
-                    text: "Mochila de delivery",
-                    reward: 100,
-                    hasIt: false,
-                    roomInformation: {
-                        assetInRoom: "",//TODO AGREGAR ASSET CUANDO ESTE
-                        frontContainer: false
-                    }
-                }
+                // {
+                //     id: 4,
+                //     title: "Mochila de delivery",
+                //     picture: "bagOff",
+                //     pictureOn: "bagOn",
+                //     text: "Mochila de delivery",
+                //     reward: 100,
+                //     hasIt: false,
+                //     roomInformation: {
+                //         assetInRoom: "",//TODO AGREGAR ASSET CUANDO ESTE
+                //         frontContainer: false
+                //     }
+                // }
             ],
             agreeFunction: handleAgreeModalRoom,
         }
