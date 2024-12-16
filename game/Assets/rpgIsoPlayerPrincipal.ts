@@ -1,5 +1,5 @@
 import RPG from "../rpg";
-import { PlayerBuilder, PossibleMovements } from "../TestScene";
+import { PlayerBuilder, PossibleMovements } from "../PlayerBuilder";
 import { CubeIsoSpriteBox } from "./cubeIsoSpriteBox";
 import { RpgIsoSpriteBox } from "./rpgIsoSpriteBox";
 

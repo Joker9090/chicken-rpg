@@ -96,50 +96,6 @@ export const FramesForMovements: FramesForMovementsGroupType = {
   },
 }
 
-export default class TestScene extends Phaser.Scene {
-  constructor() {
-    super({ key: "TestScene", active: true });
-  }
-
-  create() {
-    const player = new PlayerBuilder(this);
-
-    this.add.existing(player.getContainer());
-
-    player.getContainer().setPosition(100, 100);
-    //player.selectMovement(PossibleMovements.LEFT2);
-
-    const play = () => {
-      player.chainMovement([
-        PossibleMovements.RIGHT1, PossibleMovements.RIGHT2,PossibleMovements.RIGHT1, PossibleMovements.RIGHT2,
-        PossibleMovements.BOTTOM1, PossibleMovements.BOTTOM2,PossibleMovements.BOTTOM1, PossibleMovements.BOTTOM2,
-        PossibleMovements.LEFT1, PossibleMovements.LEFT2,PossibleMovements.LEFT1, PossibleMovements.LEFT2,
-        PossibleMovements.TOP1, PossibleMovements.TOP2,PossibleMovements.TOP1, PossibleMovements.TOP2,
-      ])
-    }
-    
-
-    //@ts-ignore
-    const head01 = new Phaser.GameObjects.Text(this, 600, 50, "NORMAL HEAD", { fill: "#0f0" });
-    head01.setInteractive().on("pointerdown", () => { 
-      player.buildPlayer("01","01","01","01","01"); 
-      player.stopAllAnimations()
-      play() 
-    })
-    this.add.existing(head01);
-    //@ts-ignore
-    const head02 = new Phaser.GameObjects.Text(this, 600, 150, "PINK HEAD", { fill: "#0f0" });
-    head02.setInteractive().on("pointerdown", () => { 
-      player.buildPlayer("01","01","01","02","01"); 
-      player.stopAllAnimations()
-      play()
-    })
-    this.add.existing(head02);
-  }
-
-  update() {}
-}
-
 export class PlayerBuilder {
   // this is a class to consolidate different player parts and create a player
   private torsoSelected = "01";

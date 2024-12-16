@@ -119,6 +119,8 @@ export class ModalPC extends ModalBase {
             color: '#ffffff',
         }).setOrigin(0.5);
 
+        // const leftTextButton = new ButtonModal(x, y, title, onPointerDown, onPointerUp, disable?: boolean = false)
+
         const tweenButtonOver = (_target: any) => {
             this.activeTween = this.scene.tweens.add({
                 targets: _target,
