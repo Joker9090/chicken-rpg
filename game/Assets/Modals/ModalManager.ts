@@ -30,10 +30,10 @@ export class ModalManager {
             case modalType.PHONE:
                 this.activeModal = new MultiViewModal(this.scene, window.innerWidth / 2, window.innerHeight / 2);
                 break;
-            default:
-                break;
             case modalType.NEWS:
                 this.activeModal = new ModalNews(this.scene, window.innerWidth / 2, window.innerHeight / 2);
+                break;
+            default:
                 break;
         }
     }
