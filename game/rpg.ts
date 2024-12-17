@@ -216,43 +216,6 @@ export default class RPG extends Scene {
     this.tabletNoInteractiveMesh = this.add.rectangle(window.innerWidth / 2, window.innerHeight / 2, window.innerWidth, window.innerHeight, 0x000000, 0).setInteractive().setVisible(false);
 
 
-    // -> ESTO HAY QUE MOVERLO AL FILE DE PLAYER
-    const posiblePositions = [
-      "idle-w",
-      "idle-s",
-      "idle-e",
-      "idle-n",
-      "walk-w",
-      "walk-s",
-      "walk-e",
-      "walk-n",
-    ];
-
-    for (let index = 0; index < 8; index++) {
-      if (index >= 0 && index <= 3) {
-        this.anims.create({
-          key: posiblePositions[index],
-          frames: this.anims.generateFrameNumbers("playerIdle", {
-            start: index === 0 ? 0 : index === 1 ? 20 : index === 2 ? 40 : 60,
-            end: index === 0 ? 19 : index === 1 ? 39 : index === 2 ? 59 : 79,
-          }),
-          frameRate: 20,
-          repeat: -1,
-        });
-      } else {
-        this.anims.create({
-          key: posiblePositions[index],
-          frames: this.anims.generateFrameNumbers("player", {
-            start: index === 4 ? 0 : index === 5 ? 20 : index === 6 ? 40 : 60,
-            end: index === 4 ? 19 : index === 5 ? 39 : index === 6 ? 59 : 79,
-          }),
-          frameRate: 40,
-          repeat: -1,
-        });
-      }
-    }
-    // <- ESTO HAY QUE MOVERLO AL FILE DE PLAYER
-
     // -> SPAWN TILES 
     this.spawnTiles();
     this.spawnObjects();
@@ -379,8 +342,6 @@ export default class RPG extends Scene {
         );
       }
     }
-
-
     
     this.time.delayedCall(300, () => {
       getObjectByType(this, "PIN")?.forEach((_pin: GameObjects.GameObject) => {
