@@ -133,6 +133,11 @@ export default class RPG extends Scene {
         delay: 800,
       })
     }, this);
+
+    this.eventCenter.turnEventOn("RPG", this.eventCenter.possibleEvents.INPROGRESS_MISSION, (missionId: number) => {
+      this.map?.drawMission(missionId)
+    }, this);
+
     // <- SLEEP
     // <- CREATE EVENTS
     //tabletModalTransp
@@ -365,6 +370,8 @@ export default class RPG extends Scene {
       }
     }
 
+
+    
     this.time.delayedCall(300, () => {
       getObjectByType(this, "PIN")?.forEach((_pin: GameObjects.GameObject) => {
         const pin = _pin as unknown as PinIsoSpriteBox;
