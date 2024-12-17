@@ -3,7 +3,9 @@
         {
             "id": 0,
             "title": "Fotos Emblemáticas",
-            "requirements": [3],
+            "requirements": [
+                3
+            ],
             "picture": "fotoCamara",
             "time": 2,
             "description": "Toma una foto en un lugar emblemático de la ciudad",
@@ -12,8 +14,11 @@
                 "reputation": 5,
                 "happiness": 5
             },
-            "available": true,
-            "done": false
+            "available": false,
+            "done": false,
+            "inProgress": false,
+            "isMinigame": false,
+            "draw": false
         },
         {
             "id": 1,
@@ -27,38 +32,40 @@
                 "reputation": 0,
                 "happiness": -5
             },
-            "available": false,
-            "done": false
-        },
-        {
-            "id": 99,
-            "title": "Pasear Perros",
-            "requirements": [],
-            "picture": "walkDogs",
-            "time": 2,
-            "description": "Saca a pasear un perro por el parque.",
-            "reward": {
-                "money": 50,
-                "reputation": 0,
-                "happiness": -5
-            },
             "available": true,
-            "done": false
+            "done": false,
+            "inProgress": false,
+            "isMinigame": true,
+            "configMinigame": {
+                "items": [
+                    {
+                        "matrixRow": 15,
+                        "matrixCol": 15,
+                        "objectNumber": 9
+                    }
+                ]
+            },
+            "draw": false
         },
         {
             "id": 2,
             "title": "Amigos de cuatro patas",
-            "requirements": [6],
+            "requirements": [
+                6
+            ],
             "picture": "walkDogs",
             "time": 0,
             "description": "Dona dinero a un refugio de animales para cuidar a los perros callejeros.",
             "reward": {
                 "money": -50,
                 "reputation": 1,
-                "happiness": 3 
+                "happiness": 3
             },
             "available": false,
-            "done": false
+            "done": false,
+            "inProgress": false,
+            "isMinigame": false,
+            "draw": false
         },
         {
             "id": 3,
@@ -69,116 +76,158 @@
             "reward": {
                 "money": 50,
                 "reputation": 1,
-                "happiness": 3 
-            } ,
+                "happiness": 3
+            },
             "time": 2,
             "available": false,
-            "done": false
+            "done": false,
+            "inProgress": false,
+            "isMinigame": false,
+            "draw": false
         },
         {
             "id": 4,
             "title": "Paseo canino 3",
             "requirements": [],
-            "description":"Saca a pasear cinco perros por el parque.",
+            "description": "Saca a pasear cinco perros por el parque.",
             "picture": "walkDogs",
             "reward": {
                 "money": 150,
                 "reputation": 3,
                 "happiness": -2
-            } ,
+            },
             "time": 2,
             "available": false,
-            "done": false
+            "done": false,
+            "inProgress": false,
+            "isMinigame": false,
+            "draw": false
         },
         {
             "id": 5,
             "title": "Delivery express",
-            "requirements": [1],
+            "requirements": [
+                1
+            ],
             "description": "Reparte los pedidos por la ciudad.",
             "picture": "deliverFood",
             "reward": {
                 "money": 100,
                 "reputation": 3,
                 "happiness": 5
-            } ,
+            },
             "time": 1,
             "available": false,
-            "done": false
+            "done": false,
+            "inProgress": false,
+            "isMinigame": false,
+            "draw": false
         },
         {
             "id": 6,
             "title": "Delivery express 2",
-            "requirements": [1],
+            "requirements": [
+                1
+            ],
             "description": "Reparte los pedidos por la ciudad.",
             "picture": "deliverFood",
             "reward": {
                 "money": 200,
                 "reputation": 5,
                 "happiness": 10
-            } ,
+            },
             "time": 1,
             "available": false,
-            "done": false
+            "done": false,
+            "inProgress": false,
+            "isMinigame": false,
+            "draw": false
         },
         {
             "id": 7,
             "title": "Delivery express 3",
-            "requirements": [1], 
+            "requirements": [
+                1
+            ],
             "description": "Reparte los pedidos por la ciudad.",
             "picture": "deliverFood",
             "reward": {
                 "money": 300,
                 "reputation": 5,
                 "happiness": 10
-            } ,
+            },
             "time": 1,
             "available": false,
-            "done": false
+            "done": false,
+            "inProgress": false,
+            "isMinigame": false,
+            "draw": false
         },
         {
             "id": 8,
             "title": "Fotografía de primera",
-            "requirements": [3, 4],
+            "requirements": [
+                3,
+                4
+            ],
             "description": "Toma fotos para un creador de contenido.",
             "picture": "fotoCamara",
             "reward": {
                 "money": 50,
                 "reputation": 2,
                 "happiness": 5
-            } ,
+            },
             "time": 2,
             "available": false,
-            "done": false
+            "done": false,
+            "inProgress": false,
+            "isMinigame": false,
+            "draw": false
         },
         {
             "id": 9,
             "title": "Fotografía de primera 2",
-            "requirements": [1, 3, 4],
+            "requirements": [
+                1,
+                3,
+                4
+            ],
             "description": "Toma fotos para dos creadores de contenido.",
             "picture": "fotoCamara",
             "reward": {
                 "money": 100,
                 "reputation": 5,
                 "happiness": 8
-            } ,
+            },
             "time": 2,
             "available": false,
-            "done": false
+            "done": false,
+            "inProgress": false,
+            "isMinigame": false,
+            "draw": false
         },
         {
             "id": 10,
             "title": "Fotografía de primera 3",
-            "requirements": [1, 3, 4, 5],
+            "requirements": [
+                1,
+                3,
+                4,
+                5
+            ],
             "description": "Toma fotos para dos creadores de contenido y edítalas.",
             "picture": "fotoCamara",
             "reward": {
                 "money": 150,
                 "reputation": 10,
                 "happiness": 10
-            } ,
+            },
             "time": 2,
             "available": false,
-            "done": false
+            "done": false,
+            "inProgress": false,
+            "isMinigame": false,
+            "draw": false
         },
         {
             "id": 11,
@@ -190,10 +239,13 @@
                 "money": 50,
                 "reputation": 20,
                 "happiness": 5
-            } ,
+            },
             "time": 2,
             "available": false,
-            "done": false
+            "done": false,
+            "inProgress": false,
+            "isMinigame": true,
+            "draw": false
         },
         {
             "id": 12,
@@ -205,40 +257,53 @@
                 "money": 0,
                 "reputation": 25,
                 "happiness": -15
-            } ,
+            },
             "time": 1,
             "available": false,
-            "done": false
+            "done": false,
+            "inProgress": false,
+            "isMinigame": true,
+            "draw": false
         },
         {
             "id": 13,
             "title": "¡Nuevos empleos!",
-            "requirements": [1],
+            "requirements": [
+                1
+            ],
             "description": "Hay más locales que requieren delivery express, realiza encargos más desafiantes.",
             "picture": "deliverFood",
             "reward": {
                 "money": 200,
                 "reputation": 5,
                 "happiness": 5
-            } ,
+            },
             "time": 1,
             "available": false,
-            "done": true
+            "done": true,
+            "inProgress": false,
+            "isMinigame": false,
+            "draw": false
         },
         {
             "id": 14,
             "title": "Calles obstruidas",
-            "requirements": [1],
+            "requirements": [
+                1
+            ],
             "description": "Las calles de la ciudad están siendo arregladas, todos los encargos demorarán un poco más de lo planeado.",
             "picture": "defaultImage",
             "reward": {
                 "money": 50,
                 "reputation": -10,
                 "happiness": -15
-            } ,
+            },
             "time": 2,
             "available": false,
-            "done": false
+            "done": false,
+            "inProgress": false,
+            "isMinigame": false,
+            "draw": false
         }
     ]
 }

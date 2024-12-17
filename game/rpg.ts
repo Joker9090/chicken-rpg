@@ -17,7 +17,7 @@ import AmbientBackgroundScene from "./ambientAssets/backgroundScene";
 import AmbientFrontgroundScene from "./ambientAssets/frontgroundScene";
 import EventsCenterManager from "./services/EventsCenter";
 import { ModalManager } from "./Assets/Modals/ModalManager";
-import { modalType } from "./Assets/Modals/ModalTypes";
+import { missionsType, modalType } from "./Assets/Modals/ModalTypes";
 import TabletScene from "./TabletScene";
 
 // import UIScene from "./UIScene";
@@ -133,21 +133,30 @@ export default class RPG extends Scene {
         delay: 800,
       })
     }, this);
-
-    this.eventCenter.turnEventOn("RPG", this.eventCenter.possibleEvents.INPROGRESS_MISSION, (missionId: number) => {
-      this.map?.drawMission(missionId)
-    }, this);
-
     // <- SLEEP
-    // <- CREATE EVENTS
-    //tabletModalTransp
+    // -> DRAW MINIGAME
+    this.eventCenter.turnEventOn("RPG", this.eventCenter.possibleEvents.START_MINIGAME, (mission: missionsType)=>{
+      this.map?.drawMinigame(mission)
+      this.time.delayedCall(1000, ()=>{
+        this.mapBlueprint = this.map?.map.map((m) => (typeof m === "string" ? m : JSON.stringify(m)));
+        //@ts-ignore
+        this.spawnTiles(this.mapBlueprint?.length - 1, 1);
+        //@ts-ignore
+        this.UICamera?.ignore(this.isoGroup);
+
+      })
+    } ,this);
+    // <- DRAW MINIGAME
+    // -> TABLET 
     EventsCenterManager.turnEventOn("RPG", EventsCenterManager.possibleEvents.OPEN_TABLET_MENU, () => {
       this.tabletNoInteractiveMesh?.setVisible(true);
     }, this);
-
+    
     EventsCenterManager.turnEventOn("RPG", EventsCenterManager.possibleEvents.CLOSE_TABLET_MENU, () => {
       this.tabletNoInteractiveMesh?.setVisible(false);
     }, this);
+    // <- TABLET
+    // <- CREATE EVENTS
 
   }
 
@@ -194,10 +203,12 @@ export default class RPG extends Scene {
   }
 
   create() {
+
     this.isoGroup = this.add.group();
     this.isoPhysics.world.setBounds(-1024, -1024, 1024 * 2, 1024 * 4);
     this.isoPhysics.projector.origin.setTo(0.5, 0.3); // permitime dudas
-    this.isoPhysics.world.gravity.setTo(0); // permitime dudas
+    // this.isoPhysics.world.gravity.setTo(0); // permitime dudas
+    // this.isoPhysics.world.gravity.setTo(1000)
     const ee = this.events;
     this.eventEmitter = ee;
     this.scale.resize(window.innerWidth, window.innerHeight);
@@ -398,7 +409,6 @@ export default class RPG extends Scene {
 
   spawnObjects() {
     if (this.mapBlueprint) {
-
       let scalar = 0;
       let h;
       const _lvlConf = this.mapBlueprint[0];
@@ -496,39 +506,25 @@ export default class RPG extends Scene {
 
   }
 
-  spawnTiles() {
+  spawnTiles(startIn: number = 2, startHeight: number = 0) {
     if (this.mapBlueprint) {
       const self = this;
       let pos = 0;
       let h: number;
-      // this.makeTransition("RPG", undefined, { maps: map2.map((m) => (typeof m === "string" ? m : JSON.stringify(m))) });
       const _lvlConf = this.mapBlueprint[0];
       const lvlConf = JSON.parse(_lvlConf);
 
       this.distanceBetweenFloors = lvlConf.distanceBetweenFloors;
       h = this.distanceBetweenFloors;
 
-      // function tweenTile(tile: RpgIsoSpriteBox) {
-      //   return () => {
-      //     self.tweens.add({
-      //       targets: tile.self,
-      //       isoZ: tile.isoZ + 10,
-      //       duration: 200,
-      //       yoyo: true,
-      //       repeat: 0,
-      //     });
-      //   };
-      // }
-
       let scalar = 0;
-      let startOnMap = 2;
-
+      let startOnMap = startIn;
       for (let index = startOnMap; index < this.mapBlueprint.length; index++) {
         // reverse the map string
         const map = this.mapBlueprint[index];
-
         // const h = 1000 + index * 600;
-        scalar = index - startOnMap;
+        scalar = index - startOnMap + startHeight;
+        if (index === startOnMap) console.log(scalar)
         const m = new MapManager(map, this as any);
         const conf = {
           height: h * scalar,

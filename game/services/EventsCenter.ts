@@ -50,6 +50,8 @@ class EventsCenterManager extends Phaser.Events.EventEmitter {
 
                 MAKE_MISSION: "makeMission", // MAKE A MISSION
                 INPROGRESS_MISSION: "inprogressMission", // INPROGRESS A MISSION
+                START_MINIGAME: "startMinigame", // INPROGRESS A MISSION
+                DRAW_MINIGAME: "drawMinigame", // INPROGRESS A MISSION
                 ADD_MISSION: "addMission", // ADD A MISSION
                 CHECK_MISSION_REQUIREMENTS: "checkMissionRequirements", // CHECK MISSION REQUIREMENTS TO MAKE IT
 

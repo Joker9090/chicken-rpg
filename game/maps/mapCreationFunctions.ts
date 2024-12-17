@@ -10,6 +10,25 @@ export const createBase = (n: number, playerPos: number[] = [0, 0]): string => {
     const builded = _mn.map((row) => row.join(" ")).join("\n");
     return builded;
   };
+
+  export type configMinigame = {
+    items: {
+      matrixRow: number
+      matrixCol: number
+      objectNumber: number
+    }[]
+  }
+
+  export const createMinigame = (n: number, config: configMinigame): string => {
+    let _mn: number[][] = new Array(n).fill(new Array(n).fill(0));
+    _mn = _mn.map((row, i) => row.map((_, j) => Number(0)));
+  
+    for(let i = 0; i < config.items.length; i++) {
+      _mn[config.items[i].matrixCol][config.items[i].matrixRow] = config.items[i].objectNumber;
+    }
+    const builded = _mn.map((row) => row.join(" ")).join("\n");
+    return builded;
+  };
   
   export const createGrass = (
     n: number,

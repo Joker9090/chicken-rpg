@@ -1,3 +1,5 @@
+import { configMinigame } from "@/game/maps/mapCreationFunctions";
+
 export type ProductToBuy = {
     id: number,
     title: string,
@@ -93,6 +95,10 @@ export type newsType = {
     },
     available: boolean
     done: boolean
+    inProgress: boolean
+    isMinigame: boolean
+    draw: boolean
+    configMinigame?: configMinigame
   }
   
   export type happinessType = {

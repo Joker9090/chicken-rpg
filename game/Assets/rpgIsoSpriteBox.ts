@@ -41,7 +41,7 @@ export class RpgIsoSpriteBox extends IsoSprite {
     this.self = this as unknown as Phaser.Physics.Arcade.Sprite;
     this.self.setAlpha(1)
     group?.add(this.self);
-    //this.scene.isoPhysics.world.enable(this);
+    // this.scene.isoPhysics.world.enable(this);
     this.scene.add.existing(this.self);
     if(interactivityPosition) {
       this.self.setInteractive(new Phaser.Geom.Rectangle(
@@ -54,7 +54,6 @@ export class RpgIsoSpriteBox extends IsoSprite {
     }
     
     const body = this.body as Physics.Arcade.Body
-    
     // body.collideWorldBounds = true;
     this.container = scene.add.container(0, 0);
     this.init(x,y,z)

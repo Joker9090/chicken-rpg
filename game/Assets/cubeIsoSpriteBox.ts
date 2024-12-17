@@ -24,7 +24,6 @@ export class CubeIsoSpriteBox extends RpgIsoSpriteBox {
     distanceBetweenFloors: number = 50
   ) {
     super(scene, x, y, z, texture, frame, group, matrixPosition, interactivityPosition);
-
     this.self.setScale(0.9);
     this.distanceBetweenFloors = distanceBetweenFloors;
     // this.scene.add.existing(this.self);
