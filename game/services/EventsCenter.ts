@@ -49,6 +49,7 @@ class EventsCenterManager extends Phaser.Events.EventEmitter {
                 MISSIONS_UPDATE: "missionsUpdate", // COMPLETES A MISSION = REWARD + TIME PASS
 
                 MAKE_MISSION: "makeMission", // MAKE A MISSION
+                INPROGRESS_MISSION: "inprogressMission", // INPROGRESS A MISSION
                 ADD_MISSION: "addMission", // ADD A MISSION
                 CHECK_MISSION_REQUIREMENTS: "checkMissionRequirements", // CHECK MISSION REQUIREMENTS TO MAKE IT
 

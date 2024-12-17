@@ -29,7 +29,8 @@ export class ModalQUEST extends ModalBase {
         const missionsSelected = availableMissions[Math.floor(Math.random() * availableMissions.length)];
 
         const handleAgreeModal = (amount: number, timePass: number) => {
-            this.eventCenter.emitEvent(this.eventCenter.possibleEvents.MAKE_MISSION, missionsSelected.id);
+            // this.eventCenter.emitEvent(this.eventCenter.possibleEvents.MAKE_MISSION, missionsSelected.id);
+            this.eventCenter.emitEvent(this.eventCenter.possibleEvents.INPROGRESS_MISSION, missionsSelected.id);
             if (pin) {
                 pin.self.destroy();
             }

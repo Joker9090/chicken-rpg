@@ -31,6 +31,7 @@ export type globalState = {
   allMissions: missionsType[];
   availableMissions: missionsType[];
   doneMissions: missionsType[];
+  inProgressMissions: missionsType[];
 }
 
 export default class GlobalDataManager extends Phaser.Scene {
@@ -96,6 +97,25 @@ export default class GlobalDataManager extends Phaser.Scene {
             this.eventCenter.emit(this.eventCenter.possibleEvents.TIME_CHANGE, mission.time);
           })
         }
+      }
+    }, this);
+
+    this.eventCenter.turnEventOn("GlobalDataManager", this.eventCenter.possibleEvents.INPROGRESS_MISSION, (missionId: number) => {
+      const mission = this.state.availableMissions.find((mission) => mission.id === missionId);
+      console.log("ENTRO ACA",mission,missionId)
+      if (mission) {
+        const newAvailableMissions = this.state.availableMissions.filter((mission) => mission.id !== missionId);
+        const newInprogressMissions = [...this.state.inProgressMissions, { ...mission, inProgress: true, draw:false }];
+        console.log("newInprogressMissions",newInprogressMissions)
+        console.log("newAvailableMissions",newAvailableMissions)
+        const keysToBeChanged = ["availableMissions","inProgressMissions"];
+        
+        const valuesToBeChanged = [
+          newAvailableMissions,
+          newInprogressMissions,
+        ];
+        this.changeState(keysToBeChanged, valuesToBeChanged);
+       
       }
     }, this);
 
@@ -177,6 +197,7 @@ export default class GlobalDataManager extends Phaser.Scene {
       news: newsMockData.news,
 
       missionRequirements: missionRequirementsMockData.requirements,
+      inProgressMissions: [],
       allMissions: missionsMockData.missions,
       availableMissions: missionsMockData.missions.filter((mission) => mission.available),
       doneMissions: missionsMockData.missions.filter((mission) => mission.done),

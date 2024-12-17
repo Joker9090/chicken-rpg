@@ -171,4 +171,8 @@ export default class City {
       this.scene.player.self.setScale(0.7);
     }
   }
+
+  drawMission(missionId: number){
+    console.log("drawMission", missionId)
+  }
 }

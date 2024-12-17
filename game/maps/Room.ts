@@ -205,4 +205,8 @@ export default class Room {
     // <- ITEMS IN INVENTORY FROM GLOBAL STATE
 
   }
+
+  drawMission(missionId: number){
+    console.log("NOT IMPLEMENTED")
+  }
 }
