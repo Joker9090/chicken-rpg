@@ -31,6 +31,7 @@ export type globalState = {
   allMissions: missionsType[];
   availableMissions: missionsType[];
   doneMissions: missionsType[];
+  inProgressMissions: missionsType[];
 }
 
 export default class GlobalDataManager extends Phaser.Scene {
@@ -74,21 +75,28 @@ export default class GlobalDataManager extends Phaser.Scene {
     this.eventCenter.turnEventOn("GlobalDataManager", this.eventCenter.possibleEvents.MAKE_MISSION, (missionId: number) => {
       const mission = this.state.availableMissions.find((mission) => mission.id === missionId);
       if (mission) {
-        const keysToBeChanged = ["playerMoney", "doneMissions", "availableMissions", "reputation", "happiness"];
+        const keysToBeChanged = ["playerMoney", "doneMissions", "inProgressMissions", "reputation", "happiness", "allMissions"];
+        const newAllMissions = this.state.allMissions
+        newAllMissions.filter((mission) => mission.id !== missionId);
+        newAllMissions.push({ ...mission, inProgress: false, done: true });
         const newMoney = this.state.playerMoney + mission.reward.money;
         const newDoneMissions = [...this.state.doneMissions, { ...mission, done: true }];
-        const newAvailableMissions = this.state.availableMissions.filter((mission) => mission.id !== missionId);
+        const newInprogressMissions = this.state.inProgressMissions.filter((mission) => mission.id !== missionId);
+
         const newReputation = this.state.reputation + mission.reward.reputation;
+        
         const newHappiness = {
           actualValue: this.state.happiness.actualValue + mission.reward.happiness,
           maxValue: this.state.happiness.maxValue
         }
+
         const valuesToBeChanged = [
           newMoney,
           newDoneMissions,
-          newAvailableMissions,
+          newInprogressMissions,
           newReputation,
-          newHappiness
+          newHappiness,
+          newAllMissions
         ];
         this.changeState(keysToBeChanged, valuesToBeChanged);
         if (mission.time > 0){
@@ -98,6 +106,42 @@ export default class GlobalDataManager extends Phaser.Scene {
         }
       }
     }, this);
+
+    this.eventCenter.turnEventOn("GlobalDataManager", this.eventCenter.possibleEvents.INPROGRESS_MISSION, (missionId: number) => {
+      const mission = this.state.availableMissions.find((mission) => mission.id === missionId);
+      if (mission) {
+        const newAllMissions = this.state.allMissions
+        newAllMissions.filter((mission) => mission.id !== missionId);
+        newAllMissions.push({ ...mission, inProgress: true });
+        const newAvailableMissions = this.state.availableMissions.filter((mission) => mission.id !== missionId);
+        const newInprogressMissions = [...this.state.inProgressMissions, { ...mission, inProgress: true }];
+        const keysToBeChanged = ["allMissions", "availableMissions","inProgressMissions"];
+        
+        const valuesToBeChanged = [
+          newAllMissions,
+          newAvailableMissions,
+          newInprogressMissions,
+        ];
+        this.changeState(keysToBeChanged, valuesToBeChanged);
+        if (mission.isMinigame){
+          this.eventCenter.emit(this.eventCenter.possibleEvents.START_MINIGAME, mission);
+        } else {
+          this.eventCenter.emit(this.eventCenter.possibleEvents.MAKE_MISSION, missionId);
+        }
+      }
+    }, this);
+
+    this.eventCenter.turnEventOn("GlobalDataManager", this.eventCenter.possibleEvents.DRAW_MINIGAME, (missionId: number)=>{
+      const mission = this.state.inProgressMissions.find((mission) => mission.id === missionId);
+      if (mission) {
+        const newAllMissions = this.state.allMissions
+        newAllMissions.filter((mission) => mission.id !== missionId);
+        newAllMissions.push({ ...mission, draw: true });
+        const newInprogressMissions = this.state.availableMissions
+        newInprogressMissions.push({ ...mission, draw: true });
+        this.changeState(["allMissions", "inProgressMissions"], [newAllMissions ,newInprogressMissions]);
+      }
+    } ,this);
 
     this.eventCenter.turnEventOn("GlobalDataManager", this.eventCenter.possibleEvents.ADD_MISSION, (missionId: number) => {
       const mission = this.state.allMissions.find((mission) => mission.id === missionId);
@@ -166,7 +210,7 @@ export default class GlobalDataManager extends Phaser.Scene {
       reputation: 10,
       happiness: tabletMockData.happiness,
 
-      timeOfDay: 4,
+      timeOfDay: 1,
       hoursPassed: 0,
       sleepping: false,
 
@@ -177,9 +221,10 @@ export default class GlobalDataManager extends Phaser.Scene {
       news: newsMockData.news,
 
       missionRequirements: missionRequirementsMockData.requirements,
-      allMissions: missionsMockData.missions,
-      availableMissions: missionsMockData.missions.filter((mission) => mission.available),
-      doneMissions: missionsMockData.missions.filter((mission) => mission.done),
+      inProgressMissions: [],
+      allMissions: missionsMockData.missions as missionsType[],
+      availableMissions: missionsMockData.missions.filter((mission) => mission.available) as missionsType[],
+      doneMissions: missionsMockData.missions.filter((mission) => mission.done) as missionsType[],
     };
   }
 

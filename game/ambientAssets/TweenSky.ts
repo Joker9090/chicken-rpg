@@ -2,7 +2,7 @@ import { globalState } from "../GlobalDataManager";
 import EventsCenterManager from "../services/EventsCenter";
 import AmbientBackgroundScene from "./backgroundScene";
 
-export default class TestBack extends Phaser.GameObjects.Container {
+export default class TweenSky extends Phaser.GameObjects.Container {
     scene: AmbientBackgroundScene
     morning: Phaser.GameObjects.Rectangle;
     middleDay: Phaser.GameObjects.Rectangle;
@@ -13,7 +13,7 @@ export default class TestBack extends Phaser.GameObjects.Container {
     globalState: globalState;
     stateBackground: "RUNNING" | "IDLE" = "IDLE"
     ANIM_DURATION = 800
-
+    oldTimeOfDay: number = 1
     constructor(scene: AmbientBackgroundScene, x: number, y: number, width: number, height: number) {
         super(scene, x, y);
         this.scene = scene
@@ -23,14 +23,17 @@ export default class TestBack extends Phaser.GameObjects.Container {
         this.night = scene.add.image(0, 0, "night").setAlpha(0);
         this.stars = scene.add.image(0, 0, "stars").setAlpha(0);
         this.globalState = this.eventCenter.emitWithResponse(this.eventCenter.possibleEvents.GET_STATE, undefined)
-        console.log(this.globalState.timeOfDay, this.night, this.stars)
+        this.oldTimeOfDay = this.globalState.timeOfDay
         this.changeSky(this.globalState.timeOfDay)
         this.add([this.morning, this.middleDay, this.afternoun, this.night, this.stars]);
         this.scene.add.existing(this)
 
         this.eventCenter.turnEventOn("AmbientBackgroundScene", this.eventCenter.possibleEvents.UPDATE_STATE, () => {
             const globalState = this.eventCenter.emitWithResponse(this.eventCenter.possibleEvents.GET_STATE, undefined)
-            this.changeSky(globalState.timeOfDay)
+            if (globalState.timeOfDay !== this.oldTimeOfDay) {
+                this.oldTimeOfDay = globalState.timeOfDay
+                this.changeSky(globalState.timeOfDay)
+            }
         }, this.scene)
     }
 

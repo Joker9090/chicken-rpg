@@ -3,13 +3,14 @@ import { changeSceneTo } from "../helpers/helpers";
 import EventsCenter from "../services/EventsCenter";
 import RPG from "../rpg";
 import { globalState } from "../GlobalDataManager";
-import { Inventory, ModalConfig, modalType, ProductToBuy } from "../Assets/Modals/ModalTypes";
+import { Inventory, missionsType, ModalConfig, modalType, ProductToBuy } from "../Assets/Modals/ModalTypes";
 import AmbientBackgroundScene from "../ambientAssets/backgroundScene";
 
 export default class Room {
 
   scene: RPG;
   map: any[];
+  minigameMap: any;
   interactiveComputer?: Phaser.GameObjects.Rectangle;
   interactiveDoor?: Phaser.GameObjects.Rectangle;
   interactiveBed?: Phaser.GameObjects.Rectangle;
@@ -167,9 +168,7 @@ export default class Room {
     let cama = this.scene.add.image(this.imagesPositions.x, this.imagesPositions.y, "cama").setOrigin(0.5).setVisible(false);
     this.interactiveBed = this.scene.add.rectangle(-150, 20, 130, 200, 0x6666ff, 0).setRotation(Math.PI / 3).setInteractive();
     this.interactiveBed.on('pointerdown', () => {
-      console.log("ENTRO ACA 1", globalState.sleepping)
       if (!this.sleeping) {
-        console.log("ENTRO ACA")
         this.sleeping = true;
         this.eventCenter.emitEvent(this.eventCenter.possibleEvents.SLEEP, undefined);
       }
@@ -204,5 +203,9 @@ export default class Room {
     this.drawItems(globalState.inventary);
     // <- ITEMS IN INVENTORY FROM GLOBAL STATE
 
+  }
+
+  drawMinigame(missionId: missionsType){
+    
   }
 }

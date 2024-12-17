@@ -1,5 +1,5 @@
 import BackgroundMenu from "./backgroundMenu";
-import TestBack from "./testBack";
+import TweenSky from "./TweenSky";
 
 
 export default class AmbientBackgroundScene extends Phaser.Scene{
@@ -27,7 +27,7 @@ export default class AmbientBackgroundScene extends Phaser.Scene{
                 this.container = new BackgroundMenu(this, this.middlePoint.x, this.middlePoint.y, this.middlePoint.x*2, this.middlePoint.y*2);
                 break;
             case "DayAndNight":
-                this.container = new TestBack(this, this.middlePoint.x, this.middlePoint.y, this.middlePoint.x*2, this.middlePoint.y*2);
+                this.container = new TweenSky(this, this.middlePoint.x, this.middlePoint.y, this.middlePoint.x*2, this.middlePoint.y*2);
                 break;
         }
         

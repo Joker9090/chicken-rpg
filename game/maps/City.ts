@@ -1,14 +1,16 @@
 import { buidling1, buidling3, buidling4, rotateBuilding } from "./buildings";
-import { generateBuildings, createBase, createSideWalk, createStreets, createGrass, addItems } from "./mapCreationFunctions";
+import { generateBuildings, createBase, createSideWalk, createStreets, createGrass, addItems, createMinigame } from "./mapCreationFunctions";
 import { ObjetsConfig } from "./mapTypes";
 import { RpgIsoSpriteBox } from "../Assets/rpgIsoSpriteBox";
 import { changeSceneTo } from "../helpers/helpers";
 import RPG from "../rpg";
 import EventsCenter from "../services/EventsCenter";
+import { missionsType } from "../Assets/Modals/ModalTypes";
 
 export default class City {
   scene: RPG;
   map: any[];
+  minigameMap: any;
   eventCenter = EventsCenter.getInstance();
   constructor(scene: RPG) {
     this.scene = scene;
@@ -118,6 +120,7 @@ export default class City {
           "7": "SEMIBLOQUE",
           "8": "TREE",
           "9": "CUBE",
+          "13": "ENDPOINT",
           "15": "PIN",
           "16": "TRAFFIC-LIGHT-A",
           "17": "TRAFFIC-LIGHT-B",
@@ -150,7 +153,7 @@ export default class City {
       },
 
       // MAP PLAYER / ITEMS CONFIG
-      [createBase(40, [15, 15])],
+      [createBase(40, [18, 18])],
       createSideWalk(createStreets(createGrass(40, false), streetConfig, false) as number[][], sideWalkConfig, true) as number[][],
       ...buildings.map((_buildings, index) => {
         const items = objects.filter(
@@ -170,5 +173,13 @@ export default class City {
     if (this.scene.player) {
       this.scene.player.self.setScale(0.7);
     }
+  }
+
+  drawMinigame(mission: missionsType){
+    console.log(mission, 'mission', this.scene)
+    if (mission.configMinigame && !mission.draw) {
+      this.map.push(createMinigame(40, mission.configMinigame))
+      this.eventCenter.emitEvent(this.eventCenter.possibleEvents.DRAW_MINIGAME, mission.id)
+    } 
   }
 }
