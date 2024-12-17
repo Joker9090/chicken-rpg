@@ -37,11 +37,17 @@
             "inProgress": false,
             "isMinigame": true,
             "configMinigame": {
+                "type": "PUSH_OBJECT",
                 "items": [
                     {
                         "matrixRow": 15,
                         "matrixCol": 15,
                         "objectNumber": 9
+                    },
+                    {
+                        "matrixRow": 15,
+                        "matrixCol": 16,
+                        "objectNumber": 13
                     }
                 ]
             },

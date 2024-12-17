@@ -619,6 +619,7 @@ export class RpgIsoPlayerPrincipal extends RpgIsoSpriteBox {
         this.tweenTileBox(tile, direction);
       } else if (tile && object) {
         if (object.type == "CUBE") {
+
           (object as CubeIsoSpriteBox).moveCube(this);
         }
       }

@@ -143,7 +143,6 @@ export default class RPG extends Scene {
         this.spawnTiles(this.mapBlueprint?.length - 1, 1);
         //@ts-ignore
         this.UICamera?.ignore(this.isoGroup);
-
       })
     } ,this);
     // <- DRAW MINIGAME
@@ -572,6 +571,9 @@ export default class RPG extends Scene {
                 break;
               case "CUBE":
                 this.tileCreator.createCubeTile(b, c, that, conf, pos, "cube1");
+                break;
+                case "ENDPOINT":
+                  this.tileCreator.createEndpointTile(b, c, that, conf, pos, "cube1", true);
                 break;
               case "PIN":
                 this.tileCreator.createPinTile(b, c, that, conf, pos, "pin");

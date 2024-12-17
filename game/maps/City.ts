@@ -120,6 +120,7 @@ export default class City {
           "7": "SEMIBLOQUE",
           "8": "TREE",
           "9": "CUBE",
+          "13": "ENDPOINT",
           "15": "PIN",
           "16": "TRAFFIC-LIGHT-A",
           "17": "TRAFFIC-LIGHT-B",

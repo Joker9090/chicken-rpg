@@ -21,11 +21,17 @@ export class CubeIsoSpriteBox extends RpgIsoSpriteBox {
     group?: Phaser.GameObjects.Group,
     matrixPosition?: {x: number, y: number, h: number},
     interactivityPosition?: {x: number, y: number, w: number, h: number},
-    distanceBetweenFloors: number = 50
+    distanceBetweenFloors: number = 50,
+    isEndpoint: boolean = false
   ) {
     super(scene, x, y, z, texture, frame, group, matrixPosition, interactivityPosition);
     this.self.setScale(0.9);
     this.distanceBetweenFloors = distanceBetweenFloors;
+    if (isEndpoint){
+       this.type = "ENDPOINT";
+       this.self.setAlpha(0.2);
+       this.self.setTint(0x00ff00);
+      }
     // this.scene.add.existing(this.self);
   }
 
@@ -46,7 +52,7 @@ export class CubeIsoSpriteBox extends RpgIsoSpriteBox {
         
         const newMatrixPos = {x:this.matrixPosition.x + (distance.x), y: this.matrixPosition.y + (distance.y), h: 0};
         const nextTileToCube = player?.getObjectAt(newMatrixPos);
-
+        
         if(nextTileToCube) {
           this.scene.tweens.add({
             targets: this.self,

@@ -238,6 +238,41 @@ export default class TileCreator {
         );
     }
 
+    createEndpointTile(
+        b: number,
+        c: number,
+        that: MapManager,
+        conf: ConfObjectType,
+        pos: number,
+        tile: string,
+        isEndpoint: boolean = false
+    ) {
+        const { game, setPosFromAnchor } = that;
+        const { height } = conf;
+        const x = setPosFromAnchor(b, c).x;
+        const y = setPosFromAnchor(b, c).y;
+        let tileObj;
+        let matrixPosition = {
+            x: b,
+            y: c,
+            h: height,
+        };
+
+        tileObj = new CubeIsoSpriteBox(
+            game,
+            x,
+            y,
+            height,
+            tile,
+            0,
+            this.scene.isoGroup,
+            matrixPosition,
+            undefined,
+            this.scene.distanceBetweenFloors,
+            isEndpoint
+        );
+    }
+
     createBuilding(
         b: number,
         c: number,

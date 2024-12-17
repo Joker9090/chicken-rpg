@@ -222,9 +222,9 @@ export default class GlobalDataManager extends Phaser.Scene {
 
       missionRequirements: missionRequirementsMockData.requirements,
       inProgressMissions: [],
-      allMissions: missionsMockData.missions,
-      availableMissions: missionsMockData.missions.filter((mission) => mission.available),
-      doneMissions: missionsMockData.missions.filter((mission) => mission.done),
+      allMissions: missionsMockData.missions as missionsType[],
+      availableMissions: missionsMockData.missions.filter((mission) => mission.available) as missionsType[],
+      doneMissions: missionsMockData.missions.filter((mission) => mission.done) as missionsType[],
     };
   }
 
