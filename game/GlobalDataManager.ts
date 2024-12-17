@@ -102,12 +102,9 @@ export default class GlobalDataManager extends Phaser.Scene {
 
     this.eventCenter.turnEventOn("GlobalDataManager", this.eventCenter.possibleEvents.INPROGRESS_MISSION, (missionId: number) => {
       const mission = this.state.availableMissions.find((mission) => mission.id === missionId);
-      console.log("ENTRO ACA",mission,missionId)
       if (mission) {
         const newAvailableMissions = this.state.availableMissions.filter((mission) => mission.id !== missionId);
         const newInprogressMissions = [...this.state.inProgressMissions, { ...mission, inProgress: true, draw:false }];
-        console.log("newInprogressMissions",newInprogressMissions)
-        console.log("newAvailableMissions",newAvailableMissions)
         const keysToBeChanged = ["availableMissions","inProgressMissions"];
         
         const valuesToBeChanged = [
