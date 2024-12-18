@@ -1,6 +1,3 @@
-//hace una clase ModalFormQuestion que sea un container que le vamos a pasar un array con un question(texto), y 4 posibles respuestas que van a ser de tipo LargeButtonWithText
-//que se van a crear en el constructor, y que se van a añadir al container
-
 import { formQuestionType } from "@/game/maps/mapCreationFunctions";
 import { LargeButtonWithText } from "../ModalComponents/LargeButtonWithText";
 

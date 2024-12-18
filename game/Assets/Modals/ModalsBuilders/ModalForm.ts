@@ -27,7 +27,6 @@ export class ModalForm extends ModalBase {
         const allNews = globalData.news
 
         const globalFakeData = {
-            // array de question answers tipo formQuestionType
             items: [
                 {
                     question: "¿Cuál es la capital de Francia?",
