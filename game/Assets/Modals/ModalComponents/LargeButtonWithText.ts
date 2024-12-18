@@ -37,7 +37,7 @@ export class LargeButtonWithText extends Phaser.GameObjects.Container {
             color: '#ffffff',
             wordWrap: { width: width },
             fixedWidth: width,
-            fixedHeight: height,
+            fixedHeight: 0,
         }).setAlign('center').setOrigin(0.5);
         
 

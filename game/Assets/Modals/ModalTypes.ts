@@ -31,6 +31,7 @@ export enum modalType {
     PC,
     NEWS,
     PHONE,
+    FORM,
   }
 
 export type ModalConfig = {

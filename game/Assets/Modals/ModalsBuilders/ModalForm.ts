@@ -2,6 +2,8 @@ import RPG from "@/game/rpg";
 import EventsCenterManager from "../../../services/EventsCenter";
 import { ModalBase } from "./ModalBase";
 import { globalState } from "@/game/GlobalDataManager";
+import { ModalFormQuestion } from "./ModalFormQuestion";
+import { formQuestionType } from "@/game/maps/mapCreationFunctions";
 
 
 
@@ -9,6 +11,8 @@ export class ModalForm extends ModalBase {
     scene: RPG;
     agreeButton: Phaser.GameObjects.Image;
     activeTween: Phaser.Tweens.Tween | null = null;
+    lastIndex: number = 0;
+    questionsContainer: Phaser.GameObjects.Container;
 
     constructor(
         scene: RPG,
@@ -22,6 +26,70 @@ export class ModalForm extends ModalBase {
 
         const allNews = globalData.news
 
+        const globalFakeData = {
+            // array de question answers tipo formQuestionType
+            items: [
+                {
+                    question: "¿Cuál es la capital de Francia?",
+                    answers: [
+                        { text: "Madrid", isCorrect: false },
+                        { text: "París", isCorrect: true },
+                        { text: "Londres", isCorrect: false },
+                        { text: "Berlín", isCorrect: false },
+                    ]
+                },
+                {
+                    question: "¿Cuál es el río más largo del mundo?",
+                    answers: [
+                        { text: "Amazonas", isCorrect: true },
+                        { text: "Nilo", isCorrect: false },
+                        { text: "Misisipi", isCorrect: false },
+                        { text: "Yangtsé", isCorrect: false },
+                    ]
+                },
+                {
+                    question: "¿Cuál es el país más grande del mundo?",
+                    answers: [
+                        { text: "Rusia", isCorrect: true },
+                        { text: "Canadá", isCorrect: false },
+                        { text: "China", isCorrect: false },
+                        { text: "Estados Unidos", isCorrect: false },
+                    ]
+                },
+                {
+                    question: "¿Cuál es el océano más grande del mundo?",
+                    answers: [
+                        { text: "Atlántico", isCorrect: false },
+                        { text: "Pacífico", isCorrect: true },
+                        { text: "Índico", isCorrect: false },
+                        { text: "Ártico", isCorrect: false },
+                    ]
+                },
+            ]
+        }
+
+        this.questionsContainer = this.scene.add.container(0, -50);
+
+        const loadQuestions = (questions: formQuestionType[], lastIndex: number) => {
+            if(lastIndex > 0) this.questionsContainer.removeAll(true);
+            let  activeQuestion = questions[lastIndex];
+            console.log("DAVID LOAD QUESTIONS: ", activeQuestion, lastIndex,questions);
+            const modalFormQuestion = new ModalFormQuestion(this.scene, 0, 0, activeQuestion , (response: boolean) => {
+                console.log("respone modal: ",response);
+                if (lastIndex < questions.length - 1) {
+                    this.lastIndex = lastIndex + 1;
+                    loadQuestions(questions, this.lastIndex);
+                } else {
+                    this.handleClose();
+                }
+            });
+            this.questionsContainer.add(modalFormQuestion);
+            /*questions.forEach((question, i) => {
+                const modalFormQuestion = new ModalFormQuestion(this.scene, 0, i * 150, question.question, question.answers.map(answer => answer.text));
+                this.questionsContainer.add(modalFormQuestion);
+            });*/
+        }
+
         const availableNews = allNews.filter(news => !news.readed);
         if (availableNews.length === 1) this.eventCenter.emit(this.eventCenter.possibleEvents.RESTART_NEWS, undefined);
         //const newsSelected = availableNews[Math.floor(Math.random() * availableNews.length)];
@@ -29,8 +97,6 @@ export class ModalForm extends ModalBase {
 
         //Modals containers
         const topContainer = this.scene.add.container(0, -170);
-        const leftContainer = this.scene.add.container(-150, 0);
-        const rightContainer = this.scene.add.container(150, 0);
 
         const tweenButtonOver = (_target: any) => {
             this.activeTween = this.scene.tweens.add({
@@ -54,64 +120,6 @@ export class ModalForm extends ModalBase {
             });
 
         }
-
-
-        // INFO CONTAINER
-        const infoContainer = this.scene.add.container(0, 0);
-
-
-        const rectangleTitle = this.scene.add.rectangle(140, -105, 290, 80, 0xBAB8BC, 0.5).setOrigin(0.5);
-        const rectangleDescription = this.scene.add.rectangle(140, 75, 290, 250, 0xF1EFF4, 0.5).setOrigin(0.5);
-
-        const graphicsTitle = this.scene.make.graphics();
-        graphicsTitle.fillStyle(0xBAB8BC);
-        graphicsTitle.fillRoundedRect(-8, -145, 290, 80, 20);
-        const maskTitle = graphicsTitle.createGeometryMask();
-
-        rectangleTitle.setMask(maskTitle);
-
-        const graphicsDescription = this.scene.make.graphics();
-        graphicsDescription.fillStyle(0xF1EFF4);
-        graphicsDescription.fillRoundedRect(-8, -50, 290, 250, 20);
-        const maskDescription = graphicsDescription.createGeometryMask();
-
-        rectangleDescription.setMask(maskDescription);
-
-        //const image = this.scene.add.image(-100, 0, newsSelected.image).setOrigin(0.5).setScale(0.45).setRotation(-Math.PI / 4);
-        const borderImage = this.scene.add.image(-165, 45, "bordeImgDiario").setOrigin(0.5).setScale(0.5);
-        const title = this.scene.add.text(140, -105, "newsSelected.title", {
-            fontFamily: "MontserratBold",
-            fontSize: '18px',
-            color: '#000000',
-            wordWrap: { width: 280 },
-            fixedWidth: 280,
-            fixedHeight: 0,
-        }).setAlign('center').setOrigin(0.5);
-
-
-        const description = this.scene.add.text(140, 185, "newsSelected.description", {
-            fontFamily: "MontserratSemiBold",
-            fontSize: '16px',
-            color: '#000000',
-            wordWrap: { width: 280 },
-            fixedWidth: 280,
-            fixedHeight: 280,
-        }).setAlign('center').setOrigin(0.5);
-
-        infoContainer.add([
-            graphicsTitle,
-            //maskTitle,
-            graphicsDescription,
-            //maskDescription,
-            rectangleTitle,
-            rectangleDescription,
-            borderImage,
-            title,
-            description,
-            //reward,
-            //time,
-            // requirements,
-        ]);
 
         //backgroundModal
         const modalBackground = this.scene.add.image(0, 0, "diarioBackground").setOrigin(0.5).setScale(0.5);
@@ -145,7 +153,7 @@ export class ModalForm extends ModalBase {
         });
 
         //@ts-ignore
-        const title_p = this.scene.add.text(0, -35, "NOTICIAS", {
+        const title_p = this.scene.add.text(0, -35, "MODAL FORM", {
             fontFamily: "MontserratBold",
             fontStyle: "bold",
             fontSize: '24px',
@@ -160,7 +168,10 @@ export class ModalForm extends ModalBase {
             btnExit_p,
         ]);
 
-        this.agreeButton.on('pointerup', () => { this.handleClose() });
+        this.agreeButton.on('pointerup', () => { 
+            //this.handleClose() 
+            loadQuestions(globalFakeData.items, this.lastIndex);
+        });
 
 
         //Buttons Container
@@ -193,9 +204,7 @@ export class ModalForm extends ModalBase {
         this.modalContainerWithElements.add([
             modalBackground,
             topContainer,
-            leftContainer,
-            rightContainer,
-            infoContainer,
+            this.questionsContainer,
             buttonsContainer
         ]);
     }
